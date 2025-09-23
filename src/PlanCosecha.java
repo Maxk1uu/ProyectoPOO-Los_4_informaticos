@@ -10,8 +10,8 @@ public class PlanCosecha {
     private double metaKilos;
     private double precioBaseKilo;
     private EstadoPlan estado;
-    // Relacion singular
-    private final Cuartel cuartel;
+    //Relacion
+    private Cuartel cuartel;
     // Relacion multiple
     private final ArrayList<Cuadrilla> cuadrillas;
     //Constructor
@@ -23,6 +23,8 @@ public class PlanCosecha {
         this.metaKilos = metaKilos;
         this.precioBaseKilo = precioBaseKilo;
         this.cuartel = cuartel;
+        //Relacion singular, la cual añade este objeto a la coleccion del objeto creado a partir de la clase Cuartel.
+        cuartel.addPlanCosecha(this);
         cuadrillas = new ArrayList<>();
         estado = EstadoPlan.PLANIFICADO;
     }
@@ -76,7 +78,9 @@ public class PlanCosecha {
     public boolean AddCosechadorToCuadrilla(int idCuadrilla, Date fechaInicio, Date fechaFin, double meta, Cosechador cosechador) {
 
     }
-    //Retorna los objetos asociados, chequear en el si es que funciona.
+    /*Retorna los objetos asociados, chequear en el si es que funciona.
+      Advertencia: Si esto no funciona, colocar cuadrillas.size() en lugar de 0 no resolvera el problema.
+     */
     public Cuadrilla[] getCuadrillas() {
         return cuadrillas.toArray(new Cuadrilla[0]);
     }
