@@ -51,7 +51,7 @@ public class Cuartel {
         return cultivo;
     }
     //Se añade el objeto a la coleccion
-    public boolean AddPlanCosecha(PlanCosecha planCosecha){
+    public boolean addPlanCosecha(PlanCosecha planCosecha){
         return planCosechas.add(planCosecha);
     }
     public PlanCosecha[] getPlanCosechas(){
