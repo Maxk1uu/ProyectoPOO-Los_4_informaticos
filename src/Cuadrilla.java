@@ -44,13 +44,19 @@ public class Cuadrilla {
     }
 
     public boolean addCosechador(Date fIni, Date fFin, double meta, Cosechador cos) {
-        CosechadorAsignado cosechador = new CosechadorAsignado(fIni, fFin, meta, nombre,  cos);
-        if (cosechadoresAsignados.contains(cosechador) && cosechadoresAsignados.size() >= maximoCosechadores) {
-            return false; //Si el cosechador ya está asignado o si la cuadrilla ya está llena, retorna falso.
-        }
+        for(CosechadorAsignado cosAs: cosechadoresAsignados){
+            if(cosAs.equals(cos)){ //Busca al cosechador entre los cosechadores asignados para conseguir la cuadrilla en la que trabaja.
+                Cuadrilla cuad = cosAs.getCuadrilla();
+                CosechadorAsignado cosechador = new CosechadorAsignado(fIni, fFin, meta, cuad,  cos);
+                if (cosechadoresAsignados.contains(cosechador) && cosechadoresAsignados.size() >= maximoCosechadores) {
+                    return false; //Si el cosechador ya está asignado o si la cuadrilla ya está llena, retorna falso.
+                }
 
-        cosechadoresAsignados.add(cosechador);
-        return true;
+                cosechadoresAsignados.add(cosechador);
+                return true;
+            }
+        }
+        return false;
     }
 
     public Cosechador[] getCosechadores() {
