@@ -8,7 +8,7 @@ public class Huerto {
 
     //hola
     //Relaciones
-    private ArrayList<Propetario>propetarios; //Clase propetario por implementar
+    private ArrayList<Propietario>propetarios; //Clase propetario por implementar
 
     //Constructor
     public Huerto(String nombre, float superficie, String ubicacion) {
