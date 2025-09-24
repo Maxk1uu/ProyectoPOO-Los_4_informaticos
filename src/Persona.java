@@ -2,7 +2,7 @@
 //Revisado por:
 public abstract class Persona {
     //Atributos
-    private Rut rut;  //No se que hacer con la clase rut, no existe y no piden crearla
+    private Rut rut;
     private String nombre;
     private String email;
     private String direccion;
