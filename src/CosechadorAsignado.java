@@ -1,8 +1,6 @@
-import java.util.ArrayList;
-import java.util.Date;
-
 //Codigo hecho por: Maximiliano Maureira
 //Revisado por:
+import java.util.Date;
 public class CosechadorAsignado {
     //Atributos
     private Date desde;
