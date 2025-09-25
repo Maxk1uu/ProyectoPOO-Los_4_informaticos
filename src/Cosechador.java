@@ -26,6 +26,7 @@ public class Cosechador extends Persona {
     }
 
     public void addCuadrilla(CosechadorAsignado cosAs) {
+
         cosechadoresAsignados.add(cosAs);
     }
 
@@ -40,5 +41,4 @@ public class Cosechador extends Persona {
         }
         return cuadrillas;
     }
-
 }

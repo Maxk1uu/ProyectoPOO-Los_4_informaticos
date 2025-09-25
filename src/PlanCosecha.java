@@ -1,3 +1,6 @@
+//Creado por: Gabriel
+//ültima revisión:
+
 import java.util.Date;
 import java.util.ArrayList;
 public class PlanCosecha {
@@ -73,16 +76,39 @@ public class PlanCosecha {
     }
     // Asociacion Multiple de esta clase.
     public boolean addCuadrilla(int idCuadrilla, String nombreCuadrilla, Supervisor supervisor) {
-        return cuadrillas.add(new Cuadrilla(idCuadrilla, nombreCuadrilla, supervisor, this));
+        //se utiliza el metodo private findCuadrilla para asegurar que la cuadrilla no existe, si no existe, crea una nueva.
+        //De lo contrario, retorna false.
+        if (findCuadrilla(idCuadrilla) == null) {
+            //Asegura que el supervisor no está asignado a una cuadrila, a través de llamar al metodo getCuadrillaAsignada.
+            //Si lo está, el objeto retornado no será null, por cual se asume que el supervisor ya tiene una cuadrilla asignada.
+            if (supervisor.getCuadrillaAsignada() == null) {
+                return cuadrillas.add(new Cuadrilla(idCuadrilla, nombreCuadrilla, supervisor, this));
+            }
+        }
+        return false;
     }
-    public boolean AddCosechadorToCuadrilla(int idCuadrilla, Date fechaInicio, Date fechaFin, double meta, Cosechador cosechador) {
-
+    //Asigna una cosechadora con una cuadrilla.
+    public boolean addCosechadorToCuadrilla(int idCuadrilla, Date fechaInicio, Date fechaFin, double meta, Cosechador cosechador) {
+        //Asegura que el objeto encontrado no es null, si no lo es, llama al metodo addCosechador.
+        if (findCuadrilla(idCuadrilla) != null) {
+            return findCuadrilla(idCuadrilla).addCosechador(fechaInicio, fechaFin, meta, cosechador);
+        }
+        return false;
     }
     /*Retorna los objetos asociados, chequear en el si es que funciona.
       Advertencia: Si esto no funciona, colocar cuadrillas.size() en lugar de 0 no resolvera el problema.
      */
     public Cuadrilla[] getCuadrillas() {
         return cuadrillas.toArray(new Cuadrilla[0]);
+    }
+    //Metodo private que encuentra la cuadrilla deseada(Se pueden agregar metodos extras, pero solamente privados).
+    private Cuadrilla findCuadrilla(int idCuadrilla) {
+        for (Cuadrilla cuadrilla : cuadrillas) {
+            if (cuadrilla.getId() == idCuadrilla) {
+                return cuadrilla;
+            }
+        }
+        return null;
     }
 
 
