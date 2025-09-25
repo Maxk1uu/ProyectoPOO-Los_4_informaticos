@@ -20,6 +20,9 @@ public class Cuadrilla {
         this.nombre = nom;
         this.planCosecha = plan;
         this.supervisor = sup;
+        //Correción hecha por: Gabriel
+        //Se realiza la asociación, añadiendo esta cuadrilla con el supervisor pasado por el constructor.
+        supervisor.setCuadrilla(this);
     }
 
     //Metodos
@@ -44,9 +47,9 @@ public class Cuadrilla {
     }
 
     public boolean addCosechador(Date fIni, Date fFin, double meta, Cosechador cos) {
-        for(CosechadorAsignado cosAs: cosechadoresAsignados){
-            if(cosAs.equals(cos)){ //Busca al cosechador entre los cosechadores asignados para conseguir la cuadrilla en la que trabaja.
-                Cuadrilla cuad = cosAs.getCuadrilla();
+            //Aquí se encontraba un equals entre dos objetos con diferentes clases, se encontró una forma de arreglarlo.
+            if(isEqualToAnotherCosechador(cos) != null){ //Busca al cosechador entre los cosechadores asignados para conseguir la cuadrilla en la que trabaja.
+                Cuadrilla cuad = isEqualToAnotherCosechador(cos).getCuadrilla();//Ignorar la advertencia de IntelliJ, se colocó una condición para que el objeto que devuelve el metodo privado no sea null.
                 CosechadorAsignado cosechador = new CosechadorAsignado(fIni, fFin, meta, cuad,  cos);
                 if (cosechadoresAsignados.contains(cosechador) && cosechadoresAsignados.size() >= maximoCosechadores) {
                     return false; //Si el cosechador ya está asignado o si la cuadrilla ya está llena, retorna falso.
@@ -55,7 +58,6 @@ public class Cuadrilla {
                 cosechadoresAsignados.add(cosechador);
                 return true;
             }
-        }
         return false;
     }
 
@@ -69,5 +71,13 @@ public class Cuadrilla {
 
     public static void setMaximoCosechadores(int max) {
         maximoCosechadores = max;
+    }
+    private CosechadorAsignado isEqualToAnotherCosechador(Cosechador cosechador){
+        for (CosechadorAsignado cosAs: cosechadoresAsignados) {
+            if (cosAs.getCosechador().equals(cosechador)){
+                return cosAs;
+            }
+        }
+        return null;
     }
 }

@@ -22,6 +22,7 @@ public class Cuartel {
         //Se ejecutan las asociaciones
         huerto.addCuartel(this);
         cultivo.addCuartel(this);
+        this.estado = EstadoFenologico.REPOSO_INVERNAL;
 
     }
     //Metodos
@@ -52,7 +53,11 @@ public class Cuartel {
     }
     //Se añade el objeto a la coleccion
     public boolean addPlanCosecha(PlanCosecha planCosecha){
-        return planCosechas.add(planCosecha);
+        //Asegura que el objeto pasado por parametro no es el mismo
+        if (!planCosechas.contains(planCosecha)) {
+            return planCosechas.add(planCosecha);
+        }
+        return false;
     }
     public PlanCosecha[] getPlanCosechas(){
         return planCosechas.toArray(new PlanCosecha[0]);
