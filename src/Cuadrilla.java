@@ -1,7 +1,7 @@
 //Codigo hecho por: Maximiliano Maureira
 //Revisado por:
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Cuadrilla {
     //Atributos
@@ -46,7 +46,7 @@ public class Cuadrilla {
         return planCosecha;
     }
 
-    public boolean addCosechador(Date fIni, Date fFin, double meta, Cosechador cos) {
+    public boolean addCosechador(LocalDate fIni, LocalDate fFin, double meta, Cosechador cos) {
             //Aquí se encontraba un equals entre dos objetos con diferentes clases, se encontró una forma de arreglarlo.
             if(isEqualToAnotherCosechador(cos) != null){ //Busca al cosechador entre los cosechadores asignados para conseguir la cuadrilla en la que trabaja.
                 Cuadrilla cuad = isEqualToAnotherCosechador(cos).getCuadrilla();//Ignorar la advertencia de IntelliJ, se colocó una condición para que el objeto que devuelve el metodo privado no sea null.
@@ -76,6 +76,16 @@ public class Cuadrilla {
         for (CosechadorAsignado cosAs: cosechadoresAsignados) {
             if (cosAs.getCosechador().equals(cosechador)){
                 return cosAs;
+            }
+        }
+        return null;
+    }
+
+    private Cosechador findCosechadorByRut(Cosechador cosechador) { //Este metodo no sale en UML pero si en el pdf
+        Rut rutCos = cosechador.getRut();
+        for(CosechadorAsignado cosAs: cosechadoresAsignados){
+            if(cosAs.equals(rutCos)){
+                return cosAs.getCosechador();
             }
         }
         return null;
