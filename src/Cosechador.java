@@ -1,32 +1,30 @@
 //Codigo hecho por: Maximiliano Maureira
 //Revisado por:
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
-
 public class Cosechador extends Persona {
     //Atributos
-    private Date fechaNacimiento;
+    private LocalDate fechaNacimiento;
 
     //Relaciones
     ArrayList<CosechadorAsignado> cosechadoresAsignados = new ArrayList<>();
 
     //Constructor (Creado por Generate)
-    public Cosechador(Rut rut, String nom, String email, String dir, Date fechaNacimiento) {
+    public Cosechador(Rut rut, String nom, String email, String dir, LocalDate fechaNacimiento) {
         super(rut, nom, email, dir);
         this.fechaNacimiento = fechaNacimiento;
     }
 
     //Metodos
-    public Date getFechaNacimiento() {
+    public LocalDate getFechaNacimiento() {
         return fechaNacimiento;
     }
 
-    public void setFechaNacimiento(Date fechaNacimiento) {
+    public void setFechaNacimiento(LocalDate fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
 
     public void addCuadrilla(CosechadorAsignado cosAs) {
-
         cosechadoresAsignados.add(cosAs);
     }
 

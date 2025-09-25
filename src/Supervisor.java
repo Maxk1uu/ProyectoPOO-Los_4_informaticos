@@ -5,7 +5,7 @@ public class Supervisor extends Persona {
     private String profesion;
 
     //Relaciones
-    Cuadrilla cuadrillaAsignada; //Asumo que la relacion es asi, ya que un supervisor solo puede ser asignado a 0 o 1 cuadrilla
+    Cuadrilla cuadrillaAsignada;
 
     //Constructor (Creado por Generate)
     public Supervisor(Rut rut, String nom, String email, String dir, String profesion) {
