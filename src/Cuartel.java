@@ -1,4 +1,4 @@
-//Creado por: Gabriel
+//Creado por: Gabriel Rojas
 //Última revisión:
 
 import java.util.ArrayList;
