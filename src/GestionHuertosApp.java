@@ -1,6 +1,6 @@
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class GestionHuertosApp {
@@ -8,7 +8,7 @@ public class GestionHuertosApp {
     private Scanner sc = new Scanner(System.in).useDelimiter("[\\t\\n\\r]+"); //Si esto no funciona, hay que agregar el delimitador a cada metodo.
 
     //Relaciones
-    private final ArrayList<ControlProduccion> controlProduccion = new ArrayList<>();
+    private final ControlProduccion controlProduccion = new ControlProduccion();
 
     //Main
     public static void main(String[] args) {
@@ -36,6 +36,8 @@ public class GestionHuertosApp {
         opcion = sc.nextInt();
         switch (opcion) { //Falta terminar aqui, ir agregando los casos a medida que se crean los metodos
             case 1: creaPersona(); break;
+            case 2: creaCultivo(); break;
+            case 3: creaHuerto(); break;
         }
     }
 
@@ -77,7 +79,7 @@ public class GestionHuertosApp {
                     System.out.println("\nEl rut ya está registrado como Supervisor.");
                 }
             }
-            case 3 -> {
+            case 3 -> { //Cosechador
                 boolean cosechadorCreado;
                 System.out.print("> Fecha de Nacimiento (dd/mm/aaaa): ");
                 LocalDate fNac = LocalDate.parse(sc.next(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
@@ -91,7 +93,8 @@ public class GestionHuertosApp {
         }
     }
 
-    public void creaCultivo() { //Falta agregar la verificacion de si existe el id o no.
+    public void creaCultivo() {
+        boolean cultivoCreado;
         int id;
         String especie, variedad;
         float rendimiento;
@@ -104,25 +107,108 @@ public class GestionHuertosApp {
         variedad = sc.next();
         System.out.print("> Rendimiento : ");
         rendimiento = sc.nextFloat();
+        cultivoCreado = controlProduccion.createCultivo(id, especie, variedad, rendimiento);
+        if (cultivoCreado) {
+            System.out.println("El Cultivo a sido creado exitosamente.");
+        } else {
+            System.out.println("Ya existe un Cultivo con esa identificacion.");
+        }
     }
-    public void creaHuerto() {
-        String nombre, ubicacion;
-        float superficie;
-        Rut rutPropietario;
 
+    public void creaHuerto() {
+        boolean huertoCreado, cuartelCreado;
+        String nombreHuerto, ubicacion;
+        float superficieHuerto, superficieCuartel;
+        Rut rutPropietario;
+        int nroCuarteles, idCuartel, idCultivo;
+        Cultivo cultivo;
         System.out.println("---Creando Huerto---");
         System.out.print("> Nombre: ");
-        nombre = sc.next();
+        nombreHuerto = sc.next();
         System.out.print("> Ubicacion: ");
         ubicacion = sc.next();
         System.out.print("> Superficie (metros cuadrados): ");
-        superficie = sc.nextFloat();
+        superficieHuerto = sc.nextFloat();
         System.out.print("> Rut Propietario: ");
         rutPropietario = new Rut(sc.next());
-        if(!Rut.rutsPropietarios.contains(rutPropietario)) {
-            System.out.println("No existe propietario con el rut indicado.");
+        huertoCreado = controlProduccion.createHuerto(nombreHuerto, superficieHuerto, ubicacion, rutPropietario);
+        if (!huertoCreado) {
+            System.out.println("\nNo fue posible crear el Huerto. Verifique que el Rut existe y que el nombre del Huerto sea unico.");
+        } else {
+            System.out.println("\nEl Huerto a sido creado exitosamente.");
+            System.out.println("\n-Agregando Cuarteles al Huerto-");
+            System.out.print("> Nro. de Cuarteles: ");
+            nroCuarteles = sc.nextInt();
+            for (int i = 1; i <= nroCuarteles; i++) {
+                System.out.print("\n> ID del cuartel: ");
+                idCuartel = sc.nextInt();
+                System.out.print("> Superficie del cuartel: ");
+                superficieCuartel = sc.nextFloat();
+                System.out.print("ID del cultivo del cuartel: ");
+                idCultivo = sc.nextInt();
+                cuartelCreado = controlProduccion.addCuartelToHuerto(nombreHuerto, idCuartel, superficieCuartel, idCultivo);
+                if(cuartelCreado){
+                    System.out.println("\nCuartel agregado exitosamente al huerto.");
+                } else {
+                    System.out.println("\nNo fue posible crear el Cuartel. Verifique que el Cultivo con id: "+idCultivo+" existe y que el id del Cuartel no se repita en el Huerto.");
+                }
+            }
         }
-        if()
+    }
+
+    public void creaPlanDeCosecha() {
+        boolean planDeCosechaCreado, cuadrillaCreada;
+        double metaKilos, precioBaseKilos;
+        int idPlanDeCosecha, idCuartel, nroCuadrillas, idCuadrilla;
+        String nombrePlanDeCosecha, nombreHuerto, nombreCuadrilla;
+        LocalDate fechaInicio, fechaTermino;
+        Rut rutSupervisor;
+        System.out.println("---Creando Plan de Cosecha---");
+        System.out.print("> ID del plan : ");
+        idPlanDeCosecha = sc.nextInt();
+        System.out.print("> Nombre del plan: ");
+        nombrePlanDeCosecha = sc.next();
+        System.out.print("> Fecha de inicio (dd/mm/yyyy): ");
+        fechaInicio = LocalDate.parse(sc.next());
+        System.out.print("> Fecha de termino (dd/mm/yyyy): ");
+        fechaTermino = LocalDate.parse(sc.next());
+        System.out.print("> Meta (Kilos): ");
+        metaKilos = sc.nextDouble();
+        System.out.print("> Precio de Base por Kilo: ");
+        precioBaseKilos = sc.nextDouble();
+        System.out.print("> Nombre del Huerto: ");
+        nombreHuerto = sc.next();
+        System.out.print("> ID del Cuartel: ");
+        idCuartel = sc.nextInt();
+        planDeCosechaCreado = controlProduccion.createPlanCosecha(idPlanDeCosecha, nombrePlanDeCosecha, fechaInicio, fechaTermino, metaKilos, precioBaseKilos, nombreHuerto, idCuartel);
+        if(!planDeCosechaCreado){
+            System.out.println("\nNo fue posible crear el Plan de Cosecha. Posibles razones:");
+            System.out.println("1. El ID del plan de Cosecha ya está registrado.");
+            System.out.println("2. No existe el Huerto.");
+            System.out.println("3. No existe el Cuartel");
+        } else {
+            System.out.println("\nPlan de Cosecha creado exitosamente.");
+            System.out.println("\n-Agregando Cuadrillas al Plan de Cosecha-");
+            System.out.print("Nro. de Cuadrillas: ");
+            nroCuadrillas =  sc.nextInt();
+            for (int i = 1; i <= nroCuadrillas; i++) {
+                System.out.print("> ID de la cuadrilla: ");
+                idCuadrilla = sc.nextInt();
+                System.out.print("> Nombre de la cuadrilla: ");
+                nombreCuadrilla = sc.next();
+                System.out.print("> Rut del Supervisor: ");
+                rutSupervisor = new Rut(sc.next());
+                cuadrillaCreada = controlProduccion.addCuadrillaToPlan(idPlanDeCosecha, idCuadrilla, nombreCuadrilla, rutSupervisor);
+                if(cuadrillaCreada){
+                    System.out.println("\nCuadrilla agregada exitosamente al Plan de Cosecha.");
+                } else {
+                    System.out.println("\nNo fue posible realizar la accion. Posibles razones:");
+                    System.out.println("1. Ya existe una Cuadrilla con ese ID");
+                    System.out.println("2. No se encontro a ningún Supervisor con el rut dado.");
+                    System.out.println("3. El Supervisor ya tiene asignada una Cuadrilla.");
+                }
+            }
+        }
 
     }
 
