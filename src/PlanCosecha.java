@@ -1,15 +1,14 @@
-//Creado por: Gabriel
+//Creado por: Gabriel Rojas
 //ültima revisión:
-
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 public class PlanCosecha {
 
     private int id;
     private String nombre;
-    private Date inicio;
-    private Date finEstimado;
-    private Date finReal;
+    private LocalDate inicio;
+    private LocalDate finEstimado;
+    private LocalDate finReal;
     private double metaKilos;
     private double precioBaseKilo;
     private EstadoPlan estado;
@@ -18,7 +17,7 @@ public class PlanCosecha {
     // Relacion multiple
     private final ArrayList<Cuadrilla> cuadrillas;
     //Constructor
-    public PlanCosecha(int id, String nombre, Date inicio, Date finEstimado, double metaKilos, double precioBaseKilo, Cuartel cuartel) {
+    public PlanCosecha(int id, String nombre, LocalDate inicio, LocalDate finEstimado, double metaKilos, double precioBaseKilo, Cuartel cuartel) {
         this.id = id;
         this.nombre = nombre;
         this.inicio = inicio;
@@ -41,16 +40,16 @@ public class PlanCosecha {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-    public Date getInicio() {
+    public LocalDate getInicio() {
         return inicio;
     }
-    public Date getFinEstimado() {
+    public LocalDate getFinEstimado() {
         return finEstimado;
     }
-    public Date getFinReal() {
+    public LocalDate getFinReal() {
         return finReal;
     }
-    public void setFinReal(Date finReal) {
+    public void setFinReal(LocalDate finReal) {
         this.finReal = finReal;
     }
     public double getMetaKilos() {
@@ -77,7 +76,7 @@ public class PlanCosecha {
     // Asociacion Multiple de esta clase.
     public boolean addCuadrilla(int idCuadrilla, String nombreCuadrilla, Supervisor supervisor) {
         //se utiliza el metodo private findCuadrilla para asegurar que la cuadrilla no existe, si no existe, crea una nueva.
-        //De lo contrario, retorna false.
+        //De lo contrario, retorna null.
         if (findCuadrilla(idCuadrilla) == null) {
             //Asegura que el supervisor no está asignado a una cuadrila, a través de llamar al metodo getCuadrillaAsignada.
             //Si lo está, el objeto retornado no será null, por cual se asume que el supervisor ya tiene una cuadrilla asignada.
@@ -88,7 +87,7 @@ public class PlanCosecha {
         return false;
     }
     //Asigna una cosechadora con una cuadrilla.
-    public boolean addCosechadorToCuadrilla(int idCuadrilla, Date fechaInicio, Date fechaFin, double meta, Cosechador cosechador) {
+    public boolean addCosechadorToCuadrilla(int idCuadrilla, LocalDate fechaInicio, LocalDate fechaFin, double meta, Cosechador cosechador) {
         //Asegura que el objeto encontrado no es null, si no lo es, llama al metodo addCosechador.
         if (findCuadrilla(idCuadrilla) != null) {
             return findCuadrilla(idCuadrilla).addCosechador(fechaInicio, fechaFin, meta, cosechador);
