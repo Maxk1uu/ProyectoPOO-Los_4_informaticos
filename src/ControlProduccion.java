@@ -12,7 +12,7 @@ public class ControlProduccion {
 
     public boolean createPropietario(Rut rut, String nombre, String email, String direccionParticular, String direccionComercial) {
         //Asegura que esta persona no existe,  si existe, retorna false.
-        if (findPersona(rut, 3) == null) return false;
+        if (findPersona(rut, 3) != null) return false;
 
         // De lo contrario, lo agrega a la colección.
         return personas.add(new Propietario(rut, nombre, email, direccionParticular, direccionComercial));
@@ -20,14 +20,14 @@ public class ControlProduccion {
 
     public boolean createSupervisor(Rut rut, String nombre, String email, String direccion, String profesion) {
         //Check para asegurar que esta persona no existe.
-        if (findPersona(rut, 2) == null) return false;
+        if (findPersona(rut, 2) != null) return false;
         //Agrega el supervisor a la coleccion.
         return personas.add(new Supervisor(rut, nombre, email, direccion, profesion));
     }
 
     public boolean createCosechador(Rut rut, String nombre, String email, String direccion, LocalDate fechaNacimiento) {
         //Asegura que un cosechador con el mismo rut pasado por el parametro no exista.
-        if (findPersona(rut, 1) == null) return false;
+        if (findPersona(rut, 1) != null) return false;
         //Agrega el cosechador a la coleccion.
         return personas.add(new Cosechador(rut, nombre, email, direccion, fechaNacimiento));
     }
@@ -45,7 +45,7 @@ public class ControlProduccion {
     public boolean addCuartelToHuerto(String nombreHuerto, int idCuartel, float superficie, int idCultivo) {
     }
 
-    //Necesidad de la clase cuartel.
+    //Necesidad de la clase huerto.
     public boolean createPlanCosecha(int id, String nombrePlan, LocalDate fechaInicio, LocalDate fechaFin, double metaKilos, double precioBaseKilo, String nomHuerto, int idCuartel) {
     }
 
@@ -67,9 +67,9 @@ public class ControlProduccion {
             En este caso, no queremos que pase eso, porque estamos agregando una nueva cuadrilla
             que no exista en su coleccion.
             */
-            if (plan.addCuadrilla(idCuadrilla, nombreCuadrilla, supervisorEncontrado)){ //Ignorar advertencia, condicion que no sea null existe.
+            if (findCuadrilla(idCuadrilla, plan.getId()) == null && plan.addCuadrilla(idCuadrilla, nombreCuadrilla, supervisorEncontrado)){ //Ignorar advertencia, condicion que no sea null existe.
                 //Retorna true si es que esta operación puede realizarse.
-                return true;
+                return plan.addCuadrilla(idCuadrilla, nombreCuadrilla, supervisorEncontrado);
             }
         }
         //De lo contrario, retorna false.
@@ -77,21 +77,42 @@ public class ControlProduccion {
 
     }
     public boolean addCosechadorToCuadrilla(int idPlanCosecha, int idCuadrilla, LocalDate fechaIniCosechador,LocalDate fechaFinCosechador, double metaKilosCosechador, Rut rutCosechador){
-        //Asigna los metodos findPlanCosecha y findPersona a variables para mejor legibilidad
+        //Asigna los metodos findPlanCosecha, findPersona y findCuadrilla a variables para mejor legibilidad
         PlanCosecha plan = findPlanCosecha(idPlanCosecha);
         Cosechador cosechadorEncontrado = (Cosechador)findPersona(rutCosechador, 1);
-        //Condiciones que aseguran que estas variables existan, de lo contrario, devuelven null.
+        //Condiciones que aseguran que estas variables existan, de lo contrario, devuelven false.
         if (plan == null) return false;
-        if (findCuadrilla(idCuadrilla, plan.getId()) == null) return false;
+        Cuadrilla cuadrillaEncontrada = findCuadrilla(idCuadrilla, plan.getId());
+        if (cuadrillaEncontrada == null) return false;
         if (cosechadorEncontrado == null) return false;
-        //Condiciones más complejas con LocalDate: por hacer.
+        //booleano isAfter, que asegura que la fecha de inicio no es superior a la fecha final. Solo puede ser Inferior o Igual.
+        //Además, asegura que la fecha de inicio y final este en el intervalo de tiempo del plan de cosecha.
+        if (!fechaIniCosechador.isAfter(fechaFinCosechador) && !fechaIniCosechador.isBefore(plan.getInicio()) && !fechaFinCosechador.isAfter(plan.getFinEstimado()) ) return false;
+        //Retornará un valor booleano que mostrara si la acción se pudo realizar o no.
+        return plan.addCosechadorToCuadrilla(idCuadrilla, fechaIniCosechador, fechaFinCosechador, metaKilosCosechador, cosechadorEncontrado);
 
+    }
+    public String[] listCultivos(){
+        if (cultivos.isEmpty()) return new String[0];
+        String[] listaCultivos = new String[cultivos.size()];
+        for (int i = 0; i < cultivos.size(); i++) {
+            Cultivo cultivo = cultivos.get(i);
+            //Talvez se deba usar String.format, chequear después.
+            listaCultivos[i] = String.join(", ", Integer.toString(cultivo.getId()), cultivo.getEspecie(),Double.toString(cultivo.getRendimiento()), cultivo.getVariedad());
+        }
+        return listaCultivos;
+    }
+    //Necesario clase Huerto
+    public String[] listHuertos{
+    }
+    public String[] listPropietarios(){
+        
     }
 
     //Metodo private que encuentra a una persona deseada a través de su rut.
     private Persona findPersona(Rut rut, int tipo) {
         //Por tener 3 colecciones estaticas, es necesario recorrer los 3 arraylist cada uno.
-        //Recomendable encontrar una mejor implementación, talvez juntar estas 3 colecciones es una.
+        //Recomendable encontrar una mejor implementación, talvez juntar estas 3 colecciones en una.
         //tipo es una variable pasada por parametro para elegir que rut se quiere encontrar.
         //esta variable es automatica y elegida en el metodo correspondiente.
         //1 = Cosechador, 2 = Supervisor, 3 = Propietario.
