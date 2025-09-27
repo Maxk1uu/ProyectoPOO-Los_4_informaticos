@@ -1,14 +1,19 @@
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class GestionHuertosApp {
     //Atributos
-    private Scanner sc = new Scanner(System.in);
+    private Scanner sc = new Scanner(System.in).useDelimiter("[\\t\\n\\r]+"); //Si esto no funciona, hay que agregar el delimitador a cada metodo.
+
+    //Relaciones
+    private final ArrayList<ControlProduccion> controlProduccion = new ArrayList<>();
 
     //Main
     public static void main(String[] args) {
         Scanner sc;
+
 
     }
 
@@ -35,7 +40,6 @@ public class GestionHuertosApp {
     }
 
     private void creaPersona() {
-        sc.useDelimiter("[\\t\\n\\r]+");
         int rol;
         String nombre, email, direccion;
         System.out.println("--Creando una Persona---");
@@ -52,39 +56,74 @@ public class GestionHuertosApp {
 
         switch (rol) {
             case 1 -> { //Propietario
-                if(!Rut.rutsPropietarios.contains(rut)) { //Si no está registrado el rut, se añade y se crea un nuevo propietario
-                    Rut.rutsPropietarios.add(rut);
-                    System.out.print("> Direccion Comercial: ");
-                    String dirComercial = sc.next();
-                    Propietario propietario = new Propietario(rut, nombre, email, direccion, dirComercial);
+                boolean propietarioCreado;
+                System.out.print("> Direccion Comercial: ");
+                String dirComercial = sc.next();
+                propietarioCreado = controlProduccion.createPropietario(rut, nombre, email, direccion, dirComercial);
+                if (propietarioCreado) {
                     System.out.println("\nEl Propietario a sido creado exitosamente.");
                 } else {
                     System.out.println("\nEl rut ya está registrado como Propietario.");
                 }
             }
             case 2 -> { //Supervisor
-                if(!Rut.rutsSupervisores.contains(rut)) { //Si no está registrado el rut, se añade y se crea un nuevo supervisor
-                    Rut.rutsSupervisores.add(rut);
-                    System.out.print("> Profesion: ");
-                    String profesion = sc.next();
-                    Supervisor supervisor = new Supervisor(rut, nombre, email, direccion, profesion);
+                boolean supervisorCreado;
+                System.out.print("> Profesion: ");
+                String profesion = sc.next();
+                supervisorCreado = controlProduccion.createSupervisor(rut, nombre, email, direccion, profesion);
+                if(supervisorCreado) {
                     System.out.println("\nEl Supervisor a sido creado exitosamente.");
                 } else {
                     System.out.println("\nEl rut ya está registrado como Supervisor.");
                 }
             }
             case 3 -> {
-                if(!Rut.rutsCosechadores.contains(rut)) { //Si no está registrado el rut, se añade y se crea un nuevo cosechador
-                    Rut.rutsCosechadores.add(rut);
-                    System.out.print("> Fecha de Nacimiento (dd/mm/aaaa): ");
-                    LocalDate fNac = LocalDate.parse(sc.next(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-                    Cosechador cosechador = new Cosechador(rut, nombre, email, direccion, fNac);
-                    System.out.println("\nEl Cosechador a sido creado exitosamente.");
+                boolean cosechadorCreado;
+                System.out.print("> Fecha de Nacimiento (dd/mm/aaaa): ");
+                LocalDate fNac = LocalDate.parse(sc.next(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                cosechadorCreado = controlProduccion.createCosechador(rut, nombre, email, direccion, fNac);
+                if(cosechadorCreado) {
+                System.out.println("\nEl Cosechador a sido creado exitosamente.");
                 } else {
                     System.out.println("\nEl rut ya está registrado como Cosechador.");
                 }
             }
         }
+    }
+
+    public void creaCultivo() { //Falta agregar la verificacion de si existe el id o no.
+        int id;
+        String especie, variedad;
+        float rendimiento;
+        System.out.println("---Creando un Cultivo---");
+        System.out.print("> Identificacion: ");
+        id = sc.nextInt();
+        System.out.print("> Especie: ");
+        especie = sc.next();
+        System.out.print("> Variedad: ");
+        variedad = sc.next();
+        System.out.print("> Rendimiento : ");
+        rendimiento = sc.nextFloat();
+    }
+    public void creaHuerto() {
+        String nombre, ubicacion;
+        float superficie;
+        Rut rutPropietario;
+
+        System.out.println("---Creando Huerto---");
+        System.out.print("> Nombre: ");
+        nombre = sc.next();
+        System.out.print("> Ubicacion: ");
+        ubicacion = sc.next();
+        System.out.print("> Superficie (metros cuadrados): ");
+        superficie = sc.nextFloat();
+        System.out.print("> Rut Propietario: ");
+        rutPropietario = new Rut(sc.next());
+        if(!Rut.rutsPropietarios.contains(rutPropietario)) {
+            System.out.println("No existe propietario con el rut indicado.");
+        }
+        if()
+
     }
 
 }
