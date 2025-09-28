@@ -34,6 +34,6 @@ public class Propietario extends Persona {
     }
 
     public Huerto[] getHuertos() {
-        return huertos.toArray(Huerto[0]); //Convierte el ArrayList completo en arreglo.
+        return huertos.toArray(Huerto[]::new); //Convierte el ArrayList completo en arreglo.
     }
 }

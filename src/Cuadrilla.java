@@ -54,9 +54,7 @@ public class Cuadrilla {
                 if (cosechadoresAsignados.contains(cosechador) && cosechadoresAsignados.size() >= maximoCosechadores) {
                     return false; //Si el cosechador ya está asignado o si la cuadrilla ya está llena, retorna falso.
                 }
-
-                cosechadoresAsignados.add(cosechador);
-                return true;
+                return cosechadoresAsignados.add(cosechador);
             }
         return false;
     }

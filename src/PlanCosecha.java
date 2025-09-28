@@ -98,7 +98,8 @@ public class PlanCosecha {
       Advertencia: Si esto no funciona, colocar cuadrillas.size() en lugar de 0 no resolvera el problema.
      */
     public Cuadrilla[] getCuadrillas() {
-        return cuadrillas.toArray(new Cuadrilla[0]);
+        if (!cuadrillas.isEmpty())  return cuadrillas.toArray(new Cuadrilla[0]);
+        return null;
     }
     //Metodo private que encuentra la cuadrilla deseada(Se pueden agregar metodos extras, pero solamente privados).
     private Cuadrilla findCuadrilla(int idCuadrilla) {

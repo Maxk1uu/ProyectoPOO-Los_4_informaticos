@@ -12,7 +12,7 @@ public class CosechadorAsignado {
     Cuadrilla cuadrilla;
 
     //Constructor
-    public CosechadorAsignado(LocalDate fIni, LocalDate fFin, double meta, Cuadrilla cuad, Cosechador cos) {
+    public CosechadorAsignado(LocalDate fIni, LocalDate fFin, double metaKilos, Cuadrilla cuad, Cosechador cos) {
         this.desde = fIni;
         this.hasta = fFin;
         this.metaKilos = metaKilos;
