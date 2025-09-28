@@ -247,5 +247,22 @@ public class GestionHuertosApp {
         }
     }
 
+    private void listaCultivos() { //Falta agregar nroCuarteles, pero no entiendo a que se refierexdd
+        String id, especie, variedad, rendimiento, nroCuarteles=null;
+        String[] listaDeCultivos = controlProduccion.listCultivos();
+        if(!listaDeCultivos[0].isEmpty()){
+            System.out.printf("%-6s%-15s%-20s%-15s%-16s", "ID", "Especie", "Variedad", "Rendimiento", "Nro. Cuarteles");
+            for(String cultivo: listaDeCultivos){
+                String[] infoCultivo = cultivo.split(", ");
+                id = infoCultivo[0];
+                especie = infoCultivo[1];
+                variedad = infoCultivo[2];
+                rendimiento = infoCultivo[3];
+                System.out.printf("%-6s%-15s%-20s%-15s%-16s", id, especie, variedad, rendimiento, nroCuarteles);
+            }
+        } else {
+            System.out.println("No hay cultivos regitrados.");
+        }
+    }
 
 }
