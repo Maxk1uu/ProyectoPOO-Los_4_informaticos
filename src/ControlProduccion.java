@@ -156,9 +156,10 @@ public class ControlProduccion {
         // Busco los propietarios de la lista de personas
         for (int i = 0; i < personas.size(); i++) {
             if(personas.get(i) instanceof Propietario){
-                listaPropietarios[i] = String.join(", ", (personas.get(i).getRut().toString(), personas.get(i).getNombre(), personas.get(i).getDireccion(), personas.get(i).getEmail(), ((Propietario) personas.get(i)).getDirComercial(), ((Propietario) personas.get(i)).getHuertos().length);
+                listaPropietarios[i] = String.join(", ", personas.get(i).getRut().toString(), personas.get(i).getNombre(), personas.get(i).getDireccion(), personas.get(i).getEmail(), ((Propietario) personas.get(i)).getDirComercial(), Integer.toString(((Propietario) personas.get(i)).getHuertos().length));
             }
         }
+        return  listaPropietarios;
     }
 
     public String[] listSupervisores(){
