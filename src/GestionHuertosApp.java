@@ -1,4 +1,6 @@
 
+import com.sun.security.jgss.GSSUtil;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
@@ -93,7 +95,7 @@ public class GestionHuertosApp {
         }
     }
 
-    public void creaCultivo() {
+    private void creaCultivo() {
         boolean cultivoCreado;
         int id;
         String especie, variedad;
@@ -115,7 +117,7 @@ public class GestionHuertosApp {
         }
     }
 
-    public void creaHuerto() {
+    private void creaHuerto() {
         boolean huertoCreado, cuartelCreado;
         String nombreHuerto, ubicacion;
         float superficieHuerto, superficieCuartel;
@@ -156,7 +158,7 @@ public class GestionHuertosApp {
         }
     }
 
-    public void creaPlanDeCosecha() {
+    private void creaPlanDeCosecha() {
         boolean planDeCosechaCreado, cuadrillaCreada;
         double metaKilos, precioBaseKilos;
         int idPlanDeCosecha, idCuartel, nroCuadrillas, idCuadrilla;
@@ -209,7 +211,41 @@ public class GestionHuertosApp {
                 }
             }
         }
-
     }
+    private void asignaCosechadoresAPlan() {
+        boolean cosechadorAsignado;
+        int idPlan, idCuadrilla, nroCosechadores;
+        LocalDate fechaInicioAsignacion, fechaTerminoAsignacion;
+        double metaKilos;
+        Rut rutCosechador;
+        System.out.println("---Asignando Cosechadores a Plan de Cosecha---");
+        System.out.print("> ID del Plan: ");
+        idPlan = sc.nextInt();
+        System.out.print("> ID de la Cuadrilla: ");
+        idCuadrilla = sc.nextInt();
+        System.out.print("> Nro. de Cosechadores a asignar: ");
+        nroCosechadores = sc.nextInt();
+        for (int i = 1; i <= nroCosechadores; i++) {
+            System.out.print("\n> Fecha de Inicio de asignacion (dd/mm/yyyy): ");
+            fechaInicioAsignacion = LocalDate.parse(sc.next());
+            System.out.print("> Fecha de Termino de asignacion (dd/mm/yyyy): ");
+            fechaTerminoAsignacion = LocalDate.parse(sc.next());
+            System.out.print("> Meta (Kilos): ");
+            metaKilos = sc.nextDouble();
+            System.out.print("> Rut del Cosechador: ");
+            rutCosechador = new Rut(sc.next());
+            cosechadorAsignado = controlProduccion.addCosechadorToCuadrilla(idPlan, idCuadrilla, fechaInicioAsignacion, fechaTerminoAsignacion, metaKilos, rutCosechador);
+            if(cosechadorAsignado){
+                System.out.println("\nCosechador asignado exitosamente a la cuadrilla del plan de Cosecha");
+            } else {
+                System.out.println("\nNo fue posible realizar la accion. Posibles razones:");
+                System.out.println("1. No existe un Plan de cosecha con el ID dado.");
+                System.out.println("2. No existe Cuadrilla con el ID dado.");
+                System.out.println("3. No existe un Cosechador con el rut dado.");
+                System.out.println("4. Las fechas de asignacion estan fuera del rango de las fechas del Plan de Cosecha");
+            }
+        }
+    }
+
 
 }
