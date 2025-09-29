@@ -19,7 +19,7 @@ public class Supervisor extends Persona {
     }
 
     public void setProfesion(String profesion) {
-        profesion = profesion;
+        this.profesion = profesion;
     }
 
     public void setCuadrilla(Cuadrilla cuad) {

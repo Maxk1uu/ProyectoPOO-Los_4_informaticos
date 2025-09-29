@@ -1,6 +1,7 @@
 
 import com.sun.security.jgss.GSSUtil;
 
+import java.sql.SQLOutput;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
@@ -16,31 +17,60 @@ public class GestionHuertosApp {
     public static void main(String[] args) {
         Scanner sc;
 
-
     }
 
     //Metodos
     private void menu() {
         int opcion;
-        System.out.println("*** SISTEMA DE GESTION DE HUERTOS ***\n");
-        System.out.println("----------Menú de Opciones----------");
-        System.out.println("1. Crear Persona");
-        System.out.println("2. Crear Cultivo");
-        System.out.println("3. Crear Huerto");
-        System.out.println("4. Crear Plan de Cosecha");
-        System.out.println("5. Asignar Cosechadores a Plan");
-        System.out.println("6. Listar Cultivos");
-        System.out.println("7. Listar Huertos");
-        System.out.println("8. Listar Personas");
-        System.out.println("9. Listar Planes de Cosecha");
-        System.out.println("10. Salir");
-        System.out.print("-Opcion: ");
-        opcion = sc.nextInt();
-        switch (opcion) { //Falta terminar aqui, ir agregando los casos a medida que se crean los metodos
-            case 1: creaPersona(); break;
-            case 2: creaCultivo(); break;
-            case 3: creaHuerto(); break;
-        }
+        do {
+            System.out.println("*** SISTEMA DE GESTION DE HUERTOS ***\n");
+            System.out.println("----------Menú de Opciones----------");
+            System.out.println("1. Crear Persona");
+            System.out.println("2. Crear Cultivo");
+            System.out.println("3. Crear Huerto");
+            System.out.println("4. Crear Plan de Cosecha");
+            System.out.println("5. Asignar Cosechadores a Plan");
+            System.out.println("6. Listar Cultivos");
+            System.out.println("7. Listar Huertos");
+            System.out.println("8. Listar Personas");
+            System.out.println("9. Listar Planes de Cosecha");
+            System.out.println("10. Salir");
+            System.out.print("-Opcion: ");
+            opcion = sc.nextInt();
+            switch (opcion) { //Falta terminar aqui, ir agregando los casos a medida que se crean los metodos
+                case 1:
+                    creaPersona();
+                    break;
+                case 2:
+                    creaCultivo();
+                    break;
+                case 3:
+                    creaHuerto();
+                    break;
+                case 4:
+                    creaPlanDeCosecha();
+                    break;
+                case 5:
+                    asignaCosechadoresAPlan();
+                    break;
+                case 6:
+                    listaCultivos();
+                    break;
+                case 7:
+                    listaHuertos();
+                    break;
+                case 8:
+                    listaPersonas();
+                    break;
+                case 9:
+                    listaPlanesCosecha();
+                    break;
+                case 10:
+                    System.out.println("Cerrando programa...");
+                    break;
+                default: System.out.println("La opción seleccionada no existe.");
+            }
+        } while (opcion != 10);
     }
 
     private void creaPersona() {
@@ -61,6 +91,7 @@ public class GestionHuertosApp {
         switch (rol) {
             case 1 -> { //Propietario
                 boolean propietarioCreado;
+                Rut.rutsPropietarios.add(rut);
                 System.out.print("> Direccion Comercial: ");
                 String dirComercial = sc.next();
                 propietarioCreado = controlProduccion.createPropietario(rut, nombre, email, direccion, dirComercial);
@@ -72,6 +103,7 @@ public class GestionHuertosApp {
             }
             case 2 -> { //Supervisor
                 boolean supervisorCreado;
+                Rut.rutsSupervisores.add(rut);
                 System.out.print("> Profesion: ");
                 String profesion = sc.next();
                 supervisorCreado = controlProduccion.createSupervisor(rut, nombre, email, direccion, profesion);
@@ -83,6 +115,7 @@ public class GestionHuertosApp {
             }
             case 3 -> { //Cosechador
                 boolean cosechadorCreado;
+                Rut.rutsCosechadores.add(rut);
                 System.out.print("> Fecha de Nacimiento (dd/mm/aaaa): ");
                 LocalDate fNac = LocalDate.parse(sc.next(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
                 cosechadorCreado = controlProduccion.createCosechador(rut, nombre, email, direccion, fNac);
@@ -133,6 +166,7 @@ public class GestionHuertosApp {
         superficieHuerto = sc.nextFloat();
         System.out.print("> Rut Propietario: ");
         rutPropietario = new Rut(sc.next());
+        Rut.rutsPropietarios.add(rutPropietario);
         huertoCreado = controlProduccion.createHuerto(nombreHuerto, superficieHuerto, ubicacion, rutPropietario);
         if (!huertoCreado) {
             System.out.println("\nNo fue posible crear el Huerto. Verifique que el Rut existe y que el nombre del Huerto sea unico.");
@@ -200,6 +234,7 @@ public class GestionHuertosApp {
                 nombreCuadrilla = sc.next();
                 System.out.print("> Rut del Supervisor: ");
                 rutSupervisor = new Rut(sc.next());
+                Rut.rutsSupervisores.add(rutSupervisor);
                 cuadrillaCreada = controlProduccion.addCuadrillaToPlan(idPlanDeCosecha, idCuadrilla, nombreCuadrilla, rutSupervisor);
                 if(cuadrillaCreada){
                     System.out.println("\nCuadrilla agregada exitosamente al Plan de Cosecha.");
@@ -234,6 +269,7 @@ public class GestionHuertosApp {
             metaKilos = sc.nextDouble();
             System.out.print("> Rut del Cosechador: ");
             rutCosechador = new Rut(sc.next());
+            Rut.rutsCosechadores.add(rutCosechador);
             cosechadorAsignado = controlProduccion.addCosechadorToCuadrilla(idPlan, idCuadrilla, fechaInicioAsignacion, fechaTerminoAsignacion, metaKilos, rutCosechador);
             if(cosechadorAsignado){
                 System.out.println("\nCosechador asignado exitosamente a la cuadrilla del plan de Cosecha");
@@ -248,21 +284,84 @@ public class GestionHuertosApp {
     }
 
     private void listaCultivos() { //Falta agregar nroCuarteles, pero no entiendo a que se refierexdd
-        String id, especie, variedad, rendimiento, nroCuarteles=null;
         String[] listaDeCultivos = controlProduccion.listCultivos();
         if(!listaDeCultivos[0].isEmpty()){
             System.out.printf("%-6s%-15s%-20s%-15s%-16s", "ID", "Especie", "Variedad", "Rendimiento", "Nro. Cuarteles");
             for(String cultivo: listaDeCultivos){
                 String[] infoCultivo = cultivo.split(", ");
-                id = infoCultivo[0];
-                especie = infoCultivo[1];
-                variedad = infoCultivo[2];
-                rendimiento = infoCultivo[3];
-                System.out.printf("%-6s%-15s%-20s%-15s%-16s", id, especie, variedad, rendimiento, nroCuarteles);
+                System.out.printf("%-6s%-15s%-20s%-15s%-16s", infoCultivo[0], infoCultivo[1], infoCultivo[2], infoCultivo[3], infoCultivo[4]);
             }
         } else {
-            System.out.println("No hay cultivos regitrados.");
+            System.out.println("No hay cultivos registrados.");
         }
     }
 
+    private void listaHuertos() {
+        String[] listaDeHuertos = controlProduccion.listHuertos();
+        if(!listaDeHuertos[0].isEmpty()){
+            System.out.println("\nLISTA DE HUERTOS");
+            System.out.println("----------------------");
+            System.out.printf("%-20s%-15s%-30s%-20s%-25s%-15s", "Nombre", "Superficie", "Ubicacion", "Rut del Propietario", "Nombre del Propietario", "Nro. Cuarteles");
+            for(String huerto: listaDeHuertos){
+                String[] infoHuerto = huerto.split(", ");
+                System.out.printf("-20s%-15s%-30s%-20s%-25s%-15s", infoHuerto[0], infoHuerto[1], infoHuerto[2], infoHuerto[3], infoHuerto[4]);
+            }
+        }
+    }
+
+    private void listaPersonas() {
+        if(!controlProduccion.listPropietarios()[0].isEmpty()){
+            System.out.println("\nLISTA DE PROPIETARIOS");
+            System.out.println("----------------------");
+            System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s", "Rut", "Nombre", "Direccion", "Email", "Direccion Comercial", "Nro. de Huertos");
+            for(String propietario: controlProduccion.listPropietarios()){
+                String[] infoPropietario = propietario.split(", ");
+                System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s", infoPropietario[0], infoPropietario[1], infoPropietario[2], infoPropietario[3], infoPropietario[4], infoPropietario[5]);
+            }
+            System.out.println("----------------------");
+        } else {
+            System.out.println("\nNo hay propietarios registrados.");
+        }
+        if(!controlProduccion.listSupervisores()[0].isEmpty()){
+            System.out.println("\nLISTA DE SUPERVISORES");
+            System.out.println("----------------------");
+            System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s", "Rut", "Nombre", "Direccion", "Email", "Profesion", "Nombre Cuadrilla");
+            for(String supervisor: controlProduccion.listSupervisores()){
+                String[] infoSupervisor = supervisor.split(", ");
+                if(infoSupervisor[5] == null || infoSupervisor[5].isEmpty()){ //Esto es por si el supervisor no tiene cuadrilla asignada.
+                    infoSupervisor[5] = "S/A";
+                }
+                System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s", infoSupervisor[0], infoSupervisor[1], infoSupervisor[2], infoSupervisor[3], infoSupervisor[4],  infoSupervisor[5]);
+            }
+            System.out.println("----------------------");
+        } else {
+            System.out.println("\nNo hay supervisores registrados.");
+        }
+        if(!controlProduccion.listCosechadores()[0].isEmpty()){
+            System.out.println("\nLISTA DE COSECHADORES");
+            System.out.println("----------------------");
+            System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s", "Rut", "Nombre", "Direccion", "Email", "Fecha De Nacimiento", "Nro. de Cuadrillas");
+            for(String cosechador: controlProduccion.listCosechadores()){
+                String[] infoCosechador = cosechador.split(", ");
+                System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s", infoCosechador[0], infoCosechador[1], infoCosechador[2], infoCosechador[3], infoCosechador[4],  infoCosechador[5]);
+            }
+            System.out.println("----------------------");
+        } else {
+            System.out.println("\nNo hay cosechadores registrados.");
+        }
+    }
+    private void listaPlanesCosecha() {
+        if(!controlProduccion.listPlanes()[0].isEmpty()) {
+            System.out.println("\nLISTA DE PLANES DE COSECHA");
+            System.out.println("-----------------------------");
+            System.out.printf("%-8s%-25s%-20s%-20s%-15s%-20s%-12s%-10s%-25s%-16s", "ID", "Nombre", "Fecha de inicio", "Fecha de Termino", "Meta (kg)", "Precio Base (kg)", "Estado", "ID Cuartel", "Nombre del Huerto", "Nro. Cuadrillas");
+            for(String plan : controlProduccion.listPlanes()){
+                String[] infoPlan = plan.split(", ");
+                System.out.printf("%-8s%-25s%-20s%-20s%-15s%-20s%-12s%-10s%-25s%-16s", infoPlan[0], infoPlan[1], infoPlan[2], infoPlan[3], infoPlan[4], infoPlan[5], infoPlan[6], infoPlan[7],  infoPlan[8], infoPlan[9]);
+            }
+            System.out.println("-----------------------------");
+        } else {
+            System.out.println("\nNo hay planes de cosecha registrados.");
+        }
+    }
 }
