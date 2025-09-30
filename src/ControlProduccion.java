@@ -1,4 +1,4 @@
-//Hecho por: Gabriel Rojas
+//Hecho por: Gabriel Rojas y Ricardo Quintana
 //Ultima revision:
 import java.util.ArrayList;
 import java.time.LocalDate;
@@ -8,13 +8,14 @@ public class ControlProduccion {
     //Advertencia: no dividir esta asociacion con sus multiples hijos, ya que se pueden guardar sin problema en esta coleccion.
     //Llamar y utilizar condiciones de instanceof y casting para llamar a clases hijas.
 
-    private ArrayList<Persona> personas = new ArrayList<>();
-    private ArrayList<Huerto> huertos = new ArrayList<>();
-    private ArrayList<Cultivo> cultivos = new ArrayList<>();
+    private final ArrayList<Persona> personas = new ArrayList<>();
+    private final ArrayList<Huerto> huertos = new ArrayList<>();
+    private final ArrayList<Cultivo> cultivos = new ArrayList<>();
+    private final ArrayList<PlanCosecha>  planCosechas = new ArrayList<>();
 
     public boolean createPropietario(Rut rut, String nombre, String email, String direccionParticular, String direccionComercial) {
         //Asegura que esta persona no existe,  si existe, retorna false.
-        if (findPersona(rut, 3) != null) return false;
+        if (findPersona(rut) != null) return false;
 
         // De lo contrario, lo agrega a la colección.
         return personas.add(new Propietario(rut, nombre, email, direccionParticular, direccionComercial));
@@ -22,14 +23,14 @@ public class ControlProduccion {
 
     public boolean createSupervisor(Rut rut, String nombre, String email, String direccion, String profesion) {
         //Check para asegurar que esta persona no existe.
-        if (findPersona(rut, 2) != null) return false;
+        if (findPersona(rut) != null) return false;
         //Agrega el supervisor a la coleccion.
         return personas.add(new Supervisor(rut, nombre, email, direccion, profesion));
     }
 
     public boolean createCosechador(Rut rut, String nombre, String email, String direccion, LocalDate fechaNacimiento) {
         //Asegura que un cosechador con el mismo rut pasado por el parametro no exista.
-        if (findPersona(rut, 1) != null) return false;
+        if (findPersona(rut) != null) return false;
         //Agrega el cosechador a la coleccion.
         return personas.add(new Cosechador(rut, nombre, email, direccion, fechaNacimiento));
     }
@@ -44,7 +45,7 @@ public class ControlProduccion {
         if(findHuerto(nombre) == null){
 
             // Verifico si es que el rut es de un propetario
-            Propietario propietario = (Propietario) findPersona(rutPropietario,3);
+            Propietario propietario = (Propietario) findPersona(rutPropietario);
 
             if (propietario != null ){
 
@@ -64,7 +65,6 @@ public class ControlProduccion {
         return false;
     }
 
-    //Necesidad de la clase huerto.
     public boolean createPlanCosecha(int id, String nombrePlan, LocalDate fechaInicio, LocalDate fechaFin, double metaKilos, double precioBaseKilo, String nomHuerto, int idCuartel) {
         //Asigna una variable al huerto que se encuentra a traves del metodo findHuerto.
         Huerto huertoEncontrado = findHuerto(nomHuerto);
@@ -75,11 +75,15 @@ public class ControlProduccion {
         if (fechaInicio.isAfter(fechaFin) && fechaInicio.isEqual(fechaFin)) return false;
         //Si no existe el huerto pasado por parametros, retorna false.
         if (huertoEncontrado == null) return false;
-        //Condicion que asegura que el cuartel pasado por parametros exista.
-        if (findCuartel(idCuartel, nomHuerto) != null){
-            Cuartel cuartelEncontrado = findCuartel(idCuartel, nomHuerto);
+        //Condicion que asegura que el cuartel pasado por parametros exista y sea parte del huerto.
+        Cuartel cuartelEncontrado = findCuartel(idCuartel, nomHuerto);
+        if (cuartelEncontrado != null){
             //Crea el nuevo plan de cosecha.
-            return cuartelEncontrado.addPlanCosecha(new PlanCosecha(id, nombrePlan, fechaInicio, fechaFin, metaKilos, precioBaseKilo, cuartelEncontrado));
+            planCosechas.add(new PlanCosecha(id,nombrePlan,fechaInicio, fechaFin, metaKilos, precioBaseKilo, cuartelEncontrado));
+            for (PlanCosecha planCosecha : planCosechas) {
+                if (planCosecha.getId() == id) return cuartelEncontrado.addPlanCosecha(planCosecha);
+            }
+
         }
         // De lo contrario, retorna false.
         return false;
@@ -88,7 +92,7 @@ public class ControlProduccion {
     public boolean addCuadrillaToPlan(int idPlan, int idCuadrilla, String nombreCuadrilla, Rut rutSupervisor) {
         //Asigna el resultado de findPersona a una variable, para mejor legibilidad de codigo.
         //se hace un casting a la clase hija Supervisor, porque el metodo  findPersona retorna un objeto Persona.
-        Supervisor supervisorEncontrado = (Supervisor) findPersona(rutSupervisor, 2);
+        Supervisor supervisorEncontrado = (Supervisor) findPersona(rutSupervisor);
         //Si no encuentra a ningun supervisor con el rut pasado por parametro, retorna false.
         if (supervisorEncontrado == null) return false;
         //Si encuentra una cuadrilla ya asignada al supervisor, retorna false.
@@ -116,7 +120,7 @@ public class ControlProduccion {
     public boolean addCosechadorToCuadrilla(int idPlanCosecha, int idCuadrilla, LocalDate fechaIniCosechador,LocalDate fechaFinCosechador, double metaKilosCosechador, Rut rutCosechador){
         //Asigna los metodos findPlanCosecha, findPersona y findCuadrilla a variables para mejor legibilidad
         PlanCosecha plan = findPlanCosecha(idPlanCosecha);
-        Cosechador cosechadorEncontrado = (Cosechador)findPersona(rutCosechador, 1);
+        Cosechador cosechadorEncontrado = (Cosechador)findPersona(rutCosechador);
         //Condiciones que aseguran que estas variables existan, de lo contrario, devuelven false.
         if (plan == null) return false;
         Cuadrilla cuadrillaEncontrada = findCuadrilla(idCuadrilla, plan.getId());
@@ -176,42 +180,13 @@ public class ControlProduccion {
     }
 
     //Metodo private que encuentra a una persona deseada a través de su rut.
-    private Persona findPersona(Rut rut, int tipo) {
-        //Por tener 3 colecciones estaticas, es necesario recorrer los 3 arraylist cada uno.
-        //Recomendable encontrar una mejor implementación, talvez juntar estas 3 colecciones en una.
-        //tipo es una variable pasada por parametro para elegir que rut se quiere encontrar.
-        //esta variable es automatica y elegida en el metodo correspondiente.
-        //1 = Cosechador, 2 = Supervisor, 3 = Propietario.
-        //mejor implementacion: por hacer.
-        switch (tipo) {
-            case 1:
-                for (Rut ruts : Rut.rutsCosechadores) {
-                    if (rut.toString().equals(ruts.toString())) {
-                        for (Persona personas : personas) {
-                            if (personas.getRut().toString().equals(ruts.toString())) return personas;
-                        }
-                    }
-                }
-                break;
-            case 2:
-                for (Rut ruts : Rut.rutsSupervisores) {
-                    if (rut.toString().equals(ruts.toString())) {
-                        for (Persona personas : personas) {
-                            if (personas.toString().equals(ruts.toString())) return  personas;
-                        }
-                    }
-                }
-                break;
-            case 3:
-                for (Rut ruts : Rut.rutsPropietarios) {
-                    if (rut.toString().equals(ruts.toString())) {
-                        for (Persona personas : personas) {
-                            if (personas.toString().equals(ruts.toString())) return personas;
-                        }
-                    }
-                }
-                break;
+    private Persona findPersona(Rut rut) {
+        //Busca a la persona.
+        for (Persona persona : personas) {
+            //compara rut.
+            if (persona.getRut().equals(rut)) return persona;
         }
+        //De lo contrario, no existe.
         return null;
     }
 
@@ -227,24 +202,14 @@ public class ControlProduccion {
 
     //Metodo privado para encontar el plan de cosecha deseado.
     private PlanCosecha findPlanCosecha(int id) {
-        //Problema: PlanCosecha no tiene ninguna asociacion con esta clase.
-        //Se tiene que obtener el plan cosecha deseado a través de 3 metodos.
-        for (Cultivo cultivos : cultivos) {
-            //Se asigna una variable con el array obtenido por cultivos.getCuarteles.
-            Cuartel[] cuarteles = cultivos.getCuarteles();
-            for (int i = 0; i < cuarteles.length; i++) {
-                //Recorre el array, y asigna esta variable con su metodo getPlanCosechas en la posicion i.
-                PlanCosecha[] planes = cuarteles[i].getPlanCosechas();
-                //Recorre el nuevo array asignado.
-                for (int k = 0; k < planes.length; k++) {
-                    //compara su metodo getId, el cual pertence al objeto PlanCosecha respectivo a la posicion k
-                    //con el id pasado por parametro.
-                    //Si lo encuentra, lo devuelve.
-                    if (planes[k].getId() == id) return planes[k];
-                }
-            }
+        //Si no existen planes de cosecha, retorna null
+        if (planCosechas.isEmpty()) return null;
+        //Busca entre la coleccion
+        for (PlanCosecha planCosecha : planCosechas) {
+            //Compara, lo devuelve.
+            if (id == planCosecha.getId()) return planCosecha;
         }
-        //De lo contrario, no existe.
+        //De lo contrario.
         return null;
     }
     //Metodo private para encontrar una cuadrilla deseada
