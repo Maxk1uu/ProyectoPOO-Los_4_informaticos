@@ -157,11 +157,21 @@ public class ControlProduccion {
         return listaHuertos;
     }
     public String[] listPropietarios(){
-        if(personas.isEmpty()) return new String[0]; // Sino existen personas retorna un arreglo vacio
-
-        String[] listaPropietarios = new String[personas.size()];
+        /*Problema, si devuelve un arreglo de tamaño cero, entonces no se podrá utilizar
+        la condicion que se encuentra en todos los if de la clase GestionHuertosApp
+        controlProduccion.listPropietarios()[0] != null , este es el problema.
+        quitando la posicion [0] no cambiará nada.
+        Esto ocurre porque el array no tiene posiciones.
+        usar isEmpty no cambiará nada.
+        Por ahora funcionará si es que devuelve un string de tamaño 1 sin nada.
+        Arreglo temporal.
+         */
+        if(personas.isEmpty()) return new String[1]; // Sino existen personas retorna un arreglo vacio
+        //El metodo findArraySize busca el tamaño del arreglo, si es -1, entonces no existen propietarios.
+        if (findArraySize(3) == -1) return new String[1];
+        String[] listaPropietarios = new String[findArraySize(3)];
         // Busco los propietarios de la lista de personas
-        for (int i = 0; i < personas.size(); i++) {
+        for (int i = 0; i < listaPropietarios.length; i++) {
             if(personas.get(i) instanceof Propietario){
                 listaPropietarios[i] = String.join(", ", personas.get(i).getRut().toString(), personas.get(i).getNombre(), personas.get(i).getDireccion(),
                         personas.get(i).getEmail(), ((Propietario) personas.get(i)).getDirComercial(), Integer.toString(((Propietario) personas.get(i)).getHuertos().length));
@@ -171,11 +181,12 @@ public class ControlProduccion {
     }
 
     public String[] listSupervisores(){
-        if(personas.isEmpty()) return new String[0]; // Sino existen personas retorna un arreglo vacio
-
-        String [] listaSupervisores = new String[personas.size()];
+        if(personas.isEmpty()) return new String[1]; // Sino existen personas retorna un arreglo vacio
+        //El metodo findArraySize busca el tamaño del arreglo, si es -1, entonces no existen supervisores
+        if (findArraySize(2) == -1) return new String[1];
+        String [] listaSupervisores = new String[findArraySize(2)];
         // Busco los supervisores de la lista de personas
-        for(int i = 0; i< personas.size(); i++){
+        for(int i = 0; i< listaSupervisores.length; i++){
             if(personas.get(i) instanceof  Supervisor){
                 listaSupervisores[i] = String.join(", ", personas.get(i).getRut().toString(), personas.get(i).getNombre(), personas.get(i).getDireccion(), personas.get(i).getEmail(),
                         ((Supervisor) personas.get(i)).getProfesion(), ((Supervisor) personas.get(i)).getCuadrillaAsignada().getNombre());
@@ -185,11 +196,12 @@ public class ControlProduccion {
     }
 
     public String [] listCosechadores(){
-        if(personas.isEmpty()) return new String[0]; // Sino existen personas retorna un arreglo vacio
-
-        String [] listaCosechadores = new String[personas.size()];
+        if(personas.isEmpty()) return new String[1]; // Sino existen personas retorna un arreglo vacio
+        //El metodo findArraySize busca el tamaño del arreglo, si es -1, entonces no existen cosechadores
+        if (findArraySize(1) == -1) return new String[1];
+        String [] listaCosechadores = new String[findArraySize(1)];
         // Busco los cosechadores de la lista de personas
-        for(int i = 0; i< personas.size(); i++){
+        for(int i = 0; i< listaCosechadores.length; i++){
             if(personas.get(i) instanceof  Cosechador){
                 int cuadrillasAsignadas = ((Cosechador)personas.get(i)).getCuadrillas().length;
                 listaCosechadores[i] = String.join(", ", personas.get(i).getRut().toString(), personas.get(i).getNombre(), personas.get(i).getDireccion(), personas.get(i).getEmail(),
@@ -200,7 +212,7 @@ public class ControlProduccion {
     }
 
     public String [] listPlanes(){
-        if(planCosechas.isEmpty()) return new String[0]; // Sino existen planes de cosechas retorna un arreglo vacío
+        if(planCosechas.isEmpty()) return new String[1]; // Sino existen planes de cosechas retorna un arreglo vacío
 
         String [] listaPlanesCosechas = new String[planCosechas.size()];
         // Guardo los planes de Cosecha en el arreglo
@@ -290,5 +302,21 @@ public class ControlProduccion {
         }
         // Si no tiene asignado el cuartel pasado como parametro retorna null
         return null;
+    }
+    private int findArraySize(int opcion) {
+        int supervisores = 0, cosechadores = 0, propietarios = 0;
+        if (!personas.isEmpty()) {
+            //dependiendo de opcion: 1 = supervisor, 2 == cosechador, 3 == propietarios;
+            for (Persona persona1 : personas) {
+                if (persona1 instanceof Supervisor) supervisores++;
+                if (persona1 instanceof Cosechador) cosechadores++;
+                if (persona1 instanceof  Propietario) propietarios++;
+            }
+            if (opcion == 1 && supervisores != 0) return supervisores;
+            if (opcion == 2 && cosechadores != 0) return cosechadores;
+            if (opcion == 3 && propietarios != 0) return propietarios;
+        }
+        //Si no existe, retorna -1.
+        return -1;
     }
 }
