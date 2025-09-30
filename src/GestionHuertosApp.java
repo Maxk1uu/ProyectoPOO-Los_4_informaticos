@@ -1,7 +1,4 @@
 
-import com.sun.security.jgss.GSSUtil;
-
-import java.sql.SQLOutput;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
@@ -24,7 +21,7 @@ public class GestionHuertosApp {
     private void menu() {
         int opcion;
         do {
-            System.out.println("\n*** SISTEMA DE GESTION DE HUERTOS ***\n");
+            System.out.println("\n\n*** SISTEMA DE GESTION DE HUERTOS ***\n");
             System.out.println("----------Menú de Opciones----------");
             System.out.println("1. Crear Persona");
             System.out.println("2. Crear Cultivo");
@@ -312,8 +309,10 @@ public class GestionHuertosApp {
             System.out.println("----------------------");
             System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s%n", "Rut", "Nombre", "Direccion", "Email", "Direccion Comercial", "Nro. de Huertos");
             for(String propietario: controlProduccion.listPropietarios()){
-                String[] infoPropietario = propietario.split(", ");
-                System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s%n", infoPropietario[0], infoPropietario[1], infoPropietario[2], infoPropietario[3], infoPropietario[4], infoPropietario[5]);
+                if(propietario != null) {
+                    String[] infoPropietario = propietario.split(", ");
+                    System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s%n", infoPropietario[0], infoPropietario[1], infoPropietario[2], infoPropietario[3], infoPropietario[4], infoPropietario[5]);
+                }
             }
             System.out.println("\n----------------------");
         } else {
@@ -324,11 +323,13 @@ public class GestionHuertosApp {
             System.out.println("----------------------");
             System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s%n", "Rut", "Nombre", "Direccion", "Email", "Profesion", "Nombre Cuadrilla");
             for(String supervisor: controlProduccion.listSupervisores()){
-                String[] infoSupervisor = supervisor.split(", ");
-                if(infoSupervisor[5] == null){ //Esto es por si el supervisor no tiene cuadrilla asignada.
-                    infoSupervisor[5] = "S/A";
+                if(supervisor != null) {
+                    String[] infoSupervisor = supervisor.split(", ");
+                    if (infoSupervisor[5] == null) { //Esto es por si el supervisor no tiene cuadrilla asignada.
+                        infoSupervisor[5] = "S/A";
+                    }
+                    System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s%n", infoSupervisor[0], infoSupervisor[1], infoSupervisor[2], infoSupervisor[3], infoSupervisor[4], infoSupervisor[5]);
                 }
-                System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s%n", infoSupervisor[0], infoSupervisor[1], infoSupervisor[2], infoSupervisor[3], infoSupervisor[4],  infoSupervisor[5]);
             }
             System.out.println("\n----------------------");
         } else {
@@ -339,8 +340,10 @@ public class GestionHuertosApp {
             System.out.println("----------------------");
             System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s%n", "Rut", "Nombre", "Direccion", "Email", "Fecha De Nacimiento", "Nro. de Cuadrillas");
             for(String cosechador: controlProduccion.listCosechadores()){
-                String[] infoCosechador = cosechador.split(", ");
-                System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s%n", infoCosechador[0], infoCosechador[1], infoCosechador[2], infoCosechador[3], infoCosechador[4],  infoCosechador[5]);
+                if(cosechador != null) {
+                    String[] infoCosechador = cosechador.split(", ");
+                    System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s%n", infoCosechador[0], infoCosechador[1], infoCosechador[2], infoCosechador[3], infoCosechador[4], infoCosechador[5]);
+                }
             }
             System.out.println("\n----------------------");
         } else {
