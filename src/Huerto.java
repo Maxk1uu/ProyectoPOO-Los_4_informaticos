@@ -57,7 +57,7 @@ public class Huerto {
         this.propietario = (Propietario) propietario;
     }
 
-    // clase cultivo por implementar
+
     public boolean addCuartel(int id, float sup, Cultivo cult){
         // Verifico si el cuartel pasado como parametro no existe en la lista
         for(Cuartel c:cuarteles){

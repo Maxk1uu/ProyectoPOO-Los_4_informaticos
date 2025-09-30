@@ -202,6 +202,7 @@ public class GestionHuertosApp {
         System.out.print("> Nombre del plan: ");
         nombrePlanDeCosecha = sc.next();
         System.out.print("> Fecha de inicio (dd/mm/yyyy): ");
+        // Error encontrado: usar date Formatter
         fechaInicio = LocalDate.parse(sc.next());
         System.out.print("> Fecha de termino (dd/mm/yyyy): ");
         fechaTermino = LocalDate.parse(sc.next());

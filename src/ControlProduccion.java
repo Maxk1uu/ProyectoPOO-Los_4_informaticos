@@ -1,5 +1,6 @@
 //Hecho por: Gabriel Rojas y Ricardo Quintana
 //Ultima revision:
+// Error encontrado el arreglo debe ser del tamaño exacto de la cantidad de personas que tengan dicho rol
 import java.util.ArrayList;
 import java.time.LocalDate;
 
