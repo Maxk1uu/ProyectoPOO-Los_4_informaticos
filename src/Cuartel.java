@@ -35,9 +35,8 @@ public class Cuartel {
     public void setSuperficie(float superficie) {
         this.superficie = superficie;
     }
-    //Por hacer: Encontrar qué variable se relaciona con Rendimiento.
-    public float getRendimientoEsperado(){
-
+    public float getRendimientoEsperado(){ //Posible solucion, no es 100% seguro que sea esto.
+        return cultivo.getRendimiento();
     }
     public EstadoFenologico getEstado() {
         return estado;
