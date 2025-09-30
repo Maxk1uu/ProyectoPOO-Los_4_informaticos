@@ -2,6 +2,7 @@
 //Ultima revision:
 import java.util.ArrayList;
 import java.time.LocalDate;
+
 public class ControlProduccion {
 
     //Asociaciones.
@@ -149,7 +150,8 @@ public class ControlProduccion {
         if(huertos.isEmpty()) return new String[0];
         String[] listaHuertos = new String[huertos.size()];
         for (int i = 0; i < huertos.size(); i++) {
-            listaHuertos[i] = String.join(", ", huertos.get(i).getNombre(), Float.toString(huertos.get(i).getSuperficie()), huertos.get(i).getUbicacion(), huertos.get(i).getPropietario().getRut().toString(), huertos.get(i).getPropietario().getNombre(), Integer.toString(huertos.get(i).getCuartels().length ));
+            listaHuertos[i] = String.join(", ", huertos.get(i).getNombre(), Float.toString(huertos.get(i).getSuperficie()), huertos.get(i).getUbicacion(),
+                    huertos.get(i).getPropietario().getRut().toString(), huertos.get(i).getPropietario().getNombre(), Integer.toString(huertos.get(i).getCuartels().length ));
         }
         return listaHuertos;
     }
@@ -160,7 +162,8 @@ public class ControlProduccion {
         // Busco los propietarios de la lista de personas
         for (int i = 0; i < personas.size(); i++) {
             if(personas.get(i) instanceof Propietario){
-                listaPropietarios[i] = String.join(", ", personas.get(i).getRut().toString(), personas.get(i).getNombre(), personas.get(i).getDireccion(), personas.get(i).getEmail(), ((Propietario) personas.get(i)).getDirComercial(), Integer.toString(((Propietario) personas.get(i)).getHuertos().length));
+                listaPropietarios[i] = String.join(", ", personas.get(i).getRut().toString(), personas.get(i).getNombre(), personas.get(i).getDireccion(),
+                        personas.get(i).getEmail(), ((Propietario) personas.get(i)).getDirComercial(), Integer.toString(((Propietario) personas.get(i)).getHuertos().length));
             }
         }
         return  listaPropietarios;
@@ -173,10 +176,41 @@ public class ControlProduccion {
         // Busco los supervisores de la lista de personas
         for(int i = 0; i< personas.size(); i++){
             if(personas.get(i) instanceof  Supervisor){
-                listaSupervisores[i] = String.join(", ", personas.get(i).getRut().toString(), personas.get(i).getNombre(), personas.get(i).getDireccion(), personas.get(i).getEmail(), ((Supervisor) personas.get(i)).getProfesion(), ((Supervisor) personas.get(i)).getCuadrillaAsignada().getNombre());
+                listaSupervisores[i] = String.join(", ", personas.get(i).getRut().toString(), personas.get(i).getNombre(), personas.get(i).getDireccion(), personas.get(i).getEmail(),
+                        ((Supervisor) personas.get(i)).getProfesion(), ((Supervisor) personas.get(i)).getCuadrillaAsignada().getNombre());
             }
         }
         return listaSupervisores;
+    }
+
+    public String [] listCosechadores(){
+        if(personas.isEmpty()) return new String[0]; // Sino existen personas retorna un arreglo vacio
+
+        String [] listaCosechadores = new String[personas.size()];
+        // Busco los cosechadores de la lista de personas
+        for(int i = 0; i< personas.size(); i++){
+            if(personas.get(i) instanceof  Cosechador){
+                int cuadrillasAsignadas = ((Cosechador)personas.get(i)).getCuadrillas().length;
+                listaCosechadores[i] = String.join(", ", personas.get(i).getRut().toString(), personas.get(i).getNombre(), personas.get(i).getDireccion(), personas.get(i).getEmail(),
+                        ((Cosechador)personas.get(i)).getFechaNacimiento().toString(), Integer.toString(cuadrillasAsignadas));
+            }
+        }
+        return listaCosechadores;
+    }
+
+    public String [] listPlanes(){
+        if(planCosechas.isEmpty()) return new String[0]; // Sino existen planes de cosechas retorna un arreglo vacío
+
+        String [] listaPlanesCosechas = new String[planCosechas.size()];
+        // Guardo los planes de Cosecha en el arreglo
+        int cont = 0;
+        for(PlanCosecha planCosecha : planCosechas){
+            listaPlanesCosechas[cont] = String.join(", ", Integer.toString(planCosecha.getId()), planCosecha.getNombre(), planCosecha.getInicio().toString(),
+                    planCosecha.getFinEstimado().toString(), Double.toString(planCosecha.getMetaKilos()), planCosecha.getEstado().toString(), Integer.toString(planCosecha.getCuartel().getId()) ,
+                    planCosecha.getCuartel().getHuerto().getNombre(), Integer.toString(planCosecha.getCuadrillas().length));
+            cont++;
+        }
+        return listaPlanesCosechas;
     }
 
     //Metodo private que encuentra a una persona deseada a través de su rut.

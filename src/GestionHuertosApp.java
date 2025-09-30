@@ -164,7 +164,6 @@ public class GestionHuertosApp {
         superficieHuerto = sc.nextFloat();
         System.out.print("> Rut Propietario: ");
         rutPropietario = new Rut(sc.next());
-        Rut.rutsPropietarios.add(rutPropietario);
         huertoCreado = controlProduccion.createHuerto(nombreHuerto, superficieHuerto, ubicacion, rutPropietario);
         if (!huertoCreado) {
             System.out.println("\nNo fue posible crear el Huerto. Verifique que el Rut existe y que el nombre del Huerto sea unico.");
