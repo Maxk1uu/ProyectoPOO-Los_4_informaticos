@@ -232,7 +232,6 @@ public class GestionHuertosApp {
                 nombreCuadrilla = sc.next();
                 System.out.print("> Rut del Supervisor: ");
                 rutSupervisor = new Rut(sc.next());
-                Rut.rutsSupervisores.add(rutSupervisor);
                 cuadrillaCreada = controlProduccion.addCuadrillaToPlan(idPlanDeCosecha, idCuadrilla, nombreCuadrilla, rutSupervisor);
                 if(cuadrillaCreada){
                     System.out.println("\nCuadrilla agregada exitosamente al Plan de Cosecha.");
@@ -267,7 +266,6 @@ public class GestionHuertosApp {
             metaKilos = sc.nextDouble();
             System.out.print("> Rut del Cosechador: ");
             rutCosechador = new Rut(sc.next());
-            Rut.rutsCosechadores.add(rutCosechador);
             cosechadorAsignado = controlProduccion.addCosechadorToCuadrilla(idPlan, idCuadrilla, fechaInicioAsignacion, fechaTerminoAsignacion, metaKilos, rutCosechador);
             if(cosechadorAsignado){
                 System.out.println("\nCosechador asignado exitosamente a la cuadrilla del plan de Cosecha");
