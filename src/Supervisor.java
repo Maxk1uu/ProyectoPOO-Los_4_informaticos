@@ -25,9 +25,6 @@ public class Supervisor extends Persona {
     public void setCuadrilla(Cuadrilla cuad) {
         if(cuadrillaAsignada == null) { //Chequea que no tenga cuadrilla asignada.
             cuadrillaAsignada = cuad;
-            System.out.println("Supervisor asignado.");
-        } else {
-            System.out.println("El supervisor ya tiene asignada una cuadrilla.");
         }
     }
 
