@@ -195,6 +195,7 @@ public class GestionHuertosApp {
         int idPlanDeCosecha, idCuartel, nroCuadrillas, idCuadrilla;
         String nombrePlanDeCosecha, nombreHuerto, nombreCuadrilla;
         LocalDate fechaInicio, fechaTermino;
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         Rut rutSupervisor;
         System.out.println("---Creando Plan de Cosecha---");
         System.out.print("> ID del plan : ");
@@ -203,9 +204,9 @@ public class GestionHuertosApp {
         nombrePlanDeCosecha = sc.next();
         System.out.print("> Fecha de inicio (dd/mm/yyyy): ");
         // Error encontrado: usar date Formatter
-        fechaInicio = LocalDate.parse(sc.next());
+        fechaInicio = LocalDate.parse(sc.next(), formato);
         System.out.print("> Fecha de termino (dd/mm/yyyy): ");
-        fechaTermino = LocalDate.parse(sc.next());
+        fechaTermino = LocalDate.parse(sc.next(), formato);
         System.out.print("> Meta (Kilos): ");
         metaKilos = sc.nextDouble();
         System.out.print("> Precio de Base por Kilo: ");
