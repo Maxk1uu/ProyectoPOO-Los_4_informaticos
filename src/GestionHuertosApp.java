@@ -16,7 +16,8 @@ public class GestionHuertosApp {
     //Main
     public static void main(String[] args) {
         Scanner sc;
-
+        GestionHuertosApp app = new GestionHuertosApp();
+        app.menu();
     }
 
     //Metodos
@@ -91,7 +92,6 @@ public class GestionHuertosApp {
         switch (rol) {
             case 1 -> { //Propietario
                 boolean propietarioCreado;
-                Rut.rutsPropietarios.add(rut);
                 System.out.print("> Direccion Comercial: ");
                 String dirComercial = sc.next();
                 propietarioCreado = controlProduccion.createPropietario(rut, nombre, email, direccion, dirComercial);
@@ -103,7 +103,6 @@ public class GestionHuertosApp {
             }
             case 2 -> { //Supervisor
                 boolean supervisorCreado;
-                Rut.rutsSupervisores.add(rut);
                 System.out.print("> Profesion: ");
                 String profesion = sc.next();
                 supervisorCreado = controlProduccion.createSupervisor(rut, nombre, email, direccion, profesion);
@@ -115,7 +114,6 @@ public class GestionHuertosApp {
             }
             case 3 -> { //Cosechador
                 boolean cosechadorCreado;
-                Rut.rutsCosechadores.add(rut);
                 System.out.print("> Fecha de Nacimiento (dd/mm/aaaa): ");
                 LocalDate fNac = LocalDate.parse(sc.next(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
                 cosechadorCreado = controlProduccion.createCosechador(rut, nombre, email, direccion, fNac);
