@@ -37,9 +37,9 @@ public class ControlProduccion {
         return personas.add(new Cosechador(rut, nombre, email, direccion, fechaNacimiento));
     }
 
-    public boolean createCultivo(int id, String especie, String variedad, float rendimiento) {
-        if (findCultivo(id) == null) return false;
-        return cultivos.add(new Cultivo(id, especie, variedad, rendimiento));
+    public boolean createCultivo(int id, String nombre, String periodo, float rendimiento) {
+        if (findCultivo(id) != null) return false;
+        return cultivos.add(new Cultivo(id, nombre, periodo, rendimiento));
     }
 
     public boolean createHuerto(String nombre, float superficie, String ubicacion, Rut rutPropietario) {
@@ -142,7 +142,7 @@ public class ControlProduccion {
         for (int i = 0; i < cultivos.size(); i++) {
             Cultivo cultivo = cultivos.get(i);
             //Talvez se deba usar String.format, chequear después.
-            listaCultivos[i] = String.join(", ", Integer.toString(cultivo.getId()), cultivo.getEspecie(),Double.toString(cultivo.getRendimiento()), cultivo.getVariedad());
+            listaCultivos[i] = String.join(", ", Integer.toString(cultivo.getId()), cultivo.getEspecie(), cultivo.getVariedad(), Double.toString(cultivo.getRendimiento()), Integer.toString(cultivo.getCuarteles().length));
         }
         return listaCultivos;
     }

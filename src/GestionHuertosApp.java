@@ -176,7 +176,7 @@ public class GestionHuertosApp {
                 idCuartel = sc.nextInt();
                 System.out.print("> Superficie del cuartel: ");
                 superficieCuartel = sc.nextFloat();
-                System.out.print("ID del cultivo del cuartel: ");
+                System.out.print("> ID del cultivo del cuartel: ");
                 idCultivo = sc.nextInt();
                 cuartelCreado = controlProduccion.addCuartelToHuerto(nombreHuerto, idCuartel, superficieCuartel, idCultivo);
                 if(cuartelCreado){
