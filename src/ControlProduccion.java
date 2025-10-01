@@ -62,7 +62,7 @@ public class ControlProduccion {
     public boolean addCuartelToHuerto(String nombreHuerto, int idCuartel, float superficie, int idCultivo) {
 
         // Verificar que el huerto exista y que el cuartel no tenga un huerto asociado
-        if( findCuartel(idCuartel, nombreHuerto) != null){
+        if( findCuartel(idCuartel, nombreHuerto) == null){
             return findHuerto(nombreHuerto).addCuartel(idCuartel,superficie,findCultivo(idCultivo));
         }
         return false;
@@ -298,7 +298,7 @@ public class ControlProduccion {
         if (findHuerto(nombreHuerto) == null) return null;
 
         for(Huerto huerto : huertos) {
-            if(huerto.getCuartel(idCuartel) != null){
+            if(huerto.getCuartel(idCuartel).getId() == idCuartel){
 
                 // Devuelve el cuartel si es que lo tiene asignado
                 return huerto.getCuartel(idCuartel);
