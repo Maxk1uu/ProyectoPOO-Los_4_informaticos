@@ -187,9 +187,15 @@ public class ControlProduccion {
         String [] listaSupervisores = new String[findArraySize(1)];
         // Busco los supervisores de la lista de personas
         for(int i = 0; i< listaSupervisores.length; i++){
-            if(personas.get(i) instanceof  Supervisor){
-                listaSupervisores[i] = String.join(", ", personas.get(i).getRut().toString(), personas.get(i).getNombre(), personas.get(i).getDireccion(), personas.get(i).getEmail(),
-                        ((Supervisor) personas.get(i)).getProfesion(), ((Supervisor) personas.get(i)).getCuadrillaAsignada().getNombre());
+            if(personas.get(i) instanceof  Supervisor) {
+                if (((Supervisor) personas.get(i)).getCuadrillaAsignada() == null) {
+                    listaSupervisores[i] = String.join(", ", personas.get(i).getRut().toString(), personas.get(i).getNombre(), personas.get(i).getDireccion(), personas.get(i).getEmail(),
+                            ((Supervisor) personas.get(i)).getProfesion(), "S/A");
+
+                } else {
+                    listaSupervisores[i] = String.join(", ", personas.get(i).getRut().toString(), personas.get(i).getNombre(), personas.get(i).getDireccion(), personas.get(i).getEmail(),
+                            ((Supervisor) personas.get(i)).getProfesion(), ((Supervisor) personas.get(i)).getCuadrillaAsignada().getNombre());
+                }
             }
         }
         return listaSupervisores;
