@@ -37,9 +37,9 @@ public class ControlProduccion {
         return personas.add(new Cosechador(rut, nombre, email, direccion, fechaNacimiento));
     }
 
-    public boolean createCultivo(int id, String nombre, String periodo, float rendimiento) {
+    public boolean createCultivo(int id, String especie, String variedad, float rendimiento) {
         if (findCultivo(id) == null) return false;
-        return cultivos.add(new Cultivo(id, nombre, periodo, rendimiento));
+        return cultivos.add(new Cultivo(id, especie, variedad, rendimiento));
     }
 
     public boolean createHuerto(String nombre, float superficie, String ubicacion, Rut rutPropietario) {
