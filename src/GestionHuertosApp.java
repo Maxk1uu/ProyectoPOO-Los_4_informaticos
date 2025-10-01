@@ -1,4 +1,6 @@
 
+import com.sun.security.jgss.GSSUtil;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
@@ -139,9 +141,9 @@ public class GestionHuertosApp {
         rendimiento = sc.nextFloat();
         cultivoCreado = controlProduccion.createCultivo(id, especie, variedad, rendimiento);
         if (cultivoCreado) {
-            System.out.println("El Cultivo a sido creado exitosamente.");
+            System.out.println("\nEl Cultivo a sido creado exitosamente.");
         } else {
-            System.out.println("Ya existe un Cultivo con esa identificacion.");
+            System.out.println("\nYa existe un Cultivo con esa identificacion.");
         }
     }
 
@@ -286,7 +288,7 @@ public class GestionHuertosApp {
                 System.out.printf("%-6s%-15s%-20s%-15s%-16s%n", infoCultivo[0], infoCultivo[1], infoCultivo[2], infoCultivo[3], infoCultivo[4]);
             }
         } else {
-            System.out.println("No hay cultivos registrados.");
+            System.out.println("\nNo hay cultivos registrados.");
         }
     }
 
@@ -300,6 +302,8 @@ public class GestionHuertosApp {
                 String[] infoHuerto = huerto.split(", ");
                 System.out.printf("-20s%-15s%-30s%-20s%-25s%-15s%n", infoHuerto[0], infoHuerto[1], infoHuerto[2], infoHuerto[3], infoHuerto[4]);
             }
+        } else {
+            System.out.println("\nNo hay huertos registrados.");
         }
     }
 
