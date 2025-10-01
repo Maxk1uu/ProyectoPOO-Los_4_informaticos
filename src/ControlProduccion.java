@@ -1,6 +1,7 @@
 //Hecho por: Gabriel Rojas y Ricardo Quintana
 //Ultima revision:
 // Error encontrado el arreglo debe ser del tamaño exacto de la cantidad de personas que tengan dicho rol
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.time.LocalDate;
 
@@ -157,24 +158,19 @@ public class ControlProduccion {
         return listaHuertos;
     }
     public String[] listPropietarios(){
-        /*Problema, si devuelve un arreglo de tamaño cero, entonces no se podrá utilizar
-        la condicion que se encuentra en todos los if de la clase GestionHuertosApp
-        controlProduccion.listPropietarios()[0] != null , este es el problema.
-        quitando la posicion [0] no cambiará nada.
-        Esto ocurre porque el array no tiene posiciones.
-        usar isEmpty no cambiará nada.
-        Por ahora funcionará si es que devuelve un string de tamaño 1 sin nada.
-        Arreglo temporal.
-         */
+        /*Cambie los parametros del for de las listas de personas, listaXXX.length -> persona.size(). Ademas, agregue otra variable(j) que avanza cada vez que encuentra un tipo de persona.
+        **Este cambio permite buscar entre todas las personas y guardar en el arreglo solo las personas necesarias, ya que con el length se llenaba el arreglo de nulls, por que el for avanzaba de numero
+        * y eso iba avanzando espacios en el arreglo. */
         if(personas.isEmpty()) return new String[0]; // Sino existen personas retorna un arreglo vacio
         //El metodo findArraySize busca el tamaño del arreglo, si es -1, entonces no existen propietarios.
         if (findArraySize(3) == -1) return new String[0];
         String[] listaPropietarios = new String[findArraySize(3)];
         // Busco los propietarios de la lista de personas
-        for (int i = 0; i < listaPropietarios.length; i++) {
+        for (int i=0, j=0; i < personas.size(); i++) {
             if(personas.get(i) instanceof Propietario){
-                listaPropietarios[i] = String.join(", ", personas.get(i).getRut().toString(), personas.get(i).getNombre(), personas.get(i).getDireccion(),
+                listaPropietarios[j] = String.join(", ", personas.get(i).getRut().toString(), personas.get(i).getNombre(), personas.get(i).getDireccion(),
                         personas.get(i).getEmail(), ((Propietario) personas.get(i)).getDirComercial(), Integer.toString(((Propietario) personas.get(i)).getHuertos().length));
+                j++;
             }
         }
         return  listaPropietarios;
@@ -186,16 +182,17 @@ public class ControlProduccion {
         if (findArraySize(1) == -1) return new String[0];
         String [] listaSupervisores = new String[findArraySize(1)];
         // Busco los supervisores de la lista de personas
-        for(int i = 0; i< listaSupervisores.length; i++){
+        for(int i=0, j=0; i< personas.size(); i++){
             if(personas.get(i) instanceof  Supervisor) {
                 if (((Supervisor) personas.get(i)).getCuadrillaAsignada() == null) {
-                    listaSupervisores[i] = String.join(", ", personas.get(i).getRut().toString(), personas.get(i).getNombre(), personas.get(i).getDireccion(), personas.get(i).getEmail(),
+                    listaSupervisores[j] = String.join(", ", personas.get(i).getRut().toString(), personas.get(i).getNombre(), personas.get(i).getDireccion(), personas.get(i).getEmail(),
                             ((Supervisor) personas.get(i)).getProfesion(), "S/A");
 
                 } else {
-                    listaSupervisores[i] = String.join(", ", personas.get(i).getRut().toString(), personas.get(i).getNombre(), personas.get(i).getDireccion(), personas.get(i).getEmail(),
+                    listaSupervisores[j] = String.join(", ", personas.get(i).getRut().toString(), personas.get(i).getNombre(), personas.get(i).getDireccion(), personas.get(i).getEmail(),
                             ((Supervisor) personas.get(i)).getProfesion(), ((Supervisor) personas.get(i)).getCuadrillaAsignada().getNombre());
                 }
+                j++;
             }
         }
         return listaSupervisores;
@@ -207,11 +204,12 @@ public class ControlProduccion {
         if (findArraySize(2) == -1) return new String[0];
         String [] listaCosechadores = new String[findArraySize(2)];
         // Busco los cosechadores de la lista de personas
-        for(int i = 0; i< listaCosechadores.length; i++){
+        for(int i=0, j=0; i< personas.size(); i++){
             if(personas.get(i) instanceof  Cosechador){
                 int cuadrillasAsignadas = ((Cosechador)personas.get(i)).getCuadrillas().length;
-                listaCosechadores[i] = String.join(", ", personas.get(i).getRut().toString(), personas.get(i).getNombre(), personas.get(i).getDireccion(), personas.get(i).getEmail(),
-                        ((Cosechador)personas.get(i)).getFechaNacimiento().toString(), Integer.toString(cuadrillasAsignadas));
+                listaCosechadores[j] = String.join(", ", personas.get(i).getRut().toString(), personas.get(i).getNombre(), personas.get(i).getDireccion(), personas.get(i).getEmail(),
+                        ((Cosechador)personas.get(i)).getFechaNacimiento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), Integer.toString(cuadrillasAsignadas));
+                j++;
             }
         }
         return listaCosechadores;

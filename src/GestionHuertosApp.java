@@ -282,6 +282,8 @@ public class GestionHuertosApp {
     private void listaCultivos() { //Falta agregar nroCuarteles, pero no entiendo a que se refierexdd
         String[] listaDeCultivos = controlProduccion.listCultivos();
         if(listaDeCultivos.length != 0){
+            System.out.println("\nLISTA DE CULTIVOS");
+            System.out.println("----------------------");
             System.out.printf("%-6s%-15s%-20s%-15s%-16s%n", "ID", "Especie", "Variedad", "Rendimiento", "Nro. Cuarteles");
             for(String cultivo: listaDeCultivos){
                 String[] infoCultivo = cultivo.split(", ");
