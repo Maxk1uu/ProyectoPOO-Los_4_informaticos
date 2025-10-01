@@ -21,7 +21,7 @@ public class GestionHuertosApp {
     private void menu() {
         int opcion;
         do {
-            System.out.println("\n\n*** SISTEMA DE GESTION DE HUERTOS ***\n");
+            System.out.println("\n*** SISTEMA DE GESTION DE HUERTOS ***\n");
             System.out.println("----------Menú de Opciones----------");
             System.out.println("1. Crear Persona");
             System.out.println("2. Crear Cultivo");
@@ -279,7 +279,7 @@ public class GestionHuertosApp {
 
     private void listaCultivos() { //Falta agregar nroCuarteles, pero no entiendo a que se refierexdd
         String[] listaDeCultivos = controlProduccion.listCultivos();
-        if(listaDeCultivos[0] != null){
+        if(listaDeCultivos.length != 0){
             System.out.printf("%-6s%-15s%-20s%-15s%-16s%n", "ID", "Especie", "Variedad", "Rendimiento", "Nro. Cuarteles");
             for(String cultivo: listaDeCultivos){
                 String[] infoCultivo = cultivo.split(", ");
@@ -292,7 +292,7 @@ public class GestionHuertosApp {
 
     private void listaHuertos() {
         String[] listaDeHuertos = controlProduccion.listHuertos();
-        if(listaDeHuertos[0] != null){
+        if(listaDeHuertos.length != 0){
             System.out.println("\nLISTA DE HUERTOS");
             System.out.println("----------------------");
             System.out.printf("%-20s%-15s%-30s%-20s%-25s%-15s%n", "Nombre", "Superficie", "Ubicacion", "Rut del Propietario", "Nombre del Propietario", "Nro. Cuarteles");
@@ -304,7 +304,7 @@ public class GestionHuertosApp {
     }
 
     private void listaPersonas() {
-        if( controlProduccion.listPropietarios()[0] != null){
+        if( controlProduccion.listPropietarios().length != 0){
             System.out.println("\nLISTA DE PROPIETARIOS");
             System.out.println("----------------------");
             System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s%n", "Rut", "Nombre", "Direccion", "Email", "Direccion Comercial", "Nro. de Huertos");
@@ -318,7 +318,7 @@ public class GestionHuertosApp {
         } else {
             System.out.println("\nNo hay propietarios registrados.");
         }
-        if(controlProduccion.listSupervisores()[0] != null){
+        if(controlProduccion.listSupervisores().length != 0){
             System.out.println("\nLISTA DE SUPERVISORES");
             System.out.println("----------------------");
             System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s%n", "Rut", "Nombre", "Direccion", "Email", "Profesion", "Nombre Cuadrilla");
@@ -335,7 +335,7 @@ public class GestionHuertosApp {
         } else {
             System.out.println("\nNo hay supervisores registrados.");
         }
-        if( controlProduccion.listCosechadores()[0] != null){
+        if( controlProduccion.listCosechadores().length != 0){
             System.out.println("\nLISTA DE COSECHADORES");
             System.out.println("----------------------");
             System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s%n", "Rut", "Nombre", "Direccion", "Email", "Fecha De Nacimiento", "Nro. de Cuadrillas");
@@ -351,7 +351,7 @@ public class GestionHuertosApp {
         }
     }
     private void listaPlanesCosecha() {
-        if(controlProduccion.listPlanes()[0] != null) {
+        if(controlProduccion.listPlanes().length != 0) {
             System.out.println("\nLISTA DE PLANES DE COSECHA");
             System.out.println("-----------------------------");
             System.out.printf("%-8s%-25s%-20s%-20s%-15s%-20s%-12s%-10s%-25s%-16s%n", "ID", "Nombre", "Fecha de inicio", "Fecha de Termino", "Meta (kg)", "Precio Base (kg)", "Estado", "ID Cuartel", "Nombre del Huerto", "Nro. Cuadrillas");

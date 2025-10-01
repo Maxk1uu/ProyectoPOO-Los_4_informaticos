@@ -99,7 +99,7 @@ public class PlanCosecha {
      */
     public Cuadrilla[] getCuadrillas() {
         if (!cuadrillas.isEmpty())  return cuadrillas.toArray(new Cuadrilla[0]);
-        return null;
+        return new Cuadrilla[0];
     }
     //Metodo private que encuentra la cuadrilla deseada(Se pueden agregar metodos extras, pero solamente privados).
     private Cuadrilla findCuadrilla(int idCuadrilla) {
