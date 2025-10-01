@@ -183,8 +183,8 @@ public class ControlProduccion {
     public String[] listSupervisores(){
         if(personas.isEmpty()) return new String[0]; // Sino existen personas retorna un arreglo vacio
         //El metodo findArraySize busca el tamaño del arreglo, si es -1, entonces no existen supervisores
-        if (findArraySize(2) == -1) return new String[0];
-        String [] listaSupervisores = new String[findArraySize(2)];
+        if (findArraySize(1) == -1) return new String[0];
+        String [] listaSupervisores = new String[findArraySize(1)];
         // Busco los supervisores de la lista de personas
         for(int i = 0; i< listaSupervisores.length; i++){
             if(personas.get(i) instanceof  Supervisor){
@@ -198,8 +198,8 @@ public class ControlProduccion {
     public String [] listCosechadores(){
         if(personas.isEmpty()) return new String[0]; // Sino existen personas retorna un arreglo vacio
         //El metodo findArraySize busca el tamaño del arreglo, si es -1, entonces no existen cosechadores
-        if (findArraySize(1) == -1) return new String[0];
-        String [] listaCosechadores = new String[findArraySize(1)];
+        if (findArraySize(2) == -1) return new String[0];
+        String [] listaCosechadores = new String[findArraySize(2)];
         // Busco los cosechadores de la lista de personas
         for(int i = 0; i< listaCosechadores.length; i++){
             if(personas.get(i) instanceof  Cosechador){
