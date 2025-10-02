@@ -219,7 +219,7 @@ public class ControlProduccion {
         int cont = 0;
         for(PlanCosecha planCosecha : planCosechas){
             listaPlanesCosechas[cont] = String.join(", ", Integer.toString(planCosecha.getId()), planCosecha.getNombre(), planCosecha.getInicio().toString(),
-                    planCosecha.getFinEstimado().toString(), Double.toString(planCosecha.getMetaKilos()), planCosecha.getEstado().toString(), Integer.toString(planCosecha.getCuartel().getId()) ,
+                    planCosecha.getFinEstimado().toString(), Double.toString(planCosecha.getMetaKilos()), planCosecha.getEstado().toString(), planCosecha.getEstado().toString(), Integer.toString(planCosecha.getCuartel().getId()) ,
                     planCosecha.getCuartel().getHuerto().getNombre(), Integer.toString(planCosecha.getCuadrillas().length));
             cont++;
         }
