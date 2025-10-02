@@ -63,7 +63,9 @@ public class ControlProduccion {
         // Verificar que el huerto exista y que el cuartel no tenga un huerto asociado
         if( findCuartel(idCuartel, nombreHuerto) == null){
             if (findHuerto(nombreHuerto) != null) {
-                return findHuerto(nombreHuerto).addCuartel(idCuartel, superficie, findCultivo(idCultivo));
+                if (findCultivo(idCultivo) != null) {
+                    return findHuerto(nombreHuerto).addCuartel(idCuartel, superficie, findCultivo(idCultivo));
+                }
             }
         }
         return false;
