@@ -61,12 +61,8 @@ public class ControlProduccion {
     public boolean addCuartelToHuerto(String nombreHuerto, int idCuartel, float superficie, int idCultivo) {
 
         // Verificar que el huerto exista y que el cuartel no tenga un huerto asociado
-        if( findCuartel(idCuartel, nombreHuerto) == null){
-            if (findHuerto(nombreHuerto) != null) {
-                if (findCultivo(idCultivo) != null) {
-                    return findHuerto(nombreHuerto).addCuartel(idCuartel, superficie, findCultivo(idCultivo));
-                }
-            }
+        if( findCuartel(idCuartel, nombreHuerto) == null && findCultivo(idCultivo) != null && findHuerto(nombreHuerto) != null){
+            return findHuerto(nombreHuerto).addCuartel(idCuartel, superficie, findCultivo(idCultivo));
         }
         return false;
     }
@@ -130,8 +126,8 @@ public class ControlProduccion {
         if (findPersona(rutCosechador) instanceof Cosechador cosechadorEncontrado) {
             //booleano isAfter, que asegura que la fecha de inicio no es superior a la fecha final. Solo puede ser Inferior o Igual.
             //Además, asegura que la fecha de inicio y final este en el intervalo de tiempo del plan de cosecha.
-            if (!fechaIniCosechador.isAfter(fechaFinCosechador) && !fechaIniCosechador.isBefore(plan.getInicio()) && !fechaFinCosechador.isAfter(plan.getFinEstimado()))
-                return false;
+            if (fechaIniCosechador.isAfter(fechaFinCosechador) || fechaIniCosechador.isBefore(plan.getInicio()) || fechaIniCosechador.isAfter(plan.getFinEstimado())
+                    || fechaFinCosechador.isAfter(plan.getFinEstimado()) || fechaFinCosechador.isBefore(plan.getInicio())) return false;
             //Retornará un valor booleano que mostrara si la acción se pudo realizar o no.
             return plan.addCosechadorToCuadrilla(idCuadrilla, fechaIniCosechador, fechaFinCosechador, metaKilosCosechador, cosechadorEncontrado);
         }
