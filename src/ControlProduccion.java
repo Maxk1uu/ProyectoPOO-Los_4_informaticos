@@ -48,12 +48,11 @@ public class ControlProduccion {
         if(findHuerto(nombre) == null){
 
             // Verifico si es que el rut es de un propetario
-            Propietario propietario = (Propietario) findPersona(rutPropietario);
-
-            if (propietario != null ){
+            if (findPersona(rutPropietario) instanceof Propietario propietario) {
 
                 // Creo el huerto
-                return huertos.add(new Huerto(nombre,superficie,ubicacion,propietario));
+                return huertos.add(new Huerto(nombre, superficie, ubicacion, propietario));
+
             }
         }
         return false;
@@ -121,17 +120,23 @@ public class ControlProduccion {
     public boolean addCosechadorToCuadrilla(int idPlanCosecha, int idCuadrilla, LocalDate fechaIniCosechador,LocalDate fechaFinCosechador, double metaKilosCosechador, Rut rutCosechador){
         //Asigna los metodos findPlanCosecha, findPersona y findCuadrilla a variables para mejor legibilidad
         PlanCosecha plan = findPlanCosecha(idPlanCosecha);
-        Cosechador cosechadorEncontrado = (Cosechador)findPersona(rutCosechador);
         //Condiciones que aseguran que estas variables existan, de lo contrario, devuelven false.
         if (plan == null) return false;
         Cuadrilla cuadrillaEncontrada = findCuadrilla(idCuadrilla, plan.getId());
         if (cuadrillaEncontrada == null) return false;
-        if (cosechadorEncontrado == null) return false;
-        //booleano isAfter, que asegura que la fecha de inicio no es superior a la fecha final. Solo puede ser Inferior o Igual.
-        //Además, asegura que la fecha de inicio y final este en el intervalo de tiempo del plan de cosecha.
-        if (!fechaIniCosechador.isAfter(fechaFinCosechador) && !fechaIniCosechador.isBefore(plan.getInicio()) && !fechaFinCosechador.isAfter(plan.getFinEstimado()) ) return false;
-        //Retornará un valor booleano que mostrara si la acción se pudo realizar o no.
-        return plan.addCosechadorToCuadrilla(idCuadrilla, fechaIniCosechador, fechaFinCosechador, metaKilosCosechador, cosechadorEncontrado);
+        if (findPersona(rutCosechador) == null) return false;
+        //Condicion que asegura  que el objeto encontrado sea Cosechador, para asi no
+        // castear un objeto Supervisor o Propietario, si es que se introduce un rut erroneo pero que existe
+        if (findPersona(rutCosechador) instanceof Cosechador cosechadorEncontrado) {
+            //booleano isAfter, que asegura que la fecha de inicio no es superior a la fecha final. Solo puede ser Inferior o Igual.
+            //Además, asegura que la fecha de inicio y final este en el intervalo de tiempo del plan de cosecha.
+            if (!fechaIniCosechador.isAfter(fechaFinCosechador) && !fechaIniCosechador.isBefore(plan.getInicio()) && !fechaFinCosechador.isAfter(plan.getFinEstimado()))
+                return false;
+            //Retornará un valor booleano que mostrara si la acción se pudo realizar o no.
+            return plan.addCosechadorToCuadrilla(idCuadrilla, fechaIniCosechador, fechaFinCosechador, metaKilosCosechador, cosechadorEncontrado);
+        }
+        //De lo contrario, retorna false.
+        return false;
 
     }
 

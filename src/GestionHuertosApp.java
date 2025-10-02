@@ -302,7 +302,7 @@ public class GestionHuertosApp {
             System.out.printf("%-20s%-15s%-30s%-20s%-25s%-15s%n", "Nombre", "Superficie", "Ubicacion", "Rut del Propietario", "Nombre del Propietario", "Nro. Cuarteles");
             for(String huerto: listaDeHuertos){
                 String[] infoHuerto = huerto.split(", ");
-                System.out.printf("-20s%-15s%-30s%-20s%-25s%-15s%n", infoHuerto[0], infoHuerto[1], infoHuerto[2], infoHuerto[3], infoHuerto[4]);
+                System.out.printf("%-20s%-15s%-30s%-20s%-25s%-15s%n", infoHuerto[0], infoHuerto[1], infoHuerto[2], infoHuerto[3], infoHuerto[4], infoHuerto[5]);
             }
         } else {
             System.out.println("\nNo hay huertos registrados.");
