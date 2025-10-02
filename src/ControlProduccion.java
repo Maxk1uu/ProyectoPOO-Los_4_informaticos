@@ -82,11 +82,7 @@ public class ControlProduccion {
         Cuartel cuartelEncontrado = findCuartel(idCuartel, nomHuerto);
         if (cuartelEncontrado != null){
             //Crea el nuevo plan de cosecha.
-            planCosechas.add(new PlanCosecha(id,nombrePlan,fechaInicio, fechaFin, metaKilos, precioBaseKilo, cuartelEncontrado));
-            for (PlanCosecha planCosecha : planCosechas) {
-                if (planCosecha.getId() == id) return cuartelEncontrado.addPlanCosecha(planCosecha);
-            }
-
+            return planCosechas.add(new PlanCosecha(id,nombrePlan,fechaInicio, fechaFin, metaKilos, precioBaseKilo, cuartelEncontrado));
         }
         // De lo contrario, retorna false.
         return false;
