@@ -298,10 +298,13 @@ public class ControlProduccion {
         if (findHuerto(nombreHuerto) == null) return null;
 
         for(Huerto huerto : huertos) {
-            if(huerto.getCuartel(idCuartel).getId() == idCuartel){
+            //Condicion que evita NullPointerException, porque getCuartel puede ser null.
+            if (huerto.getCuartel(idCuartel) != null) {
+                if (huerto.getCuartel(idCuartel).getId() == idCuartel) {
 
-                // Devuelve el cuartel si es que lo tiene asignado
-                return huerto.getCuartel(idCuartel);
+                    // Devuelve el cuartel si es que lo tiene asignado
+                    return huerto.getCuartel(idCuartel);
+                }
             }
         }
         // Si no tiene asignado el cuartel pasado como parametro retorna null
