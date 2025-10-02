@@ -20,7 +20,6 @@ public class Cuartel {
         this.cultivo = cultivo;
         this.huerto = huerto;
         //Se ejecutan las asociaciones
-        huerto.addCuartel(id, superficie, cultivo);
         cultivo.addCuartel(this);
         this.estado = EstadoFenologico.REPOSO_INVERNAL;
 
