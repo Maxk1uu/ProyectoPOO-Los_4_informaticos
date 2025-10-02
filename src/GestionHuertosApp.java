@@ -250,6 +250,7 @@ public class GestionHuertosApp {
         LocalDate fechaInicioAsignacion, fechaTerminoAsignacion;
         double metaKilos;
         Rut rutCosechador;
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         System.out.println("---Asignando Cosechadores a Plan de Cosecha---");
         System.out.print("> ID del Plan: ");
         idPlan = sc.nextInt();
@@ -259,9 +260,9 @@ public class GestionHuertosApp {
         nroCosechadores = sc.nextInt();
         for (int i = 1; i <= nroCosechadores; i++) {
             System.out.print("\n> Fecha de Inicio de asignacion (dd/mm/yyyy): ");
-            fechaInicioAsignacion = LocalDate.parse(sc.next());
+            fechaInicioAsignacion = LocalDate.parse(sc.next(), formato);
             System.out.print("> Fecha de Termino de asignacion (dd/mm/yyyy): ");
-            fechaTerminoAsignacion = LocalDate.parse(sc.next());
+            fechaTerminoAsignacion = LocalDate.parse(sc.next(), formato);
             System.out.print("> Meta (Kilos): ");
             metaKilos = sc.nextDouble();
             System.out.print("> Rut del Cosechador: ");
