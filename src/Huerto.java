@@ -21,6 +21,8 @@ public class Huerto {
         this.ubicacion = ubicacion;
         this.propietario = propietario;
         cuarteles = new ArrayList();
+        //Relacion se aplica.
+        propietario.addHuerto(this);
     }
 
     //Metodos

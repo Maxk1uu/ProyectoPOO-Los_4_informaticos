@@ -90,27 +90,25 @@ public class ControlProduccion {
     }
 
     public boolean addCuadrillaToPlan(int idPlan, int idCuadrilla, String nombreCuadrilla, Rut rutSupervisor) {
-        //Asigna el resultado de findPersona a una variable, para mejor legibilidad de codigo.
         //se hace un casting a la clase hija Supervisor, porque el metodo  findPersona retorna un objeto Persona.
-        Supervisor supervisorEncontrado = (Supervisor) findPersona(rutSupervisor);
-        //Si no encuentra a ningun supervisor con el rut pasado por parametro, retorna false.
-        if (supervisorEncontrado == null) return false;
-        //Si encuentra una cuadrilla ya asignada al supervisor, retorna false.
-        if (supervisorEncontrado.getCuadrillaAsignada() != null) return false;
-        //Utiliza el metodo private findPlanCosecha, asegura que este no sea null.
-        if (findPlanCosecha(idPlan) != null) {
-            //Asigna este resultado a una variable.
-            PlanCosecha plan = findPlanCosecha(idPlan);
+        //Ademas, se asegura que el objeto recibido sea el objeto Supervisor.
+        if (findPersona(rutSupervisor) instanceof Supervisor supervisorEncontrado) {
+            //Si encuentra una cuadrilla ya asignada al supervisor, retorna false.
+            if (supervisorEncontrado.getCuadrillaAsignada() != null) return false;
+            //Utiliza el metodo private findPlanCosecha, asegura que este no sea null.
+            if (findPlanCosecha(idPlan) != null) {
+                //Asigna este resultado a una variable.
+                PlanCosecha plan = findPlanCosecha(idPlan);
             /*
             Utiliza otro metodo private llamado findCuadrilla, si ve que esta cuadrilla ya existe en su coleccion de cuadrillas
             Retornará la cuadrilla que encuentre.
             En este caso, no queremos que pase eso, porque estamos agregando una nueva cuadrilla
             que no exista en su coleccion.
             */
-            if (findCuadrilla(idCuadrilla, plan.getId()) == null
-                    && plan.addCuadrilla(idCuadrilla, nombreCuadrilla, supervisorEncontrado)){ //Ignorar advertencia, condicion que no sea null existe.
-                //Retorna true si es que esta operación puede realizarse.
-                return plan.addCuadrilla(idCuadrilla, nombreCuadrilla, supervisorEncontrado);
+                if (findCuadrilla(idCuadrilla, plan.getId()) == null) { //Ignorar advertencia, condicion que no sea null existe.
+                    //Retorna true si es que esta operación puede realizarse.
+                    return plan.addCuadrilla(idCuadrilla, nombreCuadrilla, supervisorEncontrado);
+                }
             }
         }
         //De lo contrario, retorna false.
