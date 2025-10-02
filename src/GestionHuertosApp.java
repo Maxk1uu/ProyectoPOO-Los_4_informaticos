@@ -76,7 +76,7 @@ public class GestionHuertosApp {
     private void creaPersona() {
         int rol;
         String nombre, email, direccion;
-        System.out.println("--Creando una Persona---");
+        System.out.println("\n--Creando una Persona---");
         System.out.print("> Rol Persona ([1] Propietario ; [2] Supervisor ; [3] Cosechador): ");
         rol = sc.nextInt();
         System.out.print("> Rut: ");
@@ -130,7 +130,7 @@ public class GestionHuertosApp {
         int id;
         String especie, variedad;
         float rendimiento;
-        System.out.println("---Creando un Cultivo---");
+        System.out.println("\n---Creando un Cultivo---");
         System.out.print("> Identificacion: ");
         id = sc.nextInt();
         System.out.print("> Especie: ");
@@ -154,7 +154,7 @@ public class GestionHuertosApp {
         Rut rutPropietario;
         int nroCuarteles, idCuartel, idCultivo;
         Cultivo cultivo;
-        System.out.println("---Creando Huerto---");
+        System.out.println("\n---Creando Huerto---");
         System.out.print("> Nombre: ");
         nombreHuerto = sc.next();
         System.out.print("> Ubicacion: ");
@@ -196,7 +196,7 @@ public class GestionHuertosApp {
         LocalDate fechaInicio, fechaTermino;
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         Rut rutSupervisor;
-        System.out.println("---Creando Plan de Cosecha---");
+        System.out.println("\n---Creando Plan de Cosecha---");
         System.out.print("> ID del plan : ");
         idPlanDeCosecha = sc.nextInt();
         System.out.print("> Nombre del plan: ");
@@ -236,7 +236,7 @@ public class GestionHuertosApp {
                 if(cuadrillaCreada){
                     System.out.println("\nCuadrilla agregada exitosamente al Plan de Cosecha.");
                 } else {
-                    System.out.println("\nNo fue posible realizar la accion. Posibles razones:");
+                    System.out.println("\nNo fue posible agregar la Cuadrilla al Plan. Posibles razones:");
                     System.out.println("1. Ya existe una Cuadrilla con ese ID");
                     System.out.println("2. No se encontro a ningún Supervisor con el rut dado.");
                     System.out.println("3. El Supervisor ya tiene asignada una Cuadrilla.");
@@ -271,7 +271,7 @@ public class GestionHuertosApp {
             if(cosechadorAsignado){
                 System.out.println("\nCosechador asignado exitosamente a la cuadrilla del plan de Cosecha");
             } else {
-                System.out.println("\nNo fue posible realizar la accion. Posibles razones:");
+                System.out.println("\nNo fue posible asignar el Cosechador a la Cuadrilla. Posibles razones:");
                 System.out.println("1. No existe un Plan de cosecha con el ID dado.");
                 System.out.println("2. No existe Cuadrilla con el ID dado.");
                 System.out.println("3. No existe un Cosechador con el rut dado.");
@@ -361,7 +361,7 @@ public class GestionHuertosApp {
         if(controlProduccion.listPlanes().length != 0) {
             System.out.println("\nLISTA DE PLANES DE COSECHA");
             System.out.println("-----------------------------");
-            System.out.printf("%-8s%-25s%-20s%-20s%-15s%-20s%-12s%-10s%-25s%-16s%n", "ID", "Nombre", "Fecha de inicio", "Fecha de Termino", "Meta (kg)", "Precio Base (kg)", "Estado", "ID Cuartel", "Nombre del Huerto", "Nro. Cuadrillas");
+            System.out.printf("%-8s%-25s%-20s%-20s%-15s%-20s%-15s%-15s%-25s%-16s%n", "ID", "Nombre", "Fecha de inicio", "Fecha de Termino", "Meta (kg)", "Precio Base (kg)", "Estado", "ID Cuartel", "Nombre del Huerto", "Nro. Cuadrillas");
             for(String plan : controlProduccion.listPlanes()){
                 String[] infoPlan = plan.split(", ");
                 System.out.printf("%-8s%-25s%-20s%-20s%-15s%-20s%-12s%-10s%-25s%-16s%n", infoPlan[0], infoPlan[1], infoPlan[2], infoPlan[3], infoPlan[4], infoPlan[5], infoPlan[6], infoPlan[7],  infoPlan[8], infoPlan[9]);

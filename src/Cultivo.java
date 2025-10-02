@@ -35,12 +35,10 @@ public class Cultivo {
     public boolean addCuartel(Cuartel cuartel) {
         for (Cuartel Ncuartel : cuarteles) {
             if (Ncuartel.getId() == cuartel.getId()) {
-                System.out.println("El id: " + cuartel.getId() + "del Cuatel a crear ya esta siendo utilizado");
                 return false;
             }
         }
         cuarteles.add(cuartel);
-        System.out.printf("Identificacion: %d\n Especie: %s\n Variedad: %s\n Rendimiento: %.2f\n Cultivo creado existosamente", getId(), getEspecie(), getVariedad(), getRendimiento());
         return true;
     }
 
