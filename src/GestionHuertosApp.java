@@ -37,7 +37,7 @@ public class GestionHuertosApp {
             System.out.println("10. Salir");
             System.out.print("-Opcion: ");
             opcion = sc.nextInt();
-            switch (opcion) { //Falta terminar aqui, ir agregando los casos a medida que se crean los metodos
+            switch (opcion) {
                 case 1:
                     creaPersona();
                     break;
@@ -251,7 +251,7 @@ public class GestionHuertosApp {
         double metaKilos;
         Rut rutCosechador;
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        System.out.println("---Asignando Cosechadores a Plan de Cosecha---");
+        System.out.println("\n---Asignando Cosechadores a Plan de Cosecha---");
         System.out.print("> ID del Plan: ");
         idPlan = sc.nextInt();
         System.out.print("> ID de la Cuadrilla: ");
@@ -364,7 +364,7 @@ public class GestionHuertosApp {
             System.out.printf("%-8s%-25s%-20s%-20s%-15s%-20s%-15s%-15s%-25s%-16s%n", "ID", "Nombre", "Fecha de inicio", "Fecha de Termino", "Meta (kg)", "Precio Base (kg)", "Estado", "ID Cuartel", "Nombre del Huerto", "Nro. Cuadrillas");
             for(String plan : controlProduccion.listPlanes()){
                 String[] infoPlan = plan.split(", ");
-                System.out.printf("%-8s%-25s%-20s%-20s%-15s%-20s%-12s%-10s%-25s%-16s%n", infoPlan[0], infoPlan[1], infoPlan[2], infoPlan[3], infoPlan[4], infoPlan[5], infoPlan[6], infoPlan[7],  infoPlan[8], infoPlan[9]);
+                System.out.printf("%-8s%-25s%-20s%-20s%-15s%-20s%-15s%-15s%-25s%-16s%n", infoPlan[0], infoPlan[1], infoPlan[2], infoPlan[3], infoPlan[4], infoPlan[5], infoPlan[6], infoPlan[7],  infoPlan[8], infoPlan[9]);
             }
             System.out.println("\n-----------------------------");
         } else {
