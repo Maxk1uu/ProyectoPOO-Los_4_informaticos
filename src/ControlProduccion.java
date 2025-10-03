@@ -234,7 +234,7 @@ public class ControlProduccion {
         //Busca a la persona.
         for (Persona persona : personas) {
             //compara rut.
-            if (persona.getRut().toString().equals(rut.toString())) return persona;
+            if (persona.getRut().equals(rut)) return persona;
         }
         //De lo contrario, no existe.
         return null;
