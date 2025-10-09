@@ -18,6 +18,8 @@ public class CosechadorAsignado {
         this.metaKilos = metaKilos;
         this.cuadrilla = cuad;
         cosechador = cos;
+        //La relacion se ejecuta.
+        cosechador.addCuadrilla(this);
     }
 
     //Metodos
