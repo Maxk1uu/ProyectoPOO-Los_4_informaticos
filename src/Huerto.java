@@ -12,7 +12,7 @@ public class Huerto {
     // Relacion singular
     private Propietario propietario;
     // Relacion Multiple
-    private ArrayList <Cuartel> cuarteles;
+    private final ArrayList <Cuartel> cuarteles;
 
     //Constructor
     public Huerto(String nombre, float superficie, String ubicacion, Propietario propietario) {
@@ -59,7 +59,6 @@ public class Huerto {
         this.propietario = (Propietario) propietario;
     }
 
-
     public boolean addCuartel(int id, float sup, Cultivo cult){
         // Verifico si el cuartel pasado como parametro no existe en la lista
         for(Cuartel c:cuarteles){
@@ -67,9 +66,7 @@ public class Huerto {
                 return false;
             }
         }
-
-        cuarteles.add(new Cuartel(id,sup,cult,this));
-        return true;
+        return cuarteles.add(new Cuartel(id,sup,cult,this));
     }
 
     public Cuartel getCuartel(int id){

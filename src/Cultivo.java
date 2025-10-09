@@ -6,6 +6,8 @@ public class Cultivo {
     private String especie;
     private String variedad;
     private float rendimiento;
+
+    //Relaciones
     private final ArrayList<Cuartel> cuarteles = new ArrayList<>();
 
     // Constructor
@@ -15,6 +17,7 @@ public class Cultivo {
         this.variedad = variedad;
         this.rendimiento = rendimiento;
     }
+
     // Metodos
     public int getId() {
         return id;
@@ -31,15 +34,13 @@ public class Cultivo {
     public void setRendimiento(float rendimiento) {
         this.rendimiento = rendimiento;
     }
-    // problema que ni idea de como arreglar
     public boolean addCuartel(Cuartel cuartel) {
         for (Cuartel Ncuartel : cuarteles) {
             if (Ncuartel.getId() == cuartel.getId()) {
                 return false;
             }
         }
-        cuarteles.add(cuartel);
-        return true;
+        return cuarteles.add(cuartel);
     }
 
     public Cuartel[] getCuarteles () {

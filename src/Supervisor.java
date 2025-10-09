@@ -5,7 +5,7 @@ public class Supervisor extends Persona {
     private String profesion;
 
     //Relaciones
-    Cuadrilla cuadrillaAsignada;
+    private Cuadrilla cuadrillaAsignada;
 
     //Constructor (Creado por Generate)
     public Supervisor(Rut rut, String nom, String email, String dir, String profesion) {

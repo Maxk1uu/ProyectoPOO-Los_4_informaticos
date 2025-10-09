@@ -7,7 +7,7 @@ public class Propietario extends Persona {
     private String direccionComercial;
 
     //Relaciones
-    ArrayList<Huerto> huertos = new ArrayList<>();
+    private final ArrayList<Huerto> huertos = new ArrayList<>();
 
     //Constructor (Creado por Generate)
     public Propietario(Rut rut, String nom, String email, String dir, String direccionComercial) {
@@ -27,10 +27,8 @@ public class Propietario extends Persona {
     public boolean addHuerto(Huerto huerto) {
         if (huertos.contains(huerto)) { //Si el huerto ya está en el ArrayList, retorna falso.
             return false;
-        } else {
-            huertos.add(huerto);
-            return true;
         }
+        return huertos.add(huerto);
     }
 
     public Huerto[] getHuertos() {

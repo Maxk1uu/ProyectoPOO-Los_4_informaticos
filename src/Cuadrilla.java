@@ -10,9 +10,9 @@ public class Cuadrilla {
     private static int maximoCosechadores;
 
     //Relaciones
-    PlanCosecha planCosecha;
-    ArrayList<CosechadorAsignado> cosechadoresAsignados = new ArrayList<>();
-    Supervisor supervisor;
+    private PlanCosecha planCosecha;
+    private final ArrayList<CosechadorAsignado> cosechadoresAsignados = new ArrayList<>();
+    private Supervisor supervisor;
 
     //Constructor
     public Cuadrilla(int id, String nom, Supervisor sup, PlanCosecha plan) {
@@ -71,6 +71,7 @@ public class Cuadrilla {
     public static void setMaximoCosechadores(int max) {
         maximoCosechadores = max;
     }
+
     private CosechadorAsignado isEqualToAnotherCosechador(Cosechador cosechador){
         for (CosechadorAsignado cosAs: cosechadoresAsignados) {
             if (cosAs.getCosechador().equals(cosechador)){
@@ -83,7 +84,7 @@ public class Cuadrilla {
     private Cosechador findCosechadorByRut(Cosechador cosechador) { //Este metodo no sale en UML pero si en el pdf
         Rut rutCos = cosechador.getRut();
         for(CosechadorAsignado cosAs: cosechadoresAsignados){
-            if(cosAs.equals(rutCos)){
+            if(cosAs.getCosechador().getRut().equals(rutCos)){
                 return cosAs.getCosechador();
             }
         }

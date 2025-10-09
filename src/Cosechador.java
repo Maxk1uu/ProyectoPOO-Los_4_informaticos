@@ -8,7 +8,7 @@ public class Cosechador extends Persona {
     private LocalDate fechaNacimiento;
 
     //Relaciones
-    ArrayList<CosechadorAsignado> cosechadoresAsignados = new ArrayList<>();
+    private final ArrayList<CosechadorAsignado> cosechadoresAsignados = new ArrayList<>();
 
     //Constructor (Creado por Generate)
     public Cosechador(Rut rut, String nom, String email, String dir, LocalDate fechaNacimiento) {

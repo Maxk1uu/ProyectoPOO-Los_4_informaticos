@@ -8,8 +8,8 @@ public class CosechadorAsignado {
     private double metaKilos;
 
     //Relaciones
-    Cosechador cosechador;
-    Cuadrilla cuadrilla;
+    private Cosechador cosechador;
+    private Cuadrilla cuadrilla;
 
     //Constructor
     public CosechadorAsignado(LocalDate fIni, LocalDate fFin, double metaKilos, Cuadrilla cuad, Cosechador cos) {

@@ -14,7 +14,6 @@ public class GestionHuertosApp {
 
     //Main
     public static void main(String[] args) {
-        Scanner sc;
         GestionHuertosApp app = new GestionHuertosApp();
         app.menu();
     }
