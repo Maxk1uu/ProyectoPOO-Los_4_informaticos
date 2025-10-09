@@ -49,13 +49,11 @@ public class Cuadrilla {
 
     public boolean addCosechador(LocalDate fIni, LocalDate fFin, double meta, Cosechador cos) {
             //Aquí se encontraba un equals entre dos objetos con diferentes clases, se encontró una forma de arreglarlo.
-            if(isEqualToAnotherCosechador(cos) != null){ //Busca al cosechador entre los cosechadores asignados para conseguir la cuadrilla en la que trabaja.
-                Cuadrilla cuad = isEqualToAnotherCosechador(cos).getCuadrilla();//Ignorar la advertencia de IntelliJ, se colocó una condición para que el objeto que devuelve el metodo privado no sea null.
-                CosechadorAsignado cosechador = new CosechadorAsignado(fIni, fFin, meta, cuad,  cos);
-                if (cosechadoresAsignados.contains(cosechador) && cosechadoresAsignados.size() > maximoCosechadores) {
-                    return false; //Si el cosechador ya está asignado o si la cuadrilla ya está llena, retorna falso.
+            if(isEqualToAnotherCosechador(cos) == null){ //Busca al cosechador entre los cosechadores asignados para asegurar que no existe un cosechador repetido.
+                CosechadorAsignado cosechador = new CosechadorAsignado(fIni, fFin, meta, this,  cos);
+                if (!cosechadoresAsignados.contains(cosechador) && cosechadoresAsignados.size() < maximoCosechadores) {
+                    return cosechadoresAsignados.add(cosechador);
                 }
-                return cosechadoresAsignados.add(cosechador);
             }
         return false;
     }
