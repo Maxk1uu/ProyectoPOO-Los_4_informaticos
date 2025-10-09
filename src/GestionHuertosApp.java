@@ -1,5 +1,4 @@
 
-import com.sun.security.jgss.GSSUtil;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -152,7 +151,6 @@ public class GestionHuertosApp {
         float superficieHuerto, superficieCuartel;
         Rut rutPropietario;
         int nroCuarteles, idCuartel, idCultivo;
-        Cultivo cultivo;
         System.out.println("\n---Creando Huerto---");
         System.out.print("> Nombre: ");
         nombreHuerto = sc.next();

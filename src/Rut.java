@@ -1,7 +1,6 @@
 //Codigo hecho por: Maximiliano Maureira
 //Revisado por:
 
-import java.util.ArrayList;
 public class Rut {
     //Atributos
     private String rut;

@@ -270,10 +270,10 @@ public class ControlProduccion {
             if (findPlanCosecha(idPlan).getCuadrillas().length == 0) return null;
             //Se asigna el array que retorna findPlanCosecha.getCuadrillas a una variable para mejor legibilidad.
             Cuadrilla[] cuadrillas = findPlanCosecha(idPlan).getCuadrillas();//Ignorar advertencia. La linea de arriba asegura que findPlanCosecha no sea null.
-            for (int i = 0; i < cuadrillas.length; i++) {
+            for (Cuadrilla cuadrilla : cuadrillas) {
                 //Recorre el array, compara identificadores con su metodo getId().
                 //Lo encuentra, lo devuelve.
-                if (cuadrillas[i].getId() == idCuadrilla) return cuadrillas[i];
+                if (cuadrilla.getId() == idCuadrilla) return cuadrilla;
             }
         }
         // De lo contrario, no existe.

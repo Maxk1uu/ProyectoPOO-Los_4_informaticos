@@ -1,7 +1,6 @@
 //Codigo hecho por: Maximiliano Maureira
 //Revisado por:
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 public class Cosechador extends Persona {
     //Atributos

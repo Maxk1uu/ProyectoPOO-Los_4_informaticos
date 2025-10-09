@@ -20,7 +20,7 @@ public class Huerto {
         this.superficie = superficie;
         this.ubicacion = ubicacion;
         this.propietario = propietario;
-        cuarteles = new ArrayList();
+        cuarteles = new ArrayList<>();
         //Relacion se aplica.
         propietario.addHuerto(this);
     }
