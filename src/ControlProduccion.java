@@ -42,7 +42,7 @@ public class ControlProduccion {
         if (findCultivo(id) != null) return false;
         return cultivos.add(new Cultivo(id, nombre, periodo, rendimiento));
     }
-
+    // Hecho por Ricardo Quintana
     public boolean createHuerto(String nombre, float superficie, String ubicacion, Rut rutPropietario) {
         // Primero verifico que no exista el huerto
         if(findHuerto(nombre) == null){
@@ -57,7 +57,7 @@ public class ControlProduccion {
         }
         return false;
     }
-
+    // Hecho por Ricardo Quintana
     public boolean addCuartelToHuerto(String nombreHuerto, int idCuartel, float superficie, int idCultivo) {
 
         // Verificar que el huerto exista y que el cuartel no tenga un huerto asociado
@@ -135,7 +135,7 @@ public class ControlProduccion {
         return false;
 
     }
-
+    // Hecho por Ricardo Quintana
     public String[] listCultivos(){
         if (cultivos.isEmpty()) return new String[0];
         String[] listaCultivos = new String[cultivos.size()];
@@ -146,7 +146,7 @@ public class ControlProduccion {
         }
         return listaCultivos;
     }
-
+    // Hecho por Ricardo Quintana
     public String[] listHuertos(){
         if(huertos.isEmpty()) return new String[0];
         String[] listaHuertos = new String[huertos.size()];
@@ -156,6 +156,7 @@ public class ControlProduccion {
         }
         return listaHuertos;
     }
+    // Hecho por Ricardo Quintana
     public String[] listPropietarios(){
         /*Cambie los parametros del for de las listas de personas, listaXXX.length -> persona.size(). Ademas, agregue otra variable(j) que avanza cada vez que encuentra un tipo de persona.
         **Este cambio permite buscar entre todas las personas y guardar en el arreglo solo las personas necesarias, ya que con el length se llenaba el arreglo de nulls, por que el for avanzaba de numero
@@ -174,7 +175,7 @@ public class ControlProduccion {
         }
         return  listaPropietarios;
     }
-
+    // Hecho por Ricardo Quintana
     public String[] listSupervisores(){
         if(personas.isEmpty()) return new String[0]; // Sino existen personas retorna un arreglo vacio
         //El metodo findArraySize busca el tamaño del arreglo, si es -1, entonces no existen supervisores
@@ -196,8 +197,9 @@ public class ControlProduccion {
         }
         return listaSupervisores;
     }
-
+    // Hecho por Ricardo Quintana
     public String [] listCosechadores(){
+        generateTestData();
         if(personas.isEmpty()) return new String[0]; // Sino existen personas retorna un arreglo vacio
         //El metodo findArraySize busca el tamaño del arreglo, si es -1, entonces no existen cosechadores
         if (findArraySize(2) == -1) return new String[0];
@@ -213,7 +215,7 @@ public class ControlProduccion {
         }
         return listaCosechadores;
     }
-
+    // Hecho por Ricardo Quintana
     public String [] listPlanes(){
         if(planCosechas.isEmpty()) return new String[0]; // Sino existen planes de cosechas retorna un arreglo vacío
 
@@ -279,6 +281,7 @@ public class ControlProduccion {
         // De lo contrario, no existe.
         return null;
     }
+    // Hecho por Ricardo Quintana
     private Huerto findHuerto(String nombre) {
         // Verifico que exista un huerto con esos datos
         for(Huerto huerto : huertos) {
@@ -324,5 +327,22 @@ public class ControlProduccion {
         }
         //Si no existe, retorna -1.
         return -1;
+    }
+
+    private void generateTestData() {
+        LocalDate born;
+        LocalDate fechaIni, fechaFin;
+        LocalDate fechaIniCos, fechaFinCos;
+        createPropietario(new Rut("22.222.222-2"), "Test", "Email@gmail.com", "Direccion 1200", "DireccionCo 1200");
+        createSupervisor(new Rut("33.333.333-3"), "Test", "Email.com", "Direccion 1000", "Ingeniero Comercial");
+        createCosechador(new Rut("44.444.444-4"), "Test", "Email.com", "Direccion 101", born = LocalDate.parse("20/10/1999", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        createCultivo(123, "Manzana", "Fuji", 0.05f);
+        createHuerto("Los Vasquez", 2000, "Los Aramos", findPersona(new Rut("22.222.222-2")).getRut());
+        addCuartelToHuerto("Los Vasquez", 124, 500, 123);
+        createPlanCosecha(0003, "NombrePlan", fechaIni = LocalDate.parse("20/10/2025",DateTimeFormatter.ofPattern("dd/MM/yyyy")), fechaFin =
+                LocalDate.parse("20/03/2026", DateTimeFormatter.ofPattern("dd/MM/yyyy")), 1000, 500, "Los Vasquez", 124);
+        addCuadrillaToPlan(0003, 456, "Max Steel", new Rut("33.333.333-3"));
+        addCosechadorToCuadrilla(0003, 456, fechaIniCos = LocalDate.parse("10/11/2025", DateTimeFormatter.ofPattern("dd/MM/yyyy")), fechaFinCos =
+                LocalDate.parse("02/01/2026", DateTimeFormatter.ofPattern("dd/MM/yyyy")), 300, new Rut("44.444.444-4"));
     }
 }
