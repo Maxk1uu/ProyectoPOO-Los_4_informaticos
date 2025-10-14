@@ -1,39 +1,41 @@
 //Codigo hecho por: Maximiliano Maureira
-//Revisado por:
-import java.util.Date;
+//Revisado por: Gabriel Rojas
+import java.time.LocalDate;
 public class CosechadorAsignado {
     //Atributos
-    private Date desde;
-    private Date hasta;
+    private LocalDate desde;
+    private LocalDate hasta;
     private double metaKilos;
 
     //Relaciones
-    Cosechador cosechador;
-    Cuadrilla cuadrilla;
+    private Cosechador cosechador;
+    private Cuadrilla cuadrilla;
 
     //Constructor
-    public CosechadorAsignado(Date fIni, Date fFin, double meta, Cuadrilla cuad, Cosechador cos) {
+    public CosechadorAsignado(LocalDate fIni, LocalDate fFin, double metaKilos, Cuadrilla cuad, Cosechador cos) {
         this.desde = fIni;
         this.hasta = fFin;
         this.metaKilos = metaKilos;
         this.cuadrilla = cuad;
         cosechador = cos;
+        //La relacion se ejecuta.
+        cosechador.addCuadrilla(this);
     }
 
     //Metodos
-    public Date getDesde() {
+    public LocalDate getDesde() {
         return desde;
     }
 
-    public void setDesde(Date desde) {
+    public void setDesde(LocalDate desde) {
         this.desde = desde;
     }
 
-    public Date getHasta() {
+    public LocalDate getHasta() {
         return hasta;
     }
 
-    public void setHasta(Date hasta) {
+    public void setHasta(LocalDate hasta) {
         this.hasta = hasta;
     }
 

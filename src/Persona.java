@@ -1,5 +1,5 @@
 //Codigo hecho por: Maximiliano Maureira
-//Revisado por:
+//Revisado por: Gabriel Rojas
 public abstract class Persona {
     //Atributos
     private Rut rut;

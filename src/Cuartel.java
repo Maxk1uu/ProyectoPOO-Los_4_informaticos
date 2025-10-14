@@ -1,5 +1,5 @@
-//Creado por: Gabriel
-//Última revisión:
+//Creado por: Gabriel Rojas
+//Última revisión: Gabriel Rojas
 
 import java.util.ArrayList;
 
@@ -20,8 +20,8 @@ public class Cuartel {
         this.cultivo = cultivo;
         this.huerto = huerto;
         //Se ejecutan las asociaciones
-        huerto.addCuartel(this);
         cultivo.addCuartel(this);
+        this.estado = EstadoFenologico.REPOSO_INVERNAL;
 
     }
     //Metodos
@@ -34,9 +34,8 @@ public class Cuartel {
     public void setSuperficie(float superficie) {
         this.superficie = superficie;
     }
-    //Por hacer: Encontrar qué variable se relaciona con Rendimiento.
-    public float getRendimientoEsperado(){
-
+    public float getRendimientoEsperado(){ //Posible solucion, no es 100% seguro que sea esto.
+        return cultivo.getRendimiento();
     }
     public EstadoFenologico getEstado() {
         return estado;
@@ -52,7 +51,11 @@ public class Cuartel {
     }
     //Se añade el objeto a la coleccion
     public boolean addPlanCosecha(PlanCosecha planCosecha){
-        return planCosechas.add(planCosecha);
+        //Asegura que el objeto pasado por parametro no es el mismo
+        if (!planCosechas.contains(planCosecha)) {
+            return planCosechas.add(planCosecha);
+        }
+        return false;
     }
     public PlanCosecha[] getPlanCosechas(){
         return planCosechas.toArray(new PlanCosecha[0]);

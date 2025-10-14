@@ -1,7 +1,7 @@
 //Codigo hecho por: Maximiliano Maureira
-//Revisado por:
+//Revisado por: Gabriel Rojas
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Cuadrilla {
     //Atributos
@@ -10,9 +10,9 @@ public class Cuadrilla {
     private static int maximoCosechadores;
 
     //Relaciones
-    PlanCosecha planCosecha;
-    ArrayList<CosechadorAsignado> cosechadoresAsignados = new ArrayList<>();
-    Supervisor supervisor;
+    private PlanCosecha planCosecha;
+    private final ArrayList<CosechadorAsignado> cosechadoresAsignados = new ArrayList<>();
+    private Supervisor supervisor;
 
     //Constructor
     public Cuadrilla(int id, String nom, Supervisor sup, PlanCosecha plan) {
@@ -20,6 +20,10 @@ public class Cuadrilla {
         this.nombre = nom;
         this.planCosecha = plan;
         this.supervisor = sup;
+        //Correción hecha por: Gabriel
+        //Se realiza la asociación, añadiendo esta cuadrilla con el supervisor pasado por el constructor.
+        supervisor.setCuadrilla(this);
+        maximoCosechadores = 1;
     }
 
     //Metodos
@@ -43,24 +47,23 @@ public class Cuadrilla {
         return planCosecha;
     }
 
-    public boolean addCosechador(Date fIni, Date fFin, double meta, Cosechador cos) {
-        for(CosechadorAsignado cosAs: cosechadoresAsignados){
-            if(cosAs.equals(cos)){ //Busca al cosechador entre los cosechadores asignados para conseguir la cuadrilla en la que trabaja.
-                Cuadrilla cuad = cosAs.getCuadrilla();
-                CosechadorAsignado cosechador = new CosechadorAsignado(fIni, fFin, meta, cuad,  cos);
-                if (cosechadoresAsignados.contains(cosechador) && cosechadoresAsignados.size() >= maximoCosechadores) {
-                    return false; //Si el cosechador ya está asignado o si la cuadrilla ya está llena, retorna falso.
+    public boolean addCosechador(LocalDate fIni, LocalDate fFin, double meta, Cosechador cos) {
+            //Aquí se encontraba un equals entre dos objetos con diferentes clases, se encontró una forma de arreglarlo.
+            if(findCosechadorByRut(cos) == null){ //Busca al cosechador entre los cosechadores asignados para asegurar que no existe un cosechador repetido.
+                CosechadorAsignado cosechador = new CosechadorAsignado(fIni, fFin, meta, this,  cos);
+                if (!cosechadoresAsignados.contains(cosechador) && cosechadoresAsignados.size() < maximoCosechadores) {
+                    return cosechadoresAsignados.add(cosechador);
                 }
-
-                cosechadoresAsignados.add(cosechador);
-                return true;
             }
-        }
         return false;
     }
 
     public Cosechador[] getCosechadores() {
-        return cosechadoresAsignados.toArray(new Cosechador[0]);
+        Cosechador[] listaCos = new Cosechador[cosechadoresAsignados.size()];
+        for (int i = 0; i < cosechadoresAsignados.size(); i++) {
+            listaCos[i] = cosechadoresAsignados.get(i).getCosechador();
+        }
+        return listaCos;
     }
 
     public static int getMaximoCosechadores() {
@@ -69,5 +72,14 @@ public class Cuadrilla {
 
     public static void setMaximoCosechadores(int max) {
         maximoCosechadores = max;
+    }
+
+    private CosechadorAsignado findCosechadorByRut(Cosechador cosechador){
+        for (CosechadorAsignado cosAs: cosechadoresAsignados) {
+            if (cosAs.getCosechador().getRut().equals(cosechador.getRut())){
+                return cosAs;
+            }
+        }
+        return null;
     }
 }

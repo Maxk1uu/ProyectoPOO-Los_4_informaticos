@@ -1,11 +1,11 @@
 //Codigo hecho por: Maximiliano Maureira
-//Revisado por:
+//Revisado por: Gabriel Rojas
 public class Supervisor extends Persona {
     //Atributos
     private String profesion;
 
     //Relaciones
-    Cuadrilla cuadrillaAsignada; //Asumo que la relacion es asi, ya que un supervisor solo puede ser asignado a 0 o 1 cuadrilla.
+    private Cuadrilla cuadrillaAsignada;
 
     //Constructor (Creado por Generate)
     public Supervisor(Rut rut, String nom, String email, String dir, String profesion) {
@@ -19,15 +19,12 @@ public class Supervisor extends Persona {
     }
 
     public void setProfesion(String profesion) {
-        profesion = profesion;
+        this.profesion = profesion;
     }
 
     public void setCuadrilla(Cuadrilla cuad) {
         if(cuadrillaAsignada == null) { //Chequea que no tenga cuadrilla asignada.
             cuadrillaAsignada = cuad;
-            System.out.println("Supervisor asignado.");
-        } else {
-            System.out.println("El supervisor ya tiene asignada una cuadrilla.");
         }
     }
 
