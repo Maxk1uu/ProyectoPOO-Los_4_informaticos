@@ -16,6 +16,10 @@ public class ControlProduccion {
     private final ArrayList<Cultivo> cultivos = new ArrayList<>();
     private final ArrayList<PlanCosecha>  planCosechas = new ArrayList<>();
 
+    public ControlProduccion() {
+        generateTestData();
+    }
+
     public boolean createPropietario(Rut rut, String nombre, String email, String direccionParticular, String direccionComercial) {
         //Asegura que esta persona no existe,  si existe, retorna false.
         if (findPersona(rut) != null) return false;
@@ -199,7 +203,6 @@ public class ControlProduccion {
     }
     // Hecho por Ricardo Quintana
     public String [] listCosechadores(){
-        generateTestData();
         if(personas.isEmpty()) return new String[0]; // Sino existen personas retorna un arreglo vacio
         //El metodo findArraySize busca el tamaño del arreglo, si es -1, entonces no existen cosechadores
         if (findArraySize(2) == -1) return new String[0];

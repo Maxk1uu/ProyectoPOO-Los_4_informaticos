@@ -1,4 +1,5 @@
-
+//Codigo hecho por: Maximiliano Maureira
+//Revisado por: Gabriel Rojas y Ricardo Quintana
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -6,7 +7,7 @@ import java.util.Scanner;
 
 public class GestionHuertosApp {
     //Atributos
-    private Scanner sc = new Scanner(System.in).useDelimiter("[\\t\\n\\r]+"); //Si esto no funciona, hay que agregar el delimitador a cada metodo.
+    private final Scanner sc = new Scanner(System.in).useDelimiter("[\\t\\n\\r]+"); //Si esto no funciona, hay que agregar el delimitador a cada metodo.
 
     //Relaciones
     private final ControlProduccion controlProduccion = new ControlProduccion();
@@ -95,7 +96,7 @@ public class GestionHuertosApp {
                 if (propietarioCreado) {
                     System.out.println("\nEl Propietario a sido creado exitosamente.");
                 } else {
-                    System.out.println("\nEl rut ya está registrado como Propietario.");
+                    System.out.println("\nEl rut ya se encuentra registrado como Propietario.");
                 }
             }
             case 2 -> { //Supervisor
@@ -106,7 +107,7 @@ public class GestionHuertosApp {
                 if(supervisorCreado) {
                     System.out.println("\nEl Supervisor a sido creado exitosamente.");
                 } else {
-                    System.out.println("\nEl rut ya está registrado como Supervisor.");
+                    System.out.println("\nEl rut ya se encuentra registrado como Supervisor.");
                 }
             }
             case 3 -> { //Cosechador
@@ -117,7 +118,7 @@ public class GestionHuertosApp {
                 if(cosechadorCreado) {
                 System.out.println("\nEl Cosechador a sido creado exitosamente.");
                 } else {
-                    System.out.println("\nEl rut ya está registrado como Cosechador.");
+                    System.out.println("\nEl rut ya se encuentra registrado como Cosechador.");
                 }
             }
         }
