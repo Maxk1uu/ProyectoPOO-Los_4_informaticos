@@ -288,6 +288,7 @@ public class GestionHuertosApp {
                 String[] infoCultivo = cultivo.split(", ");
                 System.out.printf("%-20s%-25s%-25s%-30s%-30s%n", infoCultivo[0], infoCultivo[1], infoCultivo[2], infoCultivo[3], infoCultivo[4]);
             }
+            System.out.println("----------------------");
         } else {
             System.out.println("\nNo hay cultivos registrados.");
         }
@@ -303,6 +304,7 @@ public class GestionHuertosApp {
                 String[] infoHuerto = huerto.split(", ");
                 System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s%n", infoHuerto[0], infoHuerto[1], infoHuerto[2], infoHuerto[3], infoHuerto[4], infoHuerto[5]);
             }
+            System.out.println("----------------------");
         } else {
             System.out.println("\nNo hay huertos registrados.");
         }
@@ -319,7 +321,7 @@ public class GestionHuertosApp {
                     System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s%n", infoPropietario[0], infoPropietario[1], infoPropietario[2], infoPropietario[3], infoPropietario[4], infoPropietario[5]);
                 }
             }
-            System.out.println("\n----------------------");
+            System.out.println("----------------------");
         } else {
             System.out.println("\nNo hay propietarios registrados.");
         }
@@ -336,7 +338,7 @@ public class GestionHuertosApp {
                     System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s%n", infoSupervisor[0], infoSupervisor[1], infoSupervisor[2], infoSupervisor[3], infoSupervisor[4], infoSupervisor[5]);
                 }
             }
-            System.out.println("\n----------------------");
+            System.out.println("----------------------");
         } else {
             System.out.println("\nNo hay supervisores registrados.");
         }
@@ -350,7 +352,7 @@ public class GestionHuertosApp {
                     System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s%n", infoCosechador[0], infoCosechador[1], infoCosechador[2], infoCosechador[3], infoCosechador[4], infoCosechador[5]);
                 }
             }
-            System.out.println("\n----------------------");
+            System.out.println("----------------------");
         } else {
             System.out.println("\nNo hay cosechadores registrados.");
         }
@@ -364,7 +366,7 @@ public class GestionHuertosApp {
                 String[] infoPlan = plan.split(", ");
                 System.out.printf("%-8s%-25s%-20s%-20s%-15s%-20s%-15s%-15s%-25s%-16s%n", infoPlan[0], infoPlan[1], infoPlan[2], infoPlan[3], infoPlan[4], infoPlan[5], infoPlan[6], infoPlan[7],  infoPlan[8], infoPlan[9]);
             }
-            System.out.println("\n-----------------------------");
+            System.out.println("-----------------------------");
         } else {
             System.out.println("\nNo hay planes de cosecha registrados.");
         }
