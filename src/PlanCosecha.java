@@ -1,5 +1,5 @@
 //Creado por: Gabriel Rojas
-//ültima revisión:
+//ültima revisión: Gabriel Rojas
 import java.time.LocalDate;
 import java.util.ArrayList;
 public class PlanCosecha {
@@ -94,14 +94,11 @@ public class PlanCosecha {
         }
         return false;
     }
-    /*Retorna los objetos asociados, chequear en el si es que funciona.
-      Advertencia: Si esto no funciona, colocar cuadrillas.size() en lugar de 0 no resolvera el problema.
-     */
     public Cuadrilla[] getCuadrillas() {
         if (!cuadrillas.isEmpty())  return cuadrillas.toArray(new Cuadrilla[0]);
         return new Cuadrilla[0];
     }
-    //Metodo private que encuentra la cuadrilla deseada(Se pueden agregar metodos extras, pero solamente privados).
+    //Metodo private que encuentra la cuadrilla deseada.
     private Cuadrilla findCuadrilla(int idCuadrilla) {
         for (Cuadrilla cuadrilla : cuadrillas) {
             if (cuadrilla.getId() == idCuadrilla) {

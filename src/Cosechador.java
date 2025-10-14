@@ -1,5 +1,5 @@
 //Codigo hecho por: Maximiliano Maureira
-//Revisado por:
+//Revisado por: Gabriel Rojas
 import java.time.LocalDate;
 import java.util.ArrayList;
 public class Cosechador extends Persona {

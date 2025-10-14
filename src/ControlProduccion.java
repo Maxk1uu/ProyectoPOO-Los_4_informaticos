@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.time.LocalDate;
 
 public class ControlProduccion {
-
     //Asociaciones.
     //Advertencia: no dividir esta asociacion con sus multiples hijos, ya que se pueden guardar sin problema en esta coleccion.
     //Llamar y utilizar condiciones de instanceof y casting para llamar a clases hijas.
@@ -14,12 +13,12 @@ public class ControlProduccion {
     private final ArrayList<Persona> personas = new ArrayList<>();
     private final ArrayList<Huerto> huertos = new ArrayList<>();
     private final ArrayList<Cultivo> cultivos = new ArrayList<>();
-    private final ArrayList<PlanCosecha>  planCosechas = new ArrayList<>();
+    private final ArrayList<PlanCosecha> planCosechas = new ArrayList<>();
 
     public ControlProduccion() {
         generateTestData();
     }
-
+    //Creado por Gabriel Rojas
     public boolean createPropietario(Rut rut, String nombre, String email, String direccionParticular, String direccionComercial) {
         //Asegura que esta persona no existe,  si existe, retorna false.
         if (findPersona(rut) != null) return false;
@@ -27,21 +26,21 @@ public class ControlProduccion {
         // De lo contrario, lo agrega a la colección.
         return personas.add(new Propietario(rut, nombre, email, direccionParticular, direccionComercial));
     }
-
+    //Creado por Gabriel Rojas
     public boolean createSupervisor(Rut rut, String nombre, String email, String direccion, String profesion) {
         //Check para asegurar que esta persona no existe.
         if (findPersona(rut) != null) return false;
         //Agrega el supervisor a la coleccion.
         return personas.add(new Supervisor(rut, nombre, email, direccion, profesion));
     }
-
+    //Creado por Gabriel Rojas
     public boolean createCosechador(Rut rut, String nombre, String email, String direccion, LocalDate fechaNacimiento) {
         //Asegura que un cosechador con el mismo rut pasado por el parametro no exista.
         if (findPersona(rut) != null) return false;
         //Agrega el cosechador a la coleccion.
         return personas.add(new Cosechador(rut, nombre, email, direccion, fechaNacimiento));
     }
-
+    //Creado por Gabriel Rojas
     public boolean createCultivo(int id, String nombre, String periodo, float rendimiento) {
         if (findCultivo(id) != null) return false;
         return cultivos.add(new Cultivo(id, nombre, periodo, rendimiento));
@@ -49,7 +48,7 @@ public class ControlProduccion {
     // Hecho por Ricardo Quintana
     public boolean createHuerto(String nombre, float superficie, String ubicacion, Rut rutPropietario) {
         // Primero verifico que no exista el huerto
-        if(findHuerto(nombre) == null){
+        if (findHuerto(nombre) == null) {
 
             // Verifico si es que el rut es de un propetario
             if (findPersona(rutPropietario) instanceof Propietario propietario) {
@@ -65,12 +64,12 @@ public class ControlProduccion {
     public boolean addCuartelToHuerto(String nombreHuerto, int idCuartel, float superficie, int idCultivo) {
 
         // Verificar que el huerto exista y que el cuartel no tenga un huerto asociado
-        if( findCuartel(idCuartel, nombreHuerto) == null && findCultivo(idCultivo) != null && findHuerto(nombreHuerto) != null){
+        if (findCuartel(idCuartel, nombreHuerto) == null && findCultivo(idCultivo) != null && findHuerto(nombreHuerto) != null) {
             return findHuerto(nombreHuerto).addCuartel(idCuartel, superficie, findCultivo(idCultivo));
         }
         return false;
     }
-
+    //Creado por Gabriel Rojas
     public boolean createPlanCosecha(int id, String nombrePlan, LocalDate fechaInicio, LocalDate fechaFin, double metaKilos, double precioBaseKilo, String nomHuerto, int idCuartel) {
         //Asigna una variable al huerto que se encuentra a traves del metodo findHuerto.
         Huerto huertoEncontrado = findHuerto(nomHuerto);
@@ -83,14 +82,14 @@ public class ControlProduccion {
         if (huertoEncontrado == null) return false;
         //Condicion que asegura que el cuartel pasado por parametros exista y sea parte del huerto.
         Cuartel cuartelEncontrado = findCuartel(idCuartel, nomHuerto);
-        if (cuartelEncontrado != null){
+        if (cuartelEncontrado != null) {
             //Crea el nuevo plan de cosecha.
-            return planCosechas.add(new PlanCosecha(id,nombrePlan,fechaInicio, fechaFin, metaKilos, precioBaseKilo, cuartelEncontrado));
+            return planCosechas.add(new PlanCosecha(id, nombrePlan, fechaInicio, fechaFin, metaKilos, precioBaseKilo, cuartelEncontrado));
         }
         // De lo contrario, retorna false.
         return false;
     }
-
+    //Creado por Gabriel Rojas
     public boolean addCuadrillaToPlan(int idPlan, int idCuadrilla, String nombreCuadrilla, Rut rutSupervisor) {
         //se hace un casting a la clase hija Supervisor, porque el metodo  findPersona retorna un objeto Persona.
         //Ademas, se asegura que el objeto recibido sea el objeto Supervisor.
@@ -116,8 +115,8 @@ public class ControlProduccion {
         //De lo contrario, retorna false.
         return false;
     }
-
-    public boolean addCosechadorToCuadrilla(int idPlanCosecha, int idCuadrilla, LocalDate fechaIniCosechador,LocalDate fechaFinCosechador, double metaKilosCosechador, Rut rutCosechador){
+    //Creado por Gabriel Rojas
+    public boolean addCosechadorToCuadrilla(int idPlanCosecha, int idCuadrilla, LocalDate fechaIniCosechador, LocalDate fechaFinCosechador, double metaKilosCosechador, Rut rutCosechador) {
         //Asigna los metodos findPlanCosecha, findPersona y findCuadrilla a variables para mejor legibilidad
         PlanCosecha plan = findPlanCosecha(idPlanCosecha);
         //Condiciones que aseguran que estas variables existan, de lo contrario, devuelven false.
@@ -131,7 +130,8 @@ public class ControlProduccion {
             //booleano isAfter, que asegura que la fecha de inicio no es superior a la fecha final. Solo puede ser Inferior o Igual.
             //Además, asegura que la fecha de inicio y final este en el intervalo de tiempo del plan de cosecha.
             if (fechaIniCosechador.isAfter(fechaFinCosechador) || fechaIniCosechador.isBefore(plan.getInicio()) || fechaIniCosechador.isAfter(plan.getFinEstimado())
-                    || fechaFinCosechador.isAfter(plan.getFinEstimado()) || fechaFinCosechador.isBefore(plan.getInicio())) return false;
+                    || fechaFinCosechador.isAfter(plan.getFinEstimado()) || fechaFinCosechador.isBefore(plan.getInicio()))
+                return false;
             //Retornará un valor booleano que mostrara si la acción se pudo realizar o no.
             return plan.addCosechadorToCuadrilla(idCuadrilla, fechaIniCosechador, fechaFinCosechador, metaKilosCosechador, cosechadorEncontrado);
         }
@@ -140,54 +140,54 @@ public class ControlProduccion {
 
     }
     // Hecho por Ricardo Quintana
-    public String[] listCultivos(){
+    public String[] listCultivos() {
         if (cultivos.isEmpty()) return new String[0];
         String[] listaCultivos = new String[cultivos.size()];
         for (int i = 0; i < cultivos.size(); i++) {
             Cultivo cultivo = cultivos.get(i);
-            //Talvez se deba usar String.format, chequear después.
             listaCultivos[i] = String.join(", ", Integer.toString(cultivo.getId()), cultivo.getEspecie(), cultivo.getVariedad(), Double.toString(cultivo.getRendimiento()), Integer.toString(cultivo.getCuarteles().length));
         }
         return listaCultivos;
     }
     // Hecho por Ricardo Quintana
-    public String[] listHuertos(){
-        if(huertos.isEmpty()) return new String[0];
+    public String[] listHuertos() {
+        if (huertos.isEmpty()) return new String[0];
         String[] listaHuertos = new String[huertos.size()];
         for (int i = 0; i < huertos.size(); i++) {
             listaHuertos[i] = String.join(", ", huertos.get(i).getNombre(), Float.toString(huertos.get(i).getSuperficie()), huertos.get(i).getUbicacion(),
-                    huertos.get(i).getPropietario().getRut().toString(), huertos.get(i).getPropietario().getNombre(), Integer.toString(huertos.get(i).getCuartels().length ));
+                    huertos.get(i).getPropietario().getRut().toString(), huertos.get(i).getPropietario().getNombre(), Integer.toString(huertos.get(i).getCuartels().length));
         }
         return listaHuertos;
     }
     // Hecho por Ricardo Quintana
-    public String[] listPropietarios(){
+
+    public String[] listPropietarios() {
         /*Cambie los parametros del for de las listas de personas, listaXXX.length -> persona.size(). Ademas, agregue otra variable(j) que avanza cada vez que encuentra un tipo de persona.
-        **Este cambio permite buscar entre todas las personas y guardar en el arreglo solo las personas necesarias, ya que con el length se llenaba el arreglo de nulls, por que el for avanzaba de numero
-        * y eso iba avanzando espacios en el arreglo. */
-        if(personas.isEmpty()) return new String[0]; // Sino existen personas retorna un arreglo vacio
+         **Este cambio permite buscar entre todas las personas y guardar en el arreglo solo las personas necesarias, ya que con el length se llenaba el arreglo de nulls, por que el for avanzaba de numero
+         * y eso iba avanzando espacios en el arreglo. */
+        if (personas.isEmpty()) return new String[0]; // Sino existen personas retorna un arreglo vacio
         //El metodo findArraySize busca el tamaño del arreglo, si es -1, entonces no existen propietarios.
         if (findArraySize(3) == -1) return new String[0];
         String[] listaPropietarios = new String[findArraySize(3)];
         // Busco los propietarios de la lista de personas
-        for (int i=0, j=0; i < personas.size(); i++) {
-            if(personas.get(i) instanceof Propietario){
+        for (int i = 0, j = 0; i < personas.size(); i++) {
+            if (personas.get(i) instanceof Propietario) {
                 listaPropietarios[j] = String.join(", ", personas.get(i).getRut().toString(), personas.get(i).getNombre(), personas.get(i).getDireccion(),
                         personas.get(i).getEmail(), ((Propietario) personas.get(i)).getDirComercial(), Integer.toString(((Propietario) personas.get(i)).getHuertos().length));
                 j++;
             }
         }
-        return  listaPropietarios;
+        return listaPropietarios;
     }
     // Hecho por Ricardo Quintana
-    public String[] listSupervisores(){
-        if(personas.isEmpty()) return new String[0]; // Sino existen personas retorna un arreglo vacio
+    public String[] listSupervisores() {
+        if (personas.isEmpty()) return new String[0]; // Sino existen personas retorna un arreglo vacio
         //El metodo findArraySize busca el tamaño del arreglo, si es -1, entonces no existen supervisores
         if (findArraySize(1) == -1) return new String[0];
-        String [] listaSupervisores = new String[findArraySize(1)];
+        String[] listaSupervisores = new String[findArraySize(1)];
         // Busco los supervisores de la lista de personas
-        for(int i=0, j=0; i< personas.size(); i++){
-            if(personas.get(i) instanceof  Supervisor) {
+        for (int i = 0, j = 0; i < personas.size(); i++) {
+            if (personas.get(i) instanceof Supervisor) {
                 if (((Supervisor) personas.get(i)).getCuadrillaAsignada() == null) {
                     listaSupervisores[j] = String.join(", ", personas.get(i).getRut().toString(), personas.get(i).getNombre(), personas.get(i).getDireccion(), personas.get(i).getEmail(),
                             ((Supervisor) personas.get(i)).getProfesion(), "S/A");
@@ -202,32 +202,32 @@ public class ControlProduccion {
         return listaSupervisores;
     }
     // Hecho por Ricardo Quintana
-    public String [] listCosechadores(){
-        if(personas.isEmpty()) return new String[0]; // Sino existen personas retorna un arreglo vacio
+    public String[] listCosechadores() {
+        if (personas.isEmpty()) return new String[0]; // Sino existen personas retorna un arreglo vacio
         //El metodo findArraySize busca el tamaño del arreglo, si es -1, entonces no existen cosechadores
         if (findArraySize(2) == -1) return new String[0];
-        String [] listaCosechadores = new String[findArraySize(2)];
+        String[] listaCosechadores = new String[findArraySize(2)];
         // Busco los cosechadores de la lista de personas
-        for(int i=0, j=0; i< personas.size(); i++){
-            if(personas.get(i) instanceof  Cosechador){
-                int cuadrillasAsignadas = ((Cosechador)personas.get(i)).getCuadrillas().length;
+        for (int i = 0, j = 0; i < personas.size(); i++) {
+            if (personas.get(i) instanceof Cosechador) {
+                int cuadrillasAsignadas = ((Cosechador) personas.get(i)).getCuadrillas().length;
                 listaCosechadores[j] = String.join(", ", personas.get(i).getRut().toString(), personas.get(i).getNombre(), personas.get(i).getDireccion(), personas.get(i).getEmail(),
-                        ((Cosechador)personas.get(i)).getFechaNacimiento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), Integer.toString(cuadrillasAsignadas));
+                        ((Cosechador) personas.get(i)).getFechaNacimiento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), Integer.toString(cuadrillasAsignadas));
                 j++;
             }
         }
         return listaCosechadores;
     }
     // Hecho por Ricardo Quintana
-    public String [] listPlanes(){
-        if(planCosechas.isEmpty()) return new String[0]; // Sino existen planes de cosechas retorna un arreglo vacío
+    public String[] listPlanes() {
+        if (planCosechas.isEmpty()) return new String[0]; // Sino existen planes de cosechas retorna un arreglo vacío
 
-        String [] listaPlanesCosechas = new String[planCosechas.size()];
+        String[] listaPlanesCosechas = new String[planCosechas.size()];
         // Guardo los planes de Cosecha en el arreglo
         int cont = 0;
-        for(PlanCosecha planCosecha : planCosechas){
+        for (PlanCosecha planCosecha : planCosechas) {
             listaPlanesCosechas[cont] = String.join(", ", Integer.toString(planCosecha.getId()), planCosecha.getNombre(), planCosecha.getInicio().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
-                    planCosecha.getFinEstimado().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), Double.toString(planCosecha.getMetaKilos()), Double.toString(planCosecha.getPrecioBaseKilo()), planCosecha.getEstado().toString(), Integer.toString(planCosecha.getCuartel().getId()) ,
+                    planCosecha.getFinEstimado().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), Double.toString(planCosecha.getMetaKilos()), Double.toString(planCosecha.getPrecioBaseKilo()), planCosecha.getEstado().toString(), Integer.toString(planCosecha.getCuartel().getId()),
                     planCosecha.getCuartel().getHuerto().getNombre(), Integer.toString(planCosecha.getCuadrillas().length));
             cont++;
         }

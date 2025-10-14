@@ -1,5 +1,5 @@
 // Hecho por Ricardo Quintana
-// Revisado por:
+// Revisado por: Gabriel Rojas
 
 import java.util.ArrayList;
 

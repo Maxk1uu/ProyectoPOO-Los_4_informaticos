@@ -1,5 +1,5 @@
 //Codigo hecho por: Maximiliano Maureira
-//Revisado por:
+//Revisado por: Gabriel Rojas
 public class Supervisor extends Persona {
     //Atributos
     private String profesion;
