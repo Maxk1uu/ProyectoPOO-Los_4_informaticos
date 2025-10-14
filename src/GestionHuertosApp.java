@@ -218,6 +218,7 @@ public class GestionHuertosApp {
             System.out.println("1. El ID del plan de Cosecha ya está registrado.");
             System.out.println("2. No existe el Huerto.");
             System.out.println("3. No existe el Cuartel");
+            System.out.println("4. La fecha de inicio es posterior a la fecha de termino.");
         } else {
             System.out.println("\nPlan de Cosecha creado exitosamente.");
             System.out.println("\n-Agregando Cuadrillas al Plan de Cosecha-");
