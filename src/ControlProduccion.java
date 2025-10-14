@@ -78,7 +78,7 @@ public class ControlProduccion {
         //Si encuentra un plan cosecha existente, retorna false.
         if (findPlanCosecha(id) != null) return false;
         //Asegura que la fecha de inicio no sea supeerior o igual a la fecha de fin.
-        if (fechaInicio.isAfter(fechaFin) && fechaInicio.isEqual(fechaFin)) return false;
+        if (fechaInicio.isAfter(fechaFin) || fechaInicio.isEqual(fechaFin)) return false;
         //Si no existe el huerto pasado por parametros, retorna false.
         if (huertoEncontrado == null) return false;
         //Condicion que asegura que el cuartel pasado por parametros exista y sea parte del huerto.
