@@ -283,10 +283,10 @@ public class GestionHuertosApp {
         if(listaDeCultivos.length != 0){
             System.out.println("\nLISTA DE CULTIVOS");
             System.out.println("----------------------");
-            System.out.printf("%-6s%-15s%-20s%-15s%-16s%n", "ID", "Especie", "Variedad", "Rendimiento", "Nro. Cuarteles");
+            System.out.printf("%-20s%-25s%-25s%-30s%-30s%n", "ID", "Especie", "Variedad", "Rendimiento", "Nro. Cuarteles");
             for(String cultivo: listaDeCultivos){
                 String[] infoCultivo = cultivo.split(", ");
-                System.out.printf("%-6s%-15s%-20s%-15s%-16s%n", infoCultivo[0], infoCultivo[1], infoCultivo[2], infoCultivo[3], infoCultivo[4]);
+                System.out.printf("%-20s%-25s%-25s%-30s%-30s%n", infoCultivo[0], infoCultivo[1], infoCultivo[2], infoCultivo[3], infoCultivo[4]);
             }
         } else {
             System.out.println("\nNo hay cultivos registrados.");
@@ -298,10 +298,10 @@ public class GestionHuertosApp {
         if(listaDeHuertos.length != 0){
             System.out.println("\nLISTA DE HUERTOS");
             System.out.println("----------------------");
-            System.out.printf("%-20s%-15s%-30s%-20s%-25s%-15s%n", "Nombre", "Superficie", "Ubicacion", "Rut del Propietario", "Nombre del Propietario", "Nro. Cuarteles");
+            System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s%n", "Nombre", "Superficie", "Ubicacion", "Rut del Propietario", "Nombre del Propietario", "Nro. Cuarteles");
             for(String huerto: listaDeHuertos){
                 String[] infoHuerto = huerto.split(", ");
-                System.out.printf("%-20s%-15s%-30s%-20s%-25s%-15s%n", infoHuerto[0], infoHuerto[1], infoHuerto[2], infoHuerto[3], infoHuerto[4], infoHuerto[5]);
+                System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s%n", infoHuerto[0], infoHuerto[1], infoHuerto[2], infoHuerto[3], infoHuerto[4], infoHuerto[5]);
             }
         } else {
             System.out.println("\nNo hay huertos registrados.");
