@@ -1,4 +1,4 @@
-// Hecho por Ricardo Quintana
+package modelo;// Hecho por Ricardo Quintana
 // Revisado por: Gabriel Rojas
 
 import java.util.ArrayList;
@@ -70,7 +70,7 @@ public class Huerto {
     }
 
     public Cuartel getCuartel(int id){
-        // Verifico si el cuartel pertence al Huerto
+        // Verifico si el cuartel pertence al modelo.Huerto
         for(Cuartel c:cuarteles){
             if(c.getId() == id){
                 return c;
