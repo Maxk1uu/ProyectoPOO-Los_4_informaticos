@@ -1,9 +1,11 @@
-//Ultima revision:
+package controlador;//Ultima revision:
 // Error encontrado el arreglo debe ser del tamaño exacto de la cantidad de personas que tengan dicho rol
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.time.LocalDate;
+import utilidades.*;
+import modelo.*;
 
 public class ControlProduccion {
     //Asociaciones.
@@ -91,8 +93,8 @@ public class ControlProduccion {
     }
     //Creado por Gabriel Rojas
     public boolean addCuadrillaToPlan(int idPlan, int idCuadrilla, String nombreCuadrilla, Rut rutSupervisor) {
-        //se hace un casting a la clase hija Supervisor, porque el metodo  findPersona retorna un objeto Persona.
-        //Ademas, se asegura que el objeto recibido sea el objeto Supervisor.
+        //se hace un casting a la clase hija modelo.Supervisor, porque el metodo  findPersona retorna un objeto modelo.Persona.
+        //Ademas, se asegura que el objeto recibido sea el objeto modelo.Supervisor.
         if (findPersona(rutSupervisor) instanceof Supervisor supervisorEncontrado) {
             //Si encuentra una cuadrilla ya asignada al supervisor, retorna false.
             if (supervisorEncontrado.getCuadrillaAsignada() != null) return false;
@@ -124,8 +126,8 @@ public class ControlProduccion {
         Cuadrilla cuadrillaEncontrada = findCuadrilla(idCuadrilla, plan.getId());
         if (cuadrillaEncontrada == null) return false;
         if (findPersona(rutCosechador) == null) return false;
-        //Condicion que asegura  que el objeto encontrado sea Cosechador, para asi no
-        // castear un objeto Supervisor o Propietario, si es que se introduce un rut erroneo pero que existe
+        //Condicion que asegura  que el objeto encontrado sea modelo.Cosechador, para asi no
+        // castear un objeto modelo.Supervisor o modelo.Propietario, si es que se introduce un rut erroneo pero que existe
         if (findPersona(rutCosechador) instanceof Cosechador cosechadorEncontrado) {
             //booleano isAfter, que asegura que la fecha de inicio no es superior a la fecha final. Solo puede ser Inferior o Igual.
             //Además, asegura que la fecha de inicio y final este en el intervalo de tiempo del plan de cosecha.
@@ -269,7 +271,7 @@ public class ControlProduccion {
     }
     //Metodo private para encontrar una cuadrilla deseada
     private Cuadrilla findCuadrilla(int idCuadrilla, int idPlan) {
-        //Para no repetir codigo, es necesario pasar por parametro el identificador del PlanCosecha.
+        //Para no repetir codigo, es necesario pasar por parametro el identificador del modelo.PlanCosecha.
         //De esta forma, se reutiliza el codigo findPlanCosecha y se ahorra lineas de codigo.
         if (findPlanCosecha(idPlan) != null) {
             if (findPlanCosecha(idPlan).getCuadrillas().length == 0) return null;

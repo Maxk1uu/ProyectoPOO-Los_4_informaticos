@@ -1,3 +1,7 @@
+package modelo;
+
+import utilidades.Rut;
+
 //Codigo hecho por: Maximiliano Maureira
 //Revisado por: Gabriel Rojas
 public class Supervisor extends Persona {
