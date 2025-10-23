@@ -1,4 +1,6 @@
-//Revisado por: Gabriel Rojas
+package modelo;//Revisado por: Gabriel Rojas
+
+import utilidades.Rut;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

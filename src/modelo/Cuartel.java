@@ -1,4 +1,6 @@
-//Última revisión: Gabriel Rojas
+package modelo;//Última revisión: Gabriel Rojas
+
+import utilidades.EstadoFenologico;
 
 import java.util.ArrayList;
 

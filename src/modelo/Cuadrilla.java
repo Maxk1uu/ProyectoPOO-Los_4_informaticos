@@ -1,4 +1,4 @@
-//Revisado por: Gabriel Rojas
+package modelo;//Revisado por: Gabriel Rojas
 import java.time.LocalDate;
 import java.util.ArrayList;
 

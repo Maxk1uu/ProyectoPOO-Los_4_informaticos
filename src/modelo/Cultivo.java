@@ -1,4 +1,4 @@
-//Revisado por: Gabriel Rojas
+package modelo;//Revisado por: Gabriel Rojas
 import java.util.ArrayList;
 
 public class Cultivo {
