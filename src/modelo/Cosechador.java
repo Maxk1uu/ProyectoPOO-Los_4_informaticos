@@ -1,5 +1,7 @@
-//Codigo hecho por: Maximiliano Maureira
+package modelo;//Codigo hecho por: Maximiliano Maureira
 //Revisado por: Gabriel Rojas
+import utilidades.Rut;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 public class Cosechador extends Persona {

@@ -1,3 +1,4 @@
+package utilidades;
 
 public enum EstadoPlan {
     PLANIFICADO,

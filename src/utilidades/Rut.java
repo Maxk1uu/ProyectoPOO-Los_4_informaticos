@@ -1,4 +1,4 @@
-//Codigo hecho por: Maximiliano Maureira
+package utilidades;//Codigo hecho por: Maximiliano Maureira
 //Revisado por: Gabriel Rojas
 
 public class Rut {
