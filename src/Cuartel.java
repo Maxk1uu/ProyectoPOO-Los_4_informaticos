@@ -1,7 +1,5 @@
-package modelo;//Creado por: Gabriel Rojas
+//Creado por: Gabriel Rojas
 //Última revisión: Gabriel Rojas
-
-import utilidades.EstadoFenologico;
 
 import java.util.ArrayList;
 
