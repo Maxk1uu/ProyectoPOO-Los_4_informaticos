@@ -1,4 +1,3 @@
-package modelo;//Codigo hecho por: Maximiliano Maureira
 //Revisado por: Gabriel Rojas
 import java.time.LocalDate;
 import java.util.ArrayList;

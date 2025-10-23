@@ -1,6 +1,4 @@
-package modelo;//Creado por: Gabriel Rojas
 //ültima revisión: Gabriel Rojas
-import utilidades.EstadoPlan;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -27,7 +25,7 @@ public class PlanCosecha {
         this.metaKilos = metaKilos;
         this.precioBaseKilo = precioBaseKilo;
         this.cuartel = cuartel;
-        //Relacion singular, la cual añade este objeto a la coleccion del objeto creado a partir de la clase modelo.Cuartel.
+        //Relacion singular, la cual añade este objeto a la coleccion del objeto creado a partir de la clase Cuartel.
         cuartel.addPlanCosecha(this);
         cuadrillas = new ArrayList<>();
         estado = EstadoPlan.PLANIFICADO;

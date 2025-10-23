@@ -1,6 +1,4 @@
-package modelo;//Codigo hecho por: Maximiliano Maureira
 //Revisado por: Gabriel Rojas
-import utilidades.Rut;
 
 import java.util.ArrayList;
 

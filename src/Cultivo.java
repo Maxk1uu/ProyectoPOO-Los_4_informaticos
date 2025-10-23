@@ -1,4 +1,3 @@
-package modelo;//Creado por: Luis Reyes
 //Revisado por: Gabriel Rojas
 import java.util.ArrayList;
 
