@@ -4,6 +4,8 @@ package controlador;//Ultima revision:
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.time.LocalDate;
+import java.util.Optional;
+
 import utilidades.*;
 import modelo.*;
 
@@ -237,72 +239,72 @@ public class ControlProduccion {
     }
 
     //Metodo private que encuentra a una persona deseada a través de su rut.
-    private Persona findPersona(Rut rut) {
+    private Optional<Persona> findPersona(Rut rut) {
         //Busca a la persona.
         for (Persona persona : personas) {
             //compara rut.
-            if (persona.getRut().equals(rut)) return persona;
+            if (persona.getRut().equals(rut)) return Optional.of(persona);
         }
         //De lo contrario, no existe.
-        return null;
+        return Optional.empty();
     }
 
     //private method para encontrar un cultivo.
-    private Cultivo findCultivo(int id) {
+    private Optional<Cultivo> findCultivo(int id) {
         for (Cultivo cultivos : cultivos) {
             //Compara el id pasado por parametro con el getId() del objeto.
-            if (id == cultivos.getId()) return cultivos;
+            if (id == cultivos.getId()) return Optional.of(cultivos);
         }
         //De lo contrario, retorna null.
-        return null;
+        return Optional.empty();
     }
 
     //Metodo privado para encontar el plan de cosecha deseado.
-    private PlanCosecha findPlanCosecha(int id) {
+    private Optional<PlanCosecha> findPlanCosecha(int id) {
         //Si no existen planes de cosecha, retorna null
-        if (planCosechas.isEmpty()) return null;
+        if (planCosechas.isEmpty()) return Optional.empty();
         //Busca entre la coleccion
         for (PlanCosecha planCosecha : planCosechas) {
             //Compara, lo devuelve.
-            if (id == planCosecha.getId()) return planCosecha;
+            if (id == planCosecha.getId()) return Optional.of(planCosecha);
         }
         //De lo contrario.
-        return null;
+        return Optional.empty();
     }
     //Metodo private para encontrar una cuadrilla deseada
-    private Cuadrilla findCuadrilla(int idCuadrilla, int idPlan) {
+    private Optional<Cuadrilla> findCuadrilla(int idCuadrilla, int idPlan) {
         //Para no repetir codigo, es necesario pasar por parametro el identificador del modelo.PlanCosecha.
         //De esta forma, se reutiliza el codigo findPlanCosecha y se ahorra lineas de codigo.
-        if (findPlanCosecha(idPlan) != null) {
-            if (findPlanCosecha(idPlan).getCuadrillas().length == 0) return null;
+        if (findPlanCosecha(idPlan).isEmpty()) return Optional.empty(); {
+            if (findPlanCosecha(idPlan).get().getCuadrillas().length == 0) return Optional.empty();
             //Se asigna el array que retorna findPlanCosecha.getCuadrillas a una variable para mejor legibilidad.
-            Cuadrilla[] cuadrillas = findPlanCosecha(idPlan).getCuadrillas();//Ignorar advertencia. La linea de arriba asegura que findPlanCosecha no sea null.
+            Cuadrilla[] cuadrillas = findPlanCosecha(idPlan).get().getCuadrillas();//Ignorar advertencia. La linea de arriba asegura que findPlanCosecha no sea null.
             for (Cuadrilla cuadrilla : cuadrillas) {
                 //Recorre el array, compara identificadores con su metodo getId().
                 //Lo encuentra, lo devuelve.
-                if (cuadrilla.getId() == idCuadrilla) return cuadrilla;
+                if (cuadrilla.getId() == idCuadrilla) return Optional.of(cuadrilla);
             }
         }
         // De lo contrario, no existe.
-        return null;
+        return Optional.empty();
     }
     // Hecho por Ricardo Quintana
-    private Huerto findHuerto(String nombre) {
+    private Optional<Huerto> findHuerto(String nombre) {
         // Verifico que exista un huerto con esos datos
         for(Huerto huerto : huertos) {
             // Si existe retorna el huerto
-            if(huerto.getNombre().equals(nombre))  return huerto;
+            if(huerto.getNombre().equals(nombre))  return Optional.of(huerto);
         }
         // De lo contrario retona null, por lo tanto no existe
-        return null;
+        return Optional.empty();
     }
-    private Cuartel findCuartel (int idCuartel, String nombreHuerto) {
+    private Optional<Cuartel> findCuartel (int idCuartel, String nombreHuerto) {
         /* Cuarteles no tiene un relacion directa con la clase, por lo que accedemos
         por medio de alguna relacion que tenga, en este caso los huertos
          */
 
         // Si no existe el huerto, retona null
-        if (findHuerto(nombreHuerto) == null) return null;
+        if (findHuerto(nombreHuerto).isEmpty()) return Optional.empty();
 
         for(Huerto huerto : huertos) {
             //Condicion que evita NullPointerException, porque getCuartel puede ser null.
@@ -310,12 +312,12 @@ public class ControlProduccion {
                 if (huerto.getCuartel(idCuartel).getId() == idCuartel) {
 
                     // Devuelve el cuartel si es que lo tiene asignado
-                    return huerto.getCuartel(idCuartel);
+                    return Optional.of(huerto.getCuartel(idCuartel));
                 }
             }
         }
         // Si no tiene asignado el cuartel pasado como parametro retorna null
-        return null;
+        return Optional.empty();
     }
     private int findArraySize(int opcion) {
         int supervisores = 0, cosechadores = 0, propietarios = 0;
