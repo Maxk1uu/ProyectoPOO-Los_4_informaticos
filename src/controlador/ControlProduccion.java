@@ -65,7 +65,8 @@ public class ControlProduccion {
             // Creo el huerto
             huertos.add(new Huerto(nombre, superficie, ubicacion, propietario));
         } else {
-            throw new GestionHuertosException("ERROR: Rut " + rutPropietario + " no pertenece a un Propietario.");
+            // Condicion que no se especifica en el uml
+            // throw new GestionHuertosException("ERROR: Rut " + rutPropietario + " no pertenece a un Propietario.");
         }
 
     }
@@ -73,17 +74,24 @@ public class ControlProduccion {
     public void addCuartelToHuerto(String nombreHuerto, int idCuartel, float superficie, int idCultivo) {
 
         // Verificar que el huerto exista y que el cuartel no tenga un huerto asociado
-        if (findHuerto(nombreHuerto).isEmpty()) throw new GestionHuertosException("No existe un huerto con el huerto indicado");
+        if (findHuerto(nombreHuerto).isEmpty()) throw new GestionHuertosException("No existe un huerto con el nombre indicado");
         if (findCultivo(idCultivo).isEmpty()) throw new GestionHuertosException("No existe un cultivo con el id indicado");
         //Condición que no aparece en el enunciado, igual dejarla aquí porsiacaso.
         // if (findCuartel(idCuartel,nombreHuerto).isPresent()) throw new GestionHuertosException("ERROR: EL ID del Cuartel " + idCuartel+ " ya está asignado al Huerto.");
         findHuerto(nombreHuerto).get().addCuartel(idCuartel, superficie, findCultivo(idCultivo).get());
     }
+    public void changeEstadoCuartel(String nombreHuerto, int idCuartel, EstadoFenologico estado) throws  GestionHuertosException {
+        //Excepciones
+        if (findHuerto(nombreHuerto).isEmpty()) throw new GestionHuertosException("No existe un huerto con el nombre indicado");
+        if (findCuartel(idCuartel, nombreHuerto).isEmpty()) throw new GestionHuertosException("No existe en el huerto un cuartel con el id indicado");
+        //Cambio de estado
+        findCuartel(idCuartel, nombreHuerto).get().setEstado(estado);
+    }
     //Creado por Gabriel Rojas
     public void createPlanCosecha(int id, String nombrePlan, LocalDate fechaInicio, LocalDate fechaFin, double metaKilos, double precioBaseKilo, String nomHuerto, int idCuartel) throws GestionHuertosException {
         //Se asegura que el plan cosecha no exista, a traves de su id.
         //Si encuentra un plan cosecha existente, retorna false.
-        if (findPlanCosecha(id).isPresent()) throw new GestionHuertosException("Ya existe un pla cosecha con el id indicado");
+        if (findPlanCosecha(id).isPresent()) throw new GestionHuertosException("Ya existe un plan cosecha con el id indicado");
         //Asegura que la fecha de inicio no sea supeerior o igual a la fecha de fin.
         if (fechaInicio.isAfter(fechaFin) || fechaInicio.isEqual(fechaFin)) throw new GestionHuertosException("Intervalo de fechas no permitido.");
         //Si no existe el huerto pasado por parametros, retorna false.
@@ -98,6 +106,25 @@ public class ControlProduccion {
             // Condicion que no se especifica en el enunciado, dejarlo aquí porsiacaso.
             // throw new GestionHuertosException("ERROR: El cuartel con el ID " +idCuartel + " no existe o no forma parte del Huerto asignado.");
         }
+    }
+    public void changeEstadoPlan(int idPlan, EstadoPlan estado) throws GestionHuertosException {
+        if (findPlanCosecha(idPlan).isEmpty()) throw new GestionHuertosException("No existe un plan cosecha con el id indicado");
+        PlanCosecha plan = findPlanCosecha(idPlan).get();
+        //Condicional bien largo.
+        // Si el estado indicado por parametros es el mismo que el del plan, entonces tirara una excepcion.
+        // Si el estado del plan es cancelado, entonces no se podra cambiar su estado nuevamente.
+        // si su estado es Cerrado y se quiere cambiar a ejecutando, entonces no se podra, porque el plan cosecha ya ha concluido.
+        // si el Estado es Cerrado y se quiere cambiar a planificado, entonces no se podra.
+        // si el estado es Ejecutando y se quiere cambiar a planificado, entonces no se podra porque el plan ya esta en ejecucion.
+        // Disclaimer: Estas son condiciones que talvez no sean correctas, hablar de estas condiciones con la profesora.
+
+        if (plan.getEstado().equals(estado) || plan.getEstado().equals(EstadoPlan.CANCELADO)
+                || plan.getEstado().equals(EstadoPlan.CERRADO) && estado.equals(EstadoPlan.CANCELADO)
+            || plan.getEstado().equals(EstadoPlan.CERRADO) && estado.equals(EstadoPlan.EJECUTANDO)
+            || plan.getEstado().equals(EstadoPlan.CERRADO) && estado.equals(EstadoPlan.PLANIFICADO)
+            || plan.getEstado().equals(EstadoPlan.EJECUTANDO) && estado.equals(EstadoPlan.PLANIFICADO))
+            throw new GestionHuertosException("No esta permitido el cambio de estado solicitado");
+        plan.setEstado(estado);
     }
     //Creado por Gabriel Rojas
     public void addCuadrillaToPlan(int idPlan, int idCuadrilla, String nombreCuadrilla, Rut rutSupervisor) throws GestionHuertosException {
