@@ -89,7 +89,8 @@ public class ControlProduccion {
         //Si encuentra un plan cosecha existente, retorna false.
         if (findPlanCosecha(id).isPresent()) throw new GestionHuertosException("Ya existe un plan cosecha con el id indicado");
         //Asegura que la fecha de inicio no sea supeerior o igual a la fecha de fin.
-        if (fechaInicio.isAfter(fechaFin) || fechaInicio.isEqual(fechaFin)) throw new GestionHuertosException("Intervalo de fechas no permitido.");
+        //Condicion que se deja en standby
+        //if (fechaInicio.isAfter(fechaFin) || fechaInicio.isEqual(fechaFin)) throw new GestionHuertosException("Intervalo de fechas no permitido.");
         //Si no existe el huerto pasado por parametros, retorna false.
         if (findHuerto(nomHuerto).isEmpty()) throw new GestionHuertosException("No existe un huerto con el nombre indicado");
         Huerto huertoEncontrado = findHuerto(nomHuerto).get();
