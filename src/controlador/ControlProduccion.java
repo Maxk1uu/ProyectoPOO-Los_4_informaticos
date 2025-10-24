@@ -55,7 +55,7 @@ public class ControlProduccion {
         if (findHuerto(nombre).isPresent()) throw new GestionHuertosException("ERROR: El Huerto " + nombre + " que se quiso registrar ya está registrado en el sistema.");
         if (findPersona(rutPropietario).isEmpty()) throw new GestionHuertosException("ERROR: El rut " + rutPropietario+" no está registrado en el sistema.");
             // Verifico si es que el rut es de un propetario
-        if (findPersona(rutPropietario) instanceof Propietario propietario) {
+        if (findPersona(rutPropietario).get() instanceof Propietario propietario) {
             // Creo el huerto
             huertos.add(new Huerto(nombre, superficie, ubicacion, propietario));
         } else {
@@ -69,8 +69,8 @@ public class ControlProduccion {
         // Verificar que el huerto exista y que el cuartel no tenga un huerto asociado
         if (findHuerto(nombreHuerto).isEmpty()) throw new GestionHuertosException("ERROR: El nombre del Huerto "+ nombreHuerto+" no existe en el sistema.");
         if (findCultivo(idCultivo).isEmpty()) throw new GestionHuertosException("ERROR: El ID del Cultivo "+ idCultivo+" no existe en el sistema.");
-        if (findCuartel(idCuartel,nombreHuerto).isPresent) throw new GestionHuertosException("ERROR: EL ID del Cuartel " + idCuartel+ " ya está asignado al Huerto.");
-        findHuerto(nombreHuerto).addCuartel(idCuartel, superficie, findCultivo(idCultivo));
+        if (findCuartel(idCuartel,nombreHuerto).isPresent()) throw new GestionHuertosException("ERROR: EL ID del Cuartel " + idCuartel+ " ya está asignado al Huerto.");
+        findHuerto(nombreHuerto).get().addCuartel(idCuartel, superficie, findCultivo(idCultivo).get());
     }
     //Creado por Gabriel Rojas
     public void createPlanCosecha(int id, String nombrePlan, LocalDate fechaInicio, LocalDate fechaFin, double metaKilos, double precioBaseKilo, String nomHuerto, int idCuartel) throws GestionHuertosException {
@@ -81,7 +81,7 @@ public class ControlProduccion {
         if (fechaInicio.isAfter(fechaFin) || fechaInicio.isEqual(fechaFin)) throw new GestionHuertosException("ERROR: Intervalo de fechas no permitido.");
         //Si no existe el huerto pasado por parametros, retorna false.
         if (findHuerto(nomHuerto).isEmpty()) throw new GestionHuertosException("ERROR: El nombre del Huerto " + nomHuerto+" no existe en el sistema.");
-        Huerto huertoEncontrado = findHuerto(nomHuerto).get()
+        Huerto huertoEncontrado = findHuerto(nomHuerto).get();
         //Condicion que asegura que el cuartel pasado por parametros exista y sea parte del huerto.
         if (findCuartel(idCuartel,nomHuerto).isPresent()) {
             Cuartel cuartelEncontrado = findCuartel(idCuartel, nomHuerto).get();
@@ -129,11 +129,11 @@ public class ControlProduccion {
         //Asigna los metodos findPlanCosecha, findPersona y findCuadrilla a variables para mejor legibilidad
         PlanCosecha plan = findPlanCosecha(idPlanCosecha).get();
         if (findCuadrilla(idCuadrilla, plan.getId()).isEmpty()) throw new GestionHuertosException("ERROR: Cuadrilla con el ID "+ idCuadrilla+" no existe o no está asignada al Plan de Cosecha con el ID " + idPlanCosecha + ".");
-        Cuadrilla cuadrillaEncontrada = findCuadrilla(idCuadrilla, plan.getId());
+        Cuadrilla cuadrillaEncontrada = findCuadrilla(idCuadrilla, plan.getId()).get();
         if (findPersona(rutCosechador).isEmpty()) throw new GestionHuertosException("ERROR: El Cosechador con el rut "+ rutCosechador + " no existe.");
         //Condicion que asegura  que el objeto encontrado sea modelo.Cosechador, para asi no
         // castear un objeto modelo.Supervisor o modelo.Propietario, si es que se introduce un rut erroneo pero que existe
-        if (findPersona(rutCosechador) instanceof Cosechador cosechadorEncontrado) {
+        if (findPersona(rutCosechador).get() instanceof Cosechador cosechadorEncontrado) {
             //booleano isAfter, que asegura que la fecha de inicio no es superior a la fecha final. Solo puede ser Inferior o Igual.
             //Además, asegura que la fecha de inicio y final este en el intervalo de tiempo del plan de cosecha.
             if (fechaIniCosechador.isAfter(fechaFinCosechador) || fechaIniCosechador.isBefore(plan.getInicio()) || fechaIniCosechador.isAfter(plan.getFinEstimado())
@@ -347,7 +347,7 @@ public class ControlProduccion {
         createSupervisor(new Rut("33.333.333-3"), "Test", "Email.com", "Direccion 1000", "Ingeniero Comercial");
         createCosechador(new Rut("44.444.444-4"), "Test", "Email.com", "Direccion 101", born = LocalDate.parse("20/10/1999", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         createCultivo(123, "Manzana", "Fuji", 0.05f);
-        createHuerto("Los Vasquez", 2000, "Los Aramos", findPersona(new Rut("22.222.222-2")).getRut());
+        createHuerto("Los Vasquez", 2000, "Los Aramos", findPersona(new Rut("22.222.222-2")).get().getRut());
         addCuartelToHuerto("Los Vasquez", 124, 500, 123);
         createPlanCosecha(0003, "NombrePlan", fechaIni = LocalDate.parse("20/10/2025",DateTimeFormatter.ofPattern("dd/MM/yyyy")), fechaFin =
                 LocalDate.parse("20/03/2026", DateTimeFormatter.ofPattern("dd/MM/yyyy")), 1000, 500, "Los Vasquez", 124);
