@@ -59,16 +59,12 @@ public class ControlProduccion {
     public void createHuerto(String nombre, float superficie, String ubicacion, Rut rutPropietario) throws GestionHuertosException {
         // Primero verifico que no exista el huerto
         if (findHuerto(nombre).isPresent()) throw new GestionHuertosException("Ya existe un huerto con el nombre indicado");
-        if (findPersona(rutPropietario).isEmpty()) throw new GestionHuertosException("No existe un propietario con el rut indicado");
+        if (findPersona(rutPropietario).isEmpty() || !(findPersona(rutPropietario).get() instanceof Propietario propietario)) throw new GestionHuertosException("No existe un propietario con el rut indicado");
             // Verifico si es que el rut es de un propetario
-        if (findPersona(rutPropietario).get() instanceof Propietario propietario) {
-            // Creo el huerto
-            huertos.add(new Huerto(nombre, superficie, ubicacion, propietario));
-        } else {
-            // Condicion que no se especifica en el uml
-            // throw new GestionHuertosException("ERROR: Rut " + rutPropietario + " no pertenece a un Propietario.");
-        }
-
+        // Creo el huerto
+        huertos.add(new Huerto(nombre, superficie, ubicacion, propietario));
+        // Condicion que no se especifica en el uml
+        // throw new GestionHuertosException("ERROR: Rut " + rutPropietario + " no pertenece a un Propietario.");
     }
     // Hecho por Ricardo Quintana
     public void addCuartelToHuerto(String nombreHuerto, int idCuartel, float superficie, int idCultivo) {
