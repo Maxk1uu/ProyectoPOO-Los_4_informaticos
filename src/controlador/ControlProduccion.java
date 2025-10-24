@@ -18,9 +18,15 @@ public class ControlProduccion {
     private final ArrayList<Huerto> huertos = new ArrayList<>();
     private final ArrayList<Cultivo> cultivos = new ArrayList<>();
     private final ArrayList<PlanCosecha> planCosechas = new ArrayList<>();
-
-    public ControlProduccion() {
+    private static ControlProduccion instance = null;
+    private ControlProduccion() {
         generateTestData();
+    }
+    public static ControlProduccion getInstance() {
+        if (instance == null) {
+            instance = new ControlProduccion();
+        }
+        return instance;
     }
     //Creado por Gabriel Rojas
     public void createPropietario(Rut rut, String nombre, String email, String direccionParticular, String direccionComercial) throws GestionHuertosException {

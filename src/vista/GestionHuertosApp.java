@@ -13,7 +13,7 @@ public class GestionHuertosApp {
     private final Scanner sc = new Scanner(System.in).useDelimiter("[\\t\\n\\r]+"); //Si esto no funciona, hay que agregar el delimitador a cada metodo.
 
     //Relaciones
-    private final ControlProduccion controlProduccion = new ControlProduccion();
+    private final ControlProduccion controlProduccion = ControlProduccion.getInstance();
 
     //Main
     public static void main(String[] args) {
