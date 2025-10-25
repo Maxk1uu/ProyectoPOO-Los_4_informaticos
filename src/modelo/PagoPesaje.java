@@ -3,7 +3,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class PagoPesaje {
-    private int id;
+    private final int id;
     LocalDate fecha;
     //Relacion
     private List<Pesaje> pesajes;

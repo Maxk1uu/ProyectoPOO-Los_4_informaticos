@@ -2,17 +2,25 @@ package utilidades;//Revisado por: Gabriel Rojas
 
 public class Rut {
     //Atributos
-    private String rut;
+    private final long numero;
+    private final char dv;
 
     //Constructor
-    public Rut(String rut) {
-        this.rut = rut;
+    private Rut(long numero, char dv) {
+        this.numero = numero;
+        this.dv = dv;
     }
-
+    public Rut of(String rutStr){
+        //Recibira un String con el rut deseado, cortara en la posicion donde esta el '-' y después convertira los dos valores
+        //a Long y Char respectivaente, y retornara la creacion de un nuevo objeto rut.
+        //En el UML, el constructor rut es private.
+        String[] cortar = rutStr.split("-");
+        return new Rut(Long.parseLong(cortar[0]), cortar[1].charAt(0));
+    }
     //Metodos
     @Override
     public String toString() {
-        return rut;
+        return numero+"-"+dv;
     }
 
     @Override
@@ -20,6 +28,6 @@ public class Rut {
         if (obj == this) return true;
         if (obj == null || obj.getClass() != this.getClass()) return false;
         Rut otro = (Rut) obj;
-        return  this.rut.equals(otro.rut);
+        return  this.toString().equals(otro.toString());
     }
 }
