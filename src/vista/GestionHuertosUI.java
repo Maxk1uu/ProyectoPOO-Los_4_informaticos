@@ -538,7 +538,7 @@ public class GestionHuertosUI {
     private void listaPesajesCosechadores() {
         System.out.println("\nLISTA DE PESAJES DEL COSECHADOR");
         Rut rutCosechador = new Rut(leerTextoNoVacio("> Rut del Cosechador: "));
-        if (controlProduccion.listPesajesCosechadores(/*Rut Cosechador*/)) {
+        if (controlProduccion.listPesajesCosechadores(/*Rut Cosechador*/).length != 0) {
             System.out.println("--------------------------");
             System.out.printf("%-8s%-15s%-15s%-18s%-18s%-16s%-15s%n", "ID", "Fecha",
                     "Calidad", "Cantidad (kg)", "Precio por Kg", "Monto Total", "Fecha Pago");
@@ -550,6 +550,23 @@ public class GestionHuertosUI {
             System.out.println("--------------------------");
         } else {
             System.err.println("\nNo hay pesajes registrados para el cosechador ingresado.");
+        }
+    }
+
+    private void listaPagosPesajes() {
+        System.out.println("\nLISTA DE PAGOS DE PESAJES");
+        System.out.println("----------------------------");
+        if (controlProduccion.listPagosPesajes().length != 0) {
+            System.out.printf("%-8s%-15s%-16s%-17s%-20s%n", "ID", "Fecha Pago", "Monto Total", "Nro. Pesajes",
+                    "Rut Cosechador");
+            for (String pagos : controlProduccion.listPagosPesajes()) {
+                String[] infoPagos = pagos.split(", ");
+                System.out.printf("%-8s%-15s%-16s%-17s%-20s%n", infoPagos[0], infoPagos[1], infoPagos[2], infoPagos[3],
+                        infoPagos[4]);
+            }
+            System.out.println("----------------------------");
+        } else {
+            System.err.println("\nNo hay pagos registrados.");
         }
     }
 
