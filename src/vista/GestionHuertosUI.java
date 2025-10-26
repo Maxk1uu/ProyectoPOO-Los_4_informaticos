@@ -480,6 +480,41 @@ public class GestionHuertosUI {
         }
     }
 
+    private void listaPesajes() {
+        if(controlProduccion.listPesajes().length != 0) {
+            System.out.println("\nLISTA DE PESAJES");
+            System.out.println("----------------------------");
+            System.out.printf("%-8s%-15s%-20s%-15s%-18s%-18s%-16s%-15s%n", "ID", "Fecha", "Rut Cosechador",
+                    "Calidad", "Cantidad (kg)", "Precio por Kg", "Monto Total", "Fecha Pago" );
+            for(String pesaje: controlProduccion.listPesajes()) {
+                String[] infoPesaje = pesaje.split(", ");
+                System.out.printf("%-8s%-15s%-20s%-15s%-18s%-18s%-16s%-15s%n", infoPesaje[0], infoPesaje[1],
+                        infoPesaje[2], infoPesaje[3], infoPesaje[4], infoPesaje[5], infoPesaje[6], infoPesaje[7]);
+            }
+            System.out.println("----------------------------");
+        } else {
+            System.err.println("\nNo hay pesajes registrados.");
+        }
+    }
+
+    private void listaPesajesCosechadores() {
+        System.out.println("\nLISTA DE PESAJES DEL COSECHADOR");
+        Rut rutCosechador = new Rut(leerTextoNoVacio("> Rut del Cosechador: "));
+        if (controlProduccion.listPesajesCosechadores(/*Rut Cosechador*/)) {
+            System.out.println("--------------------------");
+            System.out.printf("%-8s%-15s%-15s%-18s%-18s%-16s%-15s%n", "ID", "Fecha",
+                    "Calidad", "Cantidad (kg)", "Precio por Kg", "Monto Total", "Fecha Pago");
+            for (String pesajeCos : controlProduccion.listPesajesCosechadores(/*Rut Cosechador*/)) {
+                String[] infoPesajeCos = pesajeCos.split(", ");
+                System.out.printf("%-8s%-15s%-15s%-18s%-18s%-16s%-15s%n", infoPesajeCos[0], infoPesajeCos[1],
+                        infoPesajeCos[2], infoPesajeCos[3], infoPesajeCos[4], infoPesajeCos[5], infoPesajeCos[6]);
+            }
+            System.out.println("--------------------------");
+        } else {
+            System.err.println("\nNo hay pesajes registrados para el cosechador ingresado.");
+        }
+    }
+
     private String leerTextoNoVacio(String mensaje) {
         String texto = "";
         boolean textoVacio = true;
