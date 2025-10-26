@@ -3,11 +3,13 @@ import controlador.ControlProduccion;
 import modelo.PagoPesaje;
 import utilidades.*;
 
+import javax.crypto.spec.PSource;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.function.DoubleToIntFunction;
 
 public class GestionHuertosUI {
     //Atributos
@@ -38,63 +40,99 @@ public class GestionHuertosUI {
             System.out.println("4. Menu Listados");
             System.out.println("5. Salir.");
             System.out.print("-Opcion: ");
-            opcion = sc.nextInt();
+            opcion = leerNumeroPositivo("> Opcion: ");
             switch (opcion) {
-                case 1:
-                    menuHuertos();
-                    break;
-                case 2:
-                    creaCultivo();
-                    break;
-                case 3:
-                    creaHuerto();
-                    break;
-                case 4:
-                    creaPlanDeCosecha();
-                    break;
-                case 5:
-                    asignaCosechadoresAPlan();
-                    break;
-                case 6:
-                    listaCultivos();
-                    break;
-                case 7:
-                    listaHuertos();
-                    break;
-                case 8:
-                    listaPersonas();
-                    break;
-                case 9:
-                    listaPlanesCosecha();
-                    break;
-                case 10:
-                    System.out.println("Cerrando programa...");
-                    break;
-                default: System.out.println("La opción seleccionada no existe.");
+                case 1 -> creaPersona();
+                case 2 -> menuHuertos();
+                case 3 -> menuPlanesDeCosecha();
+                case 4 -> menuListados();
+                default -> System.out.println("\nX Error: La opcion seleccionada no existe.\n");
             }
         } while (opcion != 10);
     }
 
     private void menuHuertos() {
         int opcion;
-        System.out.println("<< SUBMENU HUERTOS >>");
-        System.out.println("1. Crear Cultivo");
-        System.out.println("2. Crear Huerto");
-        System.out.println("3. Agregar Cuarteles a Huertos");
-        System.out.println("4. Cambiar Estado del Cuartel");
-        System.out.println("5. Volver");
-        System.out.println("\tOpcion: ");
-        opcion = sc.nextInt();
+        do {
+            System.out.println("\n<< SUBMENU HUERTOS >>");
+            System.out.println("1. Crear Cultivo");
+            System.out.println("2. Crear Huerto");
+            System.out.println("3. Agregar Cuarteles a Huertos");
+            System.out.println("4. Cambiar Estado del Cuartel");
+            System.out.println("5. Volver");
+            System.out.println("\tOpcion: ");
+            opcion = leerNumeroPositivo("> Opcion: ");
+            switch (opcion) {
+                case 1 -> creaCultivo();
+                case 2 -> creaHuerto();
+                case 3 -> {/*No hay metodo AgregarCuartelAHuerto en el main, solo en el controlador*/}
+                case 4 -> cambiaEstadoCuartel();
+                case 5 -> {
+                    System.out.println("\nVolviendo al menu...\n");
+                    menu();
+                }
+                default -> System.out.println("\nX Error: La opcion seleccionada no existe.\n");
+            }
+        } while (opcion != 5);
+    }
+
+    private void menuPlanesDeCosecha() {
+        int opcion;
+        do {
+            System.out.println("\n<< SUBMENU PLANES DE COSECHA >>");
+            System.out.println("1. Crear Plan de Cosecha");
+            System.out.println("2. Cambiar Estado de un Plan");
+            System.out.println("3. Agregar Cuadrillas a un Plan");
+            System.out.println("4. Agregar Cosechadores a un Plan");
+            System.out.println("5. Agregar Pesajes a un Cosechador");
+            System.out.println("6. Pagar Pesajes Impagos de un Cosechador");
+            System.out.println("7. Volver");
+            opcion = leerNumeroPositivo("> Opcion: ");
+            switch (opcion) {
+                case 1 -> creaPlanDeCosecha();
+                case 2 -> cambiaEstadoPlan();
+                case 3 -> {/*No hay metodo AgregarCuadrillaToPlan en el main, solo en el controlador*/}
+                case 4 -> asignaCosechadoresAPlan();
+                case 5 -> agregarPesajeCosechador();
+                case 6 -> pagoPesajeCosechador();
+                case 7 -> {
+                    System.out.println("\nVolviendo al menu...\n");
+                    menu();
+                }
+                default -> System.out.println("\nX Error: La opcion seleccionada no existe.\n");
+            }
+        } while (opcion != 7);
+    }
+
+    private void menuListados() {
+        int opcion;
+        System.out.println("\n<< SUBMENU LISTADOS >>");
+        System.out.println("1. Listado de Propietarios");
+        System.out.println("2. Listado de Supervisores");
+        System.out.println("3. Listado de Cosechadores");
+        System.out.println("4. Listado de Cultivos");
+        System.out.println("5. Listado de Huertos");
+        System.out.println("6. Listado de Planes de Cosecha");
+        System.out.println("7. Listado de Pesajes");
+        System.out.println("8. Listado de Pesajes de un Cosechador");
+        System.out.println("9. Listado de Pagos");
+        System.out.println("10. Volver");
+        opcion = leerNumeroPositivo("> Opcion: ");
         switch (opcion) {
-            case 1:
-                creaCultivo();
-                break;
-            case 2:
-                creaHuerto();
-                break;
-            case 3:
-                creaPlanDeCosecha();
-                break;
+            case 1 -> {/*No hay metodo ListadoPropietarios en el main, solo en el controlador*/}
+            case 2 -> {/*No hay metodo ListadoSupervisores en el main, solo en el controlador*/}
+            case 3 -> {/*No hay metodo ListadoCosechadores en el main, solo en el controlador*/}
+            case 4 -> listaCultivos();
+            case 5 -> listaHuertos();
+            case 6 -> listaPlanesCosecha();
+            case 7 -> listaPesajes();
+            case 8 -> listaPesajesCosechadores();
+            case 9 -> listaPagosPesajes();
+            case 10 -> {
+                System.out.println("\nVolviendo al menu...\n");
+                menu();
+            }
+            default -> System.out.println("\nX Error: La opcion seleccionada no existe.\n");
         }
     }
 
@@ -199,7 +237,7 @@ public class GestionHuertosUI {
         System.out.println("\n---Cambiando Estado del Cuartel---");
         idCuartel = leerNumeroPositivo("> ID del Cuartel: ");
         nomHuerto = leerTextoNoVacio("> Nombre del Huerto: ");
-        do { //Eso hace que si o si la opcion sea un numero entre 1 y 7;
+        do { //Eso hace que si o si la opcion sea un numero entre 1 y 7
             error = false;
             System.out.println("> Nuevo estado del Cuartel ");
             System.out.printf("%-20s%-20s%n%-20s%-20s%n%-20s%-20s%n%-20s%n", "[1] Reposo Invernal",
@@ -208,7 +246,7 @@ public class GestionHuertosUI {
             opcion = leerNumeroPositivo("> Opcion: ");
             if(opcion < 1 || opcion > 7 ) {
                 error = true;
-                System.err.println("\nX Error: Opcion no valida. Por favor ingrese una opcion valida.\n");
+                System.err.println("\nX Error: La opcion seleccionada no existe. \n");
             }
         } while (error);
         switch (opcion) {
@@ -305,7 +343,7 @@ public class GestionHuertosUI {
             System.out.printf("%-20s%-20s%n%-20s%-20s%n", "[1] Planificado", "[2] Ejecutando", "[3] Cerrado", "[4] Cancelado");
             opcion = leerNumeroPositivo("> Opcion: ");
             if (opcion < 1 || opcion > 4) {
-                System.err.println("\nX Error: Opcion no valida. Por favor ingrese una opcion valida.\n");
+                System.err.println("\nX Error: La opcion seleccionada no existe.\n");
                 error = true;
             }
         } while (error);
