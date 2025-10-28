@@ -41,8 +41,23 @@ public class Cuartel {
     public EstadoFenologico getEstado() {
         return estado;
     }
-    public void setEstado(EstadoFenologico estado) {
-        this.estado = estado;
+    public boolean setEstado(EstadoFenologico est) {
+        EstadoFenologico est1 = EstadoFenologico.REPOSO_INVERNAL;
+        EstadoFenologico est2 = EstadoFenologico.FLORACION;
+        EstadoFenologico est3 = EstadoFenologico.CUAJA;
+        EstadoFenologico est4 = EstadoFenologico.FRUCTIFICACION;
+        EstadoFenologico est5 = EstadoFenologico.MADURACION;
+        EstadoFenologico est6 = EstadoFenologico.COSECHA;
+        EstadoFenologico est7 = EstadoFenologico.POSTCOSECHA;
+        if(estado == est) {
+            return false;
+        }
+        return ((estado == est2 && est == est1) || //El cambio de estado solo puede avanzar, no retroceder.
+                (estado == est3 && (est == est2 || est == est1)) ||
+                (estado == est4 && (est == est3 || est == est2 || est == est1)) ||
+                (estado == est5 && (est == est4 || est == est3 || est == est2 || est == est1)) ||
+                (estado == est6 && (est == est5 || est == est4 || est == est3 || est == est2 || est == est1)) ||
+                (estado == est7 && (est == est6 || est == est5 || est == est4 || est == est3 || est == est2 || est == est1)));
     }
     public Huerto getHuerto() {
         return huerto;
@@ -51,12 +66,11 @@ public class Cuartel {
         return cultivo;
     }
     //Se añade el objeto a la coleccion
-    public boolean addPlanCosecha(PlanCosecha planCosecha){
+    public void addPlanCosecha(PlanCosecha planCosecha){
         //Asegura que el objeto pasado por parametro no es el mismo
         if (!planCosechas.contains(planCosecha)) {
-            return planCosechas.add(planCosecha);
+            planCosechas.add(planCosecha);
         }
-        return false;
     }
     public PlanCosecha[] getPlanCosechas(){
         return planCosechas.toArray(new PlanCosecha[0]);
