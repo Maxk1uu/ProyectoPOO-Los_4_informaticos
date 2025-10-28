@@ -1,6 +1,9 @@
 package modelo;//Revisado por: Gabriel Rojas
+import utilidades.GestionHuertosException;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class Cuadrilla {
     //Atributos
@@ -46,23 +49,33 @@ public class Cuadrilla {
         return planCosecha;
     }
 
-    public boolean addCosechador(LocalDate fIni, LocalDate fFin, double meta, Cosechador cos) {
-            //Aquí se encontraba un equals entre dos objetos con diferentes clases, se encontró una forma de arreglarlo.
-            if(findCosechadorByRut(cos) == null){ //Busca al cosechador entre los cosechadores asignados para asegurar que no existe un cosechador repetido.
-                CosechadorAsignado cosechador = new CosechadorAsignado(fIni, fFin, meta, this,  cos);
-                if (!cosechadoresAsignados.contains(cosechador) && cosechadoresAsignados.size() < maximoCosechadores) {
-                    return cosechadoresAsignados.add(cosechador);
-                }
-            }
-        return false;
+    public boolean addCosechador(LocalDate fIni, LocalDate fFin, double meta, Cosechador cos) throws GestionHuertosException {
+        if(findCosechadorByRut(cos).isPresent()) {
+            throw new GestionHuertosException("Ya existe un cosechador en la cuadrilla con el mismo rut del cosechador recibido como parámetro");
+        }
+        if(cosechadoresAsignados.size() >= maximoCosechadores) {
+            throw new GestionHuertosException("No es posible agregar el nuevo cosechador porque ya se alcanzó el máximo número de cosechadores en una cuadrilla");
+        }
+        return cosechadoresAsignados.add(new CosechadorAsignado(fIni, fFin, meta, this, cos));
     }
 
     public Cosechador[] getCosechadores() {
-        Cosechador[] listaCos = new Cosechador[cosechadoresAsignados.size()];
-        for (int i = 0; i < cosechadoresAsignados.size(); i++) {
-            listaCos[i] = cosechadoresAsignados.get(i).getCosechador();
+        return cosechadoresAsignados.toArray(new Cosechador[0]);
+    }
+
+    public double getKilosPesados() { //Revisar
+        double totalKilosPesados = 0, pesajeTotalPorCosechador=0;
+        for(CosechadorAsignado cosAs :  cosechadoresAsignados) {
+            for(Pesaje pesaje : cosAs.getCosechador().getPesajes()) {
+                pesajeTotalPorCosechador += pesaje.getCantidadKg();
+            }
+            totalKilosPesados += pesajeTotalPorCosechador;
         }
-        return listaCos;
+        return totalKilosPesados;
+    }
+
+    public CosechadorAsignado[] getAsignaciones() {
+        return cosechadoresAsignados.toArray(new CosechadorAsignado[0]);
     }
 
     public static int getMaximoCosechadores() {
@@ -73,12 +86,12 @@ public class Cuadrilla {
         maximoCosechadores = max;
     }
 
-    private CosechadorAsignado findCosechadorByRut(Cosechador cosechador){
+    private Optional<CosechadorAsignado> findCosechadorByRut(Cosechador cosechador){
         for (CosechadorAsignado cosAs: cosechadoresAsignados) {
             if (cosAs.getCosechador().getRut().equals(cosechador.getRut())){
-                return cosAs;
+                return Optional.of(cosAs);
             }
         }
-        return null;
+        return Optional.empty();
     }
 }
