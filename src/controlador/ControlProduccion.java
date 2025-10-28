@@ -1,10 +1,11 @@
 package controlador;//Ultima revision:
 // Error encontrado el arreglo debe ser del tamaño exacto de la cantidad de personas que tengan dicho rol
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.util.*;
 import java.time.LocalDate;
-import java.util.Optional;
 
 import utilidades.*;
 import modelo.*;
@@ -19,83 +20,104 @@ public class ControlProduccion {
     private final ArrayList<Cultivo> cultivos = new ArrayList<>();
     private final ArrayList<PlanCosecha> planCosechas = new ArrayList<>();
     private static ControlProduccion instance = null;
+
     private ControlProduccion() {
         generateTestData();
     }
+
     public static ControlProduccion getInstance() {
         if (instance == null) {
             instance = new ControlProduccion();
         }
         return instance;
     }
+
     //Creado por Gabriel Rojas
     public void createPropietario(Rut rut, String nombre, String email, String direccionParticular, String direccionComercial) throws GestionHuertosException {
         //Asegura que esta persona no existe,  si existe, retorna false.
-        if (findPersona(rut).isPresent()) throw new GestionHuertosException("Ya existe un propietario con el rut indicado");
+        if (findPersona(rut).isPresent())
+            throw new GestionHuertosException("Ya existe un propietario con el rut indicado");
 
         // De lo contrario, lo agrega a la colección.
         personas.add(new Propietario(rut, nombre, email, direccionParticular, direccionComercial));
     }
+
     //Creado por Gabriel Rojas
     public void createSupervisor(Rut rut, String nombre, String email, String direccion, String profesion) throws GestionHuertosException {
         //Check para asegurar que esta persona no existe.
-        if (findPersona(rut).isPresent()) throw new GestionHuertosException("Ya existe un supervisor con el rut indicado") ;
+        if (findPersona(rut).isPresent())
+            throw new GestionHuertosException("Ya existe un supervisor con el rut indicado");
         //Agrega el supervisor a la coleccion.
         personas.add(new Supervisor(rut, nombre, email, direccion, profesion));
     }
+
     //Creado por Gabriel Rojas
-    public void createCosechador(Rut rut, String nombre, String email, String direccion, LocalDate fechaNacimiento) throws  GestionHuertosException {
+    public void createCosechador(Rut rut, String nombre, String email, String direccion, LocalDate fechaNacimiento) throws GestionHuertosException {
         //Asegura que un cosechador con el mismo rut pasado por el parametro no exista.
-        if (findPersona(rut).isPresent()) throw new GestionHuertosException("Ya existe un cosechador con el rut indicado");
+        if (findPersona(rut).isPresent())
+            throw new GestionHuertosException("Ya existe un cosechador con el rut indicado");
         //Agrega el cosechador a la coleccion.
         personas.add(new Cosechador(rut, nombre, email, direccion, fechaNacimiento));
     }
+
     //Creado por Gabriel Rojas
     public void createCultivo(int id, String nombre, String periodo, float rendimiento) throws GestionHuertosException {
         if (findCultivo(id).isPresent()) throw new GestionHuertosException("Ya existe un cultivo con el id indicado");
         cultivos.add(new Cultivo(id, nombre, periodo, rendimiento));
     }
+
     // Hecho por Ricardo Quintana
     public void createHuerto(String nombre, float superficie, String ubicacion, Rut rutPropietario) throws GestionHuertosException {
         // Primero verifico que no exista el huerto
-        if (findHuerto(nombre).isPresent()) throw new GestionHuertosException("Ya existe un huerto con el nombre indicado");
-        if (findPersona(rutPropietario).isEmpty() || !(findPersona(rutPropietario).get() instanceof Propietario propietario)) throw new GestionHuertosException("No existe un propietario con el rut indicado");
-            // Verifico si es que el rut es de un propetario
+        if (findHuerto(nombre).isPresent())
+            throw new GestionHuertosException("Ya existe un huerto con el nombre indicado");
+        if (findPersona(rutPropietario).isEmpty() || !(findPersona(rutPropietario).get() instanceof Propietario propietario))
+            throw new GestionHuertosException("No existe un propietario con el rut indicado");
+        // Verifico si es que el rut es de un propetario
         // Creo el huerto
         huertos.add(new Huerto(nombre, superficie, ubicacion, propietario));
         // Condicion que no se especifica en el uml
         // throw new GestionHuertosException("ERROR: Rut " + rutPropietario + " no pertenece a un Propietario.");
     }
+
     // Hecho por Ricardo Quintana
     public void addCuartelToHuerto(String nombreHuerto, int idCuartel, float superficie, int idCultivo) {
 
         // Verificar que el huerto exista y que el cuartel no tenga un huerto asociado
-        if (findHuerto(nombreHuerto).isEmpty()) throw new GestionHuertosException("No existe un huerto con el nombre indicado");
-        if (findCultivo(idCultivo).isEmpty()) throw new GestionHuertosException("No existe un cultivo con el id indicado");
+        if (findHuerto(nombreHuerto).isEmpty())
+            throw new GestionHuertosException("No existe un huerto con el nombre indicado");
+        if (findCultivo(idCultivo).isEmpty())
+            throw new GestionHuertosException("No existe un cultivo con el id indicado");
         //Condición que no aparece en el enunciado, igual dejarla aquí porsiacaso.
         // if (findCuartel(idCuartel,nombreHuerto).isPresent()) throw new GestionHuertosException("ERROR: EL ID del Cuartel " + idCuartel+ " ya está asignado al Huerto.");
         findHuerto(nombreHuerto).get().addCuartel(idCuartel, superficie, findCultivo(idCultivo).get());
     }
-    public void changeEstadoCuartel(String nombreHuerto, int idCuartel, EstadoFenologico estado) throws  GestionHuertosException {
+
+    public void changeEstadoCuartel(String nombreHuerto, int idCuartel, EstadoFenologico estado) throws GestionHuertosException {
         //Excepciones
-        if (findHuerto(nombreHuerto).isEmpty()) throw new GestionHuertosException("No existe un huerto con el nombre indicado");
-        if (findCuartel(idCuartel, nombreHuerto).isEmpty()) throw new GestionHuertosException("No existe en el huerto un cuartel con el id indicado");
+        if (findHuerto(nombreHuerto).isEmpty())
+            throw new GestionHuertosException("No existe un huerto con el nombre indicado");
+        if (findCuartel(idCuartel, nombreHuerto).isEmpty())
+            throw new GestionHuertosException("No existe en el huerto un cuartel con el id indicado");
         //Cambio de estado
         findCuartel(idCuartel, nombreHuerto).get().setEstado(estado);
     }
+
     //Creado por Gabriel Rojas
     public void createPlanCosecha(int id, String nombrePlan, LocalDate fechaInicio, LocalDate fechaFin, double metaKilos, double precioBaseKilo, String nomHuerto, int idCuartel) throws GestionHuertosException {
         //Se asegura que el plan cosecha no exista, a traves de su id.
         //Si encuentra un plan cosecha existente, retorna false.
-        if (findPlanCosecha(id).isPresent()) throw new GestionHuertosException("Ya existe un plan cosecha con el id indicado");
+        if (findPlanCosecha(id).isPresent())
+            throw new GestionHuertosException("Ya existe un plan cosecha con el id indicado");
         //Asegura que la fecha de inicio no sea supeerior o igual a la fecha de fin.
         //Condicion que se deja en standby
         //if (fechaInicio.isAfter(fechaFin) || fechaInicio.isEqual(fechaFin)) throw new GestionHuertosException("Intervalo de fechas no permitido.");
         //Si no existe el huerto pasado por parametros, retorna false.
-        if (findHuerto(nomHuerto).isEmpty()) throw new GestionHuertosException("No existe un huerto con el nombre indicado");
+        if (findHuerto(nomHuerto).isEmpty())
+            throw new GestionHuertosException("No existe un huerto con el nombre indicado");
         Huerto huertoEncontrado = findHuerto(nomHuerto).get();
         //Condicion que asegura que el cuartel pasado por parametros exista y sea parte del huerto.
-        if (findCuartel(idCuartel,nomHuerto).isPresent()) {
+        if (findCuartel(idCuartel, nomHuerto).isPresent()) {
             Cuartel cuartelEncontrado = findCuartel(idCuartel, nomHuerto).get();
             //Crea el nuevo plan de cosecha.
             planCosechas.add(new PlanCosecha(id, nombrePlan, fechaInicio, fechaFin, metaKilos, precioBaseKilo, cuartelEncontrado));
@@ -104,8 +126,10 @@ public class ControlProduccion {
             // throw new GestionHuertosException("ERROR: El cuartel con el ID " +idCuartel + " no existe o no forma parte del Huerto asignado.");
         }
     }
+
     public void changeEstadoPlan(int idPlan, EstadoPlan estado) throws GestionHuertosException {
-        if (findPlanCosecha(idPlan).isEmpty()) throw new GestionHuertosException("No existe un plan cosecha con el id indicado");
+        if (findPlanCosecha(idPlan).isEmpty())
+            throw new GestionHuertosException("No existe un plan cosecha con el id indicado");
         PlanCosecha plan = findPlanCosecha(idPlan).get();
         //Condicional bien largo.
         // Si el estado indicado por parametros es el mismo que el del plan, entonces tirara una excepcion.
@@ -117,20 +141,23 @@ public class ControlProduccion {
 
         if (plan.getEstado().equals(estado) || plan.getEstado().equals(EstadoPlan.CANCELADO)
                 || plan.getEstado().equals(EstadoPlan.CERRADO) && estado.equals(EstadoPlan.CANCELADO)
-            || plan.getEstado().equals(EstadoPlan.CERRADO) && estado.equals(EstadoPlan.EJECUTANDO)
-            || plan.getEstado().equals(EstadoPlan.CERRADO) && estado.equals(EstadoPlan.PLANIFICADO)
-            || plan.getEstado().equals(EstadoPlan.EJECUTANDO) && estado.equals(EstadoPlan.PLANIFICADO))
+                || plan.getEstado().equals(EstadoPlan.CERRADO) && estado.equals(EstadoPlan.EJECUTANDO)
+                || plan.getEstado().equals(EstadoPlan.CERRADO) && estado.equals(EstadoPlan.PLANIFICADO)
+                || plan.getEstado().equals(EstadoPlan.EJECUTANDO) && estado.equals(EstadoPlan.PLANIFICADO))
             throw new GestionHuertosException("No esta permitido el cambio de estado solicitado");
         plan.setEstado(estado);
     }
+
     //Creado por Gabriel Rojas
     public void addCuadrillaToPlan(int idPlan, int idCuadrilla, String nombreCuadrilla, Rut rutSupervisor) throws GestionHuertosException {
         //se hace un casting a la clase hija modelo.Supervisor, porque el metodo  findPersona retorna un objeto modelo.Persona.
         //Ademas, se asegura que el objeto recibido sea el objeto modelo.Supervisor.
-        if (findPersona(rutSupervisor).isEmpty()) throw new GestionHuertosException("No existe un supervisor con el rut indicado");
+        if (findPersona(rutSupervisor).isEmpty())
+            throw new GestionHuertosException("No existe un supervisor con el rut indicado");
         if (findPersona(rutSupervisor).get() instanceof Supervisor supervisorEncontrado) {
             //Si encuentra una cuadrilla ya asignada al supervisor, retorna false.
-            if (supervisorEncontrado.getCuadrillaAsignada() != null) throw new GestionHuertosException("El supervisor ya tiene asignada una cuadrilla a a su cargo");
+            if (supervisorEncontrado.getCuadrillaAsignada() != null)
+                throw new GestionHuertosException("El supervisor ya tiene asignada una cuadrilla a a su cargo");
             //Utiliza el metodo private findPlanCosecha, asegura que este no sea null.
             if (findPlanCosecha(idPlan).isPresent()) {
                 //Asigna este resultado a una variable.
@@ -152,17 +179,20 @@ public class ControlProduccion {
             }
         }
     }
+
     //Creado por Gabriel Rojas
     public void addCosechadorToCuadrilla(int idPlanCosecha, int idCuadrilla, LocalDate fechaIniCosechador, LocalDate fechaFinCosechador, double metaKilosCosechador, Rut rutCosechador) {
 
         //Condiciones que aseguran que estas variables existan, de lo contrario, devuelven false.
-        if (findPlanCosecha(idPlanCosecha).isEmpty()) throw new GestionHuertosException("No existe un plan cosecha con el id indicado");
+        if (findPlanCosecha(idPlanCosecha).isEmpty())
+            throw new GestionHuertosException("No existe un plan cosecha con el id indicado");
         //Asigna los metodos findPlanCosecha, findPersona y findCuadrilla a variables para mejor legibilidad
         PlanCosecha plan = findPlanCosecha(idPlanCosecha).get();
         // Condicion que no se especifica en el enunciado.
         // if (findCuadrilla(idCuadrilla, plan.getId()).isEmpty()) throw new GestionHuertosException("ERROR: Cuadrilla con el ID "+ idCuadrilla+" no existe o no está asignada al Plan de Cosecha con el ID " + idPlanCosecha + ".");
         Cuadrilla cuadrillaEncontrada = findCuadrilla(idCuadrilla, plan.getId()).get();
-        if (findPersona(rutCosechador).isEmpty()) throw new GestionHuertosException("No existe un cosechador con el rut indicado");
+        if (findPersona(rutCosechador).isEmpty())
+            throw new GestionHuertosException("No existe un cosechador con el rut indicado");
         //Condicion que asegura  que el objeto encontrado sea modelo.Cosechador, para asi no
         // castear un objeto modelo.Supervisor o modelo.Propietario, si es que se introduce un rut erroneo pero que existe
         if (findPersona(rutCosechador).get() instanceof Cosechador cosechadorEncontrado) {
@@ -175,6 +205,7 @@ public class ControlProduccion {
             plan.addCosechadorToCuadrilla(idCuadrilla, fechaIniCosechador, fechaFinCosechador, metaKilosCosechador, cosechadorEncontrado);
         }
     }
+
     // Hecho por Ricardo Quintana
     public String[] listCultivos() {
         if (cultivos.isEmpty()) return new String[0];
@@ -185,6 +216,7 @@ public class ControlProduccion {
         }
         return listaCultivos;
     }
+
     // Hecho por Ricardo Quintana
     public String[] listHuertos() {
         if (huertos.isEmpty()) return new String[0];
@@ -215,6 +247,7 @@ public class ControlProduccion {
         }
         return listaPropietarios;
     }
+
     // Hecho por Ricardo Quintana
     public String[] listSupervisores() {
         if (personas.isEmpty()) return new String[0]; // Sino existen personas retorna un arreglo vacio
@@ -237,6 +270,7 @@ public class ControlProduccion {
         }
         return listaSupervisores;
     }
+
     // Hecho por Ricardo Quintana
     public String[] listCosechadores() {
         if (personas.isEmpty()) return new String[0]; // Sino existen personas retorna un arreglo vacio
@@ -254,6 +288,7 @@ public class ControlProduccion {
         }
         return listaCosechadores;
     }
+
     // Hecho por Ricardo Quintana
     public String[] listPlanes() {
         if (planCosechas.isEmpty()) return new String[0]; // Sino existen planes de cosechas retorna un arreglo vacío
@@ -268,6 +303,154 @@ public class ControlProduccion {
             cont++;
         }
         return listaPlanesCosechas;
+    }
+
+    // Hecho por Ricardo Quintana
+    private void readDataFromTextFile() throws FileNotFoundException {
+        // creo el Scanner asociado al archivoDeTexto
+        try {
+            Scanner scGestionHuertos = new Scanner(new File("InputDataGestionHuertos.txt")).useLocale(Locale.UK);
+            scGestionHuertos.useDelimiter(";");
+            while (scGestionHuertos.hasNextLine()) {
+                String linea = scGestionHuertos.nextLine().trim();
+                int nroDeLineas = 0;
+                if (!linea.startsWith("#") && !linea.isEmpty()) {
+                    String[] operacion = linea.split(";");
+                    switch (operacion[0]) {
+                        case "createPropietario":
+                            nroDeLineas = Integer.parseInt(operacion[1]);
+                            for (int i = 0; i < nroDeLineas; i++) {
+                                Rut rut = new Rut(scGestionHuertos.next().trim());
+                                String nombre = scGestionHuertos.next().trim();
+                                String email = scGestionHuertos.next().trim();
+                                String direccion = scGestionHuertos.next().trim();
+                                String direccionComercial = scGestionHuertos.next().trim();
+                                createPropietario(rut, nombre, email, direccion, direccionComercial);
+                            }
+                            break;
+                        case "createSupervisor":
+                            nroDeLineas = Integer.parseInt(operacion[1]);
+                            for (int i = 0; i < nroDeLineas; i++) {
+                                Rut rut = new Rut(scGestionHuertos.next().trim());
+                                String nombre = scGestionHuertos.next().trim();
+                                String email = scGestionHuertos.next().trim();
+                                String direccion = scGestionHuertos.next().trim();
+                                String profesion = scGestionHuertos.next().trim();
+                                createSupervisor(rut, nombre, email, direccion, profesion);
+                            }
+                            break;
+                        case "createCosechador":
+                            nroDeLineas = Integer.parseInt(operacion[1]);
+                            for (int i = 0; i < nroDeLineas; i++) {
+                                Rut rut = new Rut(scGestionHuertos.next().trim());
+                                String nombre = scGestionHuertos.next().trim();
+                                String email = scGestionHuertos.next().trim();
+                                String direccion = scGestionHuertos.next().trim();
+                                LocalDate fechaNacimiento = LocalDate.parse(scGestionHuertos.next().trim(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                                createCosechador(rut, nombre, email, direccion, fechaNacimiento);
+                            }
+                            break;
+                        case "createCultivo":
+                            nroDeLineas = Integer.parseInt(operacion[1]);
+                            for (int i = 0; i < nroDeLineas; i++) {
+                                String id = scGestionHuertos.next().trim();
+                                String especie = scGestionHuertos.next().trim();
+                                String variedad = scGestionHuertos.next().trim();
+                                float rendimiento = scGestionHuertos.nextFloat();
+                                createCultivo(Integer.parseInt(id), especie, variedad, rendimiento);
+                            }
+                            break;
+                        case "createHuerto":
+                            nroDeLineas = Integer.parseInt(operacion[1]);
+                            for (int i = 0; i < nroDeLineas; i++) {
+                                String nombre = scGestionHuertos.next().trim();
+                                float superficie = scGestionHuertos.nextFloat();
+                                String ubicacion = scGestionHuertos.next().trim();
+                                Rut rut = new Rut(scGestionHuertos.next().trim());
+                                createHuerto(nombre, superficie, ubicacion, rut);
+                            }
+                            break;
+                        case "addCuartelToHuerto":
+                            nroDeLineas = Integer.parseInt(operacion[1]);
+                            for (int i = 0; i < nroDeLineas; i++) {
+                                String nombreHuerto = scGestionHuertos.next().trim();
+                                int idCuartel = scGestionHuertos.nextInt();
+                                float superficie = scGestionHuertos.nextFloat();
+                                int idCultivo = scGestionHuertos.nextInt();
+                                addCuartelToHuerto(nombreHuerto, idCuartel, superficie, idCultivo);
+                            }
+                            break;
+                        case "createPlanCosecha":
+                            nroDeLineas = Integer.parseInt(operacion[1]);
+                            for (int i = 0; i < nroDeLineas; i++) {
+                                int idPlanCosecha = scGestionHuertos.nextInt();
+                                String nombre = scGestionHuertos.next().trim();
+                                LocalDate fechaInicio = LocalDate.parse(scGestionHuertos.next().trim(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                                LocalDate fechaTermino = LocalDate.parse(scGestionHuertos.next().trim(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                                double meta = scGestionHuertos.nextDouble();
+                                float precioBase = scGestionHuertos.nextFloat();
+                                String nombreHuerto = scGestionHuertos.next().trim();
+                                int idCuartel = scGestionHuertos.nextInt();
+                                createPlanCosecha(idPlanCosecha, nombre, fechaInicio, fechaTermino, meta, precioBase, nombreHuerto, idCuartel);
+                            }
+                            break;
+                        case "addCuadrillaToPlan":
+                            nroDeLineas = Integer.parseInt(operacion[1]);
+                            for (int i = 0; i < nroDeLineas; i++) {
+                                int idPlanCosecha = scGestionHuertos.nextInt();
+                                int idCuadrilla = scGestionHuertos.nextInt();
+                                String nombreCuadrilla = scGestionHuertos.next().trim();
+                                Rut rutSupervisor = new Rut(scGestionHuertos.next().trim());
+                                addCuadrillaToPlan(idPlanCosecha, idCuadrilla, nombreCuadrilla, rutSupervisor);
+                            }
+                            break;
+                        case "addCosechadorToCuadrilla":
+                            nroDeLineas = Integer.parseInt(operacion[1]);
+                            for (int i = 0; i < nroDeLineas; i++) {
+                                int idPlanCosecha = scGestionHuertos.nextInt();
+                                int idCuadrilla = scGestionHuertos.nextInt();
+                                LocalDate fechaInicio = LocalDate.parse(scGestionHuertos.next().trim(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                                LocalDate fechaFinal = LocalDate.parse(scGestionHuertos.next().trim(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                                double meta = scGestionHuertos.nextDouble();
+                                Rut rutCosechador = new Rut(scGestionHuertos.next().trim());
+                                addCosechadorToCuadrilla(idPlanCosecha, idCuadrilla, fechaInicio, fechaFinal, meta, rutCosechador);
+                            }
+                            break;
+                        case "changeEstadoPlan":
+                            nroDeLineas = Integer.parseInt(operacion[1]);
+                            for (int i = 0; i < nroDeLineas; i++) {
+                                int idPlanCosecha = scGestionHuertos.nextInt();
+                                EstadoPlan estadoPlan = EstadoPlan.valueOf(scGestionHuertos.next().trim());
+                                changeEstadoPlan(idPlanCosecha, estadoPlan);
+                            }
+                            break;
+                        case "changeEstadoCuartel":
+                            nroDeLineas = Integer.parseInt(operacion[1]);
+                            for (int i = 0; i < nroDeLineas; i++) {
+                                int idCuartel = scGestionHuertos.nextInt();
+                                String nombreHuerto = scGestionHuertos.next().trim();
+                                EstadoFenologico estado = EstadoFenologico.valueOf(scGestionHuertos.next().trim());
+                                changeEstadoCuartel(nombreHuerto, idCuartel, estado);
+                            }
+                            break;
+                        case "addPesaje":
+                            nroDeLineas = Integer.parseInt(operacion[1]);
+                            for (int i = 0; i < nroDeLineas; i++) {
+                                int idPesaje = scGestionHuertos.nextInt();
+                                Rut rut = new Rut(scGestionHuertos.next().trim());
+                                int idPlan = scGestionHuertos.nextInt();
+                                int idCuadrilla = scGestionHuertos.nextInt();
+                                float ctdKilos = scGestionHuertos.nextFloat();
+                                Calidad calidad = Calidad.valueOf(scGestionHuertos.next().trim());
+                                addPesaje(idPesaje, rut, idPlan, idCuadrilla, ctdKilos, calidad);
+                            }
+                            break;
+                    }
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     //Metodo private que encuentra a una persona deseada a través de su rut.
@@ -303,11 +486,13 @@ public class ControlProduccion {
         //De lo contrario.
         return Optional.empty();
     }
+
     //Metodo private para encontrar una cuadrilla deseada
     private Optional<Cuadrilla> findCuadrilla(int idCuadrilla, int idPlan) {
         //Para no repetir codigo, es necesario pasar por parametro el identificador del modelo.PlanCosecha.
         //De esta forma, se reutiliza el codigo findPlanCosecha y se ahorra lineas de codigo.
-        if (findPlanCosecha(idPlan).isEmpty()) return Optional.empty(); {
+        if (findPlanCosecha(idPlan).isEmpty()) return Optional.empty();
+        {
             if (findPlanCosecha(idPlan).get().getCuadrillas().length == 0) return Optional.empty();
             //Se asigna el array que retorna findPlanCosecha.getCuadrillas a una variable para mejor legibilidad.
             Cuadrilla[] cuadrillas = findPlanCosecha(idPlan).get().getCuadrillas();//Ignorar advertencia. La linea de arriba asegura que findPlanCosecha no sea null.
@@ -320,17 +505,19 @@ public class ControlProduccion {
         // De lo contrario, no existe.
         return Optional.empty();
     }
+
     // Hecho por Ricardo Quintana
     private Optional<Huerto> findHuerto(String nombre) {
         // Verifico que exista un huerto con esos datos
-        for(Huerto huerto : huertos) {
+        for (Huerto huerto : huertos) {
             // Si existe retorna el huerto
-            if(huerto.getNombre().equals(nombre))  return Optional.of(huerto);
+            if (huerto.getNombre().equals(nombre)) return Optional.of(huerto);
         }
         // De lo contrario retona null, por lo tanto no existe
         return Optional.empty();
     }
-    private Optional<Cuartel> findCuartel (int idCuartel, String nombreHuerto) {
+
+    private Optional<Cuartel> findCuartel(int idCuartel, String nombreHuerto) {
         /* Cuarteles no tiene un relacion directa con la clase, por lo que accedemos
         por medio de alguna relacion que tenga, en este caso los huertos
          */
@@ -338,7 +525,7 @@ public class ControlProduccion {
         // Si no existe el huerto, retona null
         if (findHuerto(nombreHuerto).isEmpty()) return Optional.empty();
 
-        for(Huerto huerto : huertos) {
+        for (Huerto huerto : huertos) {
             //Condicion que evita NullPointerException, porque getCuartel puede ser null.
             if (huerto.getCuartel(idCuartel) != null) {
                 if (huerto.getCuartel(idCuartel).getId() == idCuartel) {
@@ -351,6 +538,7 @@ public class ControlProduccion {
         // Si no tiene asignado el cuartel pasado como parametro retorna null
         return Optional.empty();
     }
+
     private int findArraySize(int opcion) {
         int supervisores = 0, cosechadores = 0, propietarios = 0;
         if (!personas.isEmpty()) {
@@ -378,7 +566,7 @@ public class ControlProduccion {
         createCultivo(123, "Manzana", "Fuji", 0.05f);
         createHuerto("Los Vasquez", 2000, "Los Aramos", findPersona(new Rut("22.222.222-2")).get().getRut());
         addCuartelToHuerto("Los Vasquez", 124, 500, 123);
-        createPlanCosecha(0003, "NombrePlan", fechaIni = LocalDate.parse("20/10/2025",DateTimeFormatter.ofPattern("dd/MM/yyyy")), fechaFin =
+        createPlanCosecha(0003, "NombrePlan", fechaIni = LocalDate.parse("20/10/2025", DateTimeFormatter.ofPattern("dd/MM/yyyy")), fechaFin =
                 LocalDate.parse("20/03/2026", DateTimeFormatter.ofPattern("dd/MM/yyyy")), 1000, 500, "Los Vasquez", 124);
         addCuadrillaToPlan(0003, 456, "Max Steel", new Rut("33.333.333-3"));
         addCosechadorToCuadrilla(0003, 456, fechaIniCos = LocalDate.parse("10/11/2025", DateTimeFormatter.ofPattern("dd/MM/yyyy")), fechaFinCos =
