@@ -79,9 +79,8 @@ public class PlanCosecha {
         // Disclaimer: Estas son condiciones que talvez no sean correctas, hablar de estas condiciones con la profesora.
 
         if (getEstado().equals(estado) || getEstado().equals(EstadoPlan.CANCELADO)
-                || getEstado().equals(EstadoPlan.CERRADO) && estado.equals(EstadoPlan.CANCELADO)
-                || getEstado().equals(EstadoPlan.CERRADO) && estado.equals(EstadoPlan.EJECUTANDO)
-                || getEstado().equals(EstadoPlan.CERRADO) && estado.equals(EstadoPlan.PLANIFICADO)
+                || getEstado().equals(EstadoPlan.CERRADO)
+                || getEstado().equals(EstadoPlan.PLANIFICADO) && estado.equals(EstadoPlan.CERRADO)
                 || getEstado().equals(EstadoPlan.EJECUTANDO) && estado.equals(EstadoPlan.PLANIFICADO))
             return false;
         this.estado = estado;
