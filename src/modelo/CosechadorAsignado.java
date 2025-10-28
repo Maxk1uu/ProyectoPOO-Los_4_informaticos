@@ -45,11 +45,24 @@ public class CosechadorAsignado {
     public void setMetaKilos(double metaKilos) {
         this.metaKilos = metaKilos;
     }
-
     public Cuadrilla getCuadrilla() {
         return cuadrilla;
     }
     public Cosechador getCosechador() {
         return cosechador;
+    }
+
+    //necesita revision
+    public double getCumplimientoMeta(){
+        return ((double)(getNroPesajesPagados() * 100)/getMetaKilos());
+    }
+    public int getNroPesajesImpagos(){
+        return 0;
+    }
+    public double getMontoPesajesImpagos(){
+        return (cuadrilla.getPlanCosecha().getPrecioBaseKilo() * getNroPesajesImpagos());
+    }
+    public int getNroPesajesPagados(){
+        return 0;
     }
 }

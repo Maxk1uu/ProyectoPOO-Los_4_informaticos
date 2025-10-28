@@ -4,6 +4,9 @@ import utilidades.Rut;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Optional;
+
 public class Cosechador extends Persona {
     //Atributos
     private LocalDate fechaNacimiento;
@@ -40,5 +43,15 @@ public class Cosechador extends Persona {
             cuadrillas[i] = cosechadoresAsignados.get(i).getCuadrilla(); //Guardo sólo la cuadrilla de cada cosechador.
         }
         return cuadrillas;
+    }
+    //necesita revision.
+    public Optional<CosechadorAsignado> getAsignacione(int idCuadrilla,int idPlanCosecha){
+        Optional<Cosechador> resultado = Optional.empty();
+        for(CosechadorAsignado cosAs : cosechadoresAsignados) {
+            if(cosAs.getCuadrilla() == idPlanCosecha){
+                return Optional.of(cosAs);
+            }
+        }
+        return Optional.empty();
     }
 }
