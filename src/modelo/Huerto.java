@@ -1,3 +1,4 @@
+// Hecho por: Ricardo Quintana
 // Revisado por: Gabriel Rojas
 package modelo;
 
@@ -7,6 +8,7 @@ import utilidades.GestionHuertosException;
 import java.util.ArrayList;
 
 public class Huerto {
+
     // Atributos
     private String nombre;
     private float superficie;
@@ -93,27 +95,33 @@ public class Huerto {
     }
 
     public Cuartel[] getCuartels() {
-        Cuartel[] cuartelesArr = new Cuartel[cuarteles.size()];
-        int cont = 0; // contador para guardar en la posicion correcta
-        for (Cuartel c : cuarteles) {
-            cuartelesArr[cont] = c;
-            cont++;
-        }
-        return cuartelesArr;
+        return cuarteles.toArray(new Cuartel[0]);
     }
 
     public void setEstadoCuartel(int id, EstadoFenologico estadoFenologico) throws GestionHuertosException {
+        Cuartel cuartel = null;
+
+        // Buscar el cuartel
         for (Cuartel c : cuarteles) {
             if (c.getId() == id) {
-                if(c.getEstado() != estadoFenologico) {
-                    // si es distinto podemos cambiar su estado
-                    c.setEstado(estadoFenologico);
-                } else {
-                    throw new GestionHuertosException("No esta permitido el cambio de estado solicitado");
-                }
+                cuartel = c;
+                break;
             }
         }
-        // Si no existe el cuartel tiro la excepcion
-        throw new GestionHuertosException("No existe un cuartel con el id indicado");
+
+        if (cuartel == null) {
+            throw new GestionHuertosException("No existe un cuartel con el id indicado");
+        }
+        if (cuartel.getEstado() == EstadoFenologico.REPOSO_INVERNAL && estadoFenologico == EstadoFenologico.FLORACION ||
+                cuartel.getEstado() == EstadoFenologico.FLORACION && estadoFenologico == EstadoFenologico.CUAJA ||
+                cuartel.getEstado() == EstadoFenologico.CUAJA && estadoFenologico == EstadoFenologico.FRUCTIFICACION ||
+                cuartel.getEstado() == EstadoFenologico.FRUCTIFICACION && estadoFenologico == EstadoFenologico.MADURACION ||
+                cuartel.getEstado() == EstadoFenologico.MADURACION && estadoFenologico == EstadoFenologico.COSECHA ||
+                cuartel.getEstado() == EstadoFenologico.COSECHA && estadoFenologico == EstadoFenologico.POSTCOSECHA ||
+                cuartel.getEstado() == EstadoFenologico.POSTCOSECHA && estadoFenologico == EstadoFenologico.REPOSO_INVERNAL) {
+            cuartel.setEstado(estadoFenologico);
+        } else {
+            throw new GestionHuertosException("No esta permitido el cambio de estado solicitado");
+        }
     }
 }
