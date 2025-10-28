@@ -334,7 +334,7 @@ public class ControlProduccion {
                         case "createPropietario":
                             nroDeLineas = Integer.parseInt(operacion[1]);
                             for (int i = 0; i < nroDeLineas; i++) {
-                                Rut rut = new Rut(scGestionHuertos.next().trim());
+                                Rut rut = Rut.of(scGestionHuertos.next().trim());
                                 String nombre = scGestionHuertos.next().trim();
                                 String email = scGestionHuertos.next().trim();
                                 String direccion = scGestionHuertos.next().trim();
@@ -345,7 +345,7 @@ public class ControlProduccion {
                         case "createSupervisor":
                             nroDeLineas = Integer.parseInt(operacion[1]);
                             for (int i = 0; i < nroDeLineas; i++) {
-                                Rut rut = new Rut(scGestionHuertos.next().trim());
+                                Rut rut = Rut.of(scGestionHuertos.next().trim());
                                 String nombre = scGestionHuertos.next().trim();
                                 String email = scGestionHuertos.next().trim();
                                 String direccion = scGestionHuertos.next().trim();
@@ -356,7 +356,7 @@ public class ControlProduccion {
                         case "createCosechador":
                             nroDeLineas = Integer.parseInt(operacion[1]);
                             for (int i = 0; i < nroDeLineas; i++) {
-                                Rut rut = new Rut(scGestionHuertos.next().trim());
+                                Rut rut = Rut.of(scGestionHuertos.next().trim());
                                 String nombre = scGestionHuertos.next().trim();
                                 String email = scGestionHuertos.next().trim();
                                 String direccion = scGestionHuertos.next().trim();
@@ -380,7 +380,7 @@ public class ControlProduccion {
                                 String nombre = scGestionHuertos.next().trim();
                                 float superficie = scGestionHuertos.nextFloat();
                                 String ubicacion = scGestionHuertos.next().trim();
-                                Rut rut = new Rut(scGestionHuertos.next().trim());
+                                Rut rut = Rut.of(scGestionHuertos.next().trim());
                                 createHuerto(nombre, superficie, ubicacion, rut);
                             }
                             break;
@@ -414,7 +414,7 @@ public class ControlProduccion {
                                 int idPlanCosecha = scGestionHuertos.nextInt();
                                 int idCuadrilla = scGestionHuertos.nextInt();
                                 String nombreCuadrilla = scGestionHuertos.next().trim();
-                                Rut rutSupervisor = new Rut(scGestionHuertos.next().trim());
+                                Rut rutSupervisor = Rut.of(scGestionHuertos.next().trim());
                                 addCuadrillaToPlan(idPlanCosecha, idCuadrilla, nombreCuadrilla, rutSupervisor);
                             }
                             break;
@@ -426,7 +426,7 @@ public class ControlProduccion {
                                 LocalDate fechaInicio = LocalDate.parse(scGestionHuertos.next().trim(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
                                 LocalDate fechaFinal = LocalDate.parse(scGestionHuertos.next().trim(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
                                 double meta = scGestionHuertos.nextDouble();
-                                Rut rutCosechador = new Rut(scGestionHuertos.next().trim());
+                                Rut rutCosechador = Rut.of(scGestionHuertos.next().trim());
                                 addCosechadorToCuadrilla(idPlanCosecha, idCuadrilla, fechaInicio, fechaFinal, meta, rutCosechador);
                             }
                             break;
@@ -451,7 +451,7 @@ public class ControlProduccion {
                             nroDeLineas = Integer.parseInt(operacion[1]);
                             for (int i = 0; i < nroDeLineas; i++) {
                                 int idPesaje = scGestionHuertos.nextInt();
-                                Rut rut = new Rut(scGestionHuertos.next().trim());
+                                Rut rut = Rut.of(scGestionHuertos.next().trim());
                                 int idPlan = scGestionHuertos.nextInt();
                                 int idCuadrilla = scGestionHuertos.nextInt();
                                 float ctdKilos = scGestionHuertos.nextFloat();
