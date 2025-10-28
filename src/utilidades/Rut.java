@@ -10,12 +10,19 @@ public class Rut {
         this.numero = numero;
         this.dv = dv;
     }
-    public Rut of(String rutStr){
+    public static Rut of(String rutStr){
         //Recibira un String con el rut deseado, cortara en la posicion donde esta el '-' y después convertira los dos valores
         //a Long y Char respectivaente, y retornara la creacion de un nuevo objeto rut.
         //En el UML, el constructor rut es private.
         String[] cortar = rutStr.split("-");
-        return new Rut(Long.parseLong(cortar[0]), cortar[1].charAt(0));
+        //Corta en los puntos.
+        String[] rutNum = cortar[0].split("\\.");
+        StringBuilder numero = new StringBuilder();
+        for (String rut : rutNum) {
+            //reconstruye el numero con un stringbuilder
+           numero.append(rut);
+        }
+        return new Rut(Long.parseLong(numero.toString()), cortar[1].charAt(0));
     }
     //Metodos
     @Override

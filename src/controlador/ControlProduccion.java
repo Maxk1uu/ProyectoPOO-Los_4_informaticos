@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import utilidades.*;
@@ -20,9 +21,9 @@ public class ControlProduccion {
     private final ArrayList<Cultivo> cultivos = new ArrayList<>();
     private final ArrayList<PlanCosecha> planCosechas = new ArrayList<>();
     private final ArrayList<Pesaje> pesajes = new ArrayList<>();
+    private final ArrayList<PagoPesaje> pagosPesajes = new ArrayList<>();
     private static ControlProduccion instance = null;
     private ControlProduccion() {
-        generateTestData();
     }
     public static ControlProduccion getInstance() {
         if (instance == null) {
@@ -83,7 +84,7 @@ public class ControlProduccion {
         if (findHuerto(nombreHuerto).isEmpty()) throw new GestionHuertosException("No existe un huerto con el nombre indicado");
         if (findCuartel(idCuartel, nombreHuerto).isEmpty()) throw new GestionHuertosException("No existe en el huerto un cuartel con el id indicado");
         //Cambio de estado
-        findCuartel(idCuartel, nombreHuerto).get().setEstado(estado);
+        findHuerto(nombreHuerto).get().setEstadoCuartel(idCuartel, estado);
     }
     //Creado por Gabriel Rojas
     public void createPlanCosecha(int id, String nombrePlan, LocalDate fechaInicio, LocalDate fechaFin, double metaKilos, double precioBaseKilo, String nomHuerto, int idCuartel) throws GestionHuertosException {
@@ -109,21 +110,7 @@ public class ControlProduccion {
     public void changeEstadoPlan(int idPlan, EstadoPlan estado) throws GestionHuertosException {
         if (findPlanCosecha(idPlan).isEmpty()) throw new GestionHuertosException("No existe un plan cosecha con el id indicado");
         PlanCosecha plan = findPlanCosecha(idPlan).get();
-        //Condicional bien largo.
-        // Si el estado indicado por parametros es el mismo que el del plan, entonces tirara una excepcion.
-        // Si el estado del plan es cancelado, entonces no se podra cambiar su estado nuevamente.
-        // si su estado es Cerrado y se quiere cambiar a ejecutando, entonces no se podra, porque el plan cosecha ya ha concluido.
-        // si el Estado es Cerrado y se quiere cambiar a planificado, entonces no se podra.
-        // si el estado es Ejecutando y se quiere cambiar a planificado, entonces no se podra porque el plan ya esta en ejecucion.
-        // Disclaimer: Estas son condiciones que talvez no sean correctas, hablar de estas condiciones con la profesora.
-
-        if (plan.getEstado().equals(estado) || plan.getEstado().equals(EstadoPlan.CANCELADO)
-                || plan.getEstado().equals(EstadoPlan.CERRADO) && estado.equals(EstadoPlan.CANCELADO)
-            || plan.getEstado().equals(EstadoPlan.CERRADO) && estado.equals(EstadoPlan.EJECUTANDO)
-            || plan.getEstado().equals(EstadoPlan.CERRADO) && estado.equals(EstadoPlan.PLANIFICADO)
-            || plan.getEstado().equals(EstadoPlan.EJECUTANDO) && estado.equals(EstadoPlan.PLANIFICADO))
-            throw new GestionHuertosException("No esta permitido el cambio de estado solicitado");
-        plan.setEstado(estado);
+         if (!plan.setEstado(estado))  throw new GestionHuertosException("No esta permitido el cambio de estado solicitado");
     }
     //Creado por Gabriel Rojas
     public void addCuadrillaToPlan(int idPlan, int idCuadrilla, String nombreCuadrilla, Rut rutSupervisor) throws GestionHuertosException {
@@ -178,20 +165,29 @@ public class ControlProduccion {
     }
     public void addPesaje(int id, Rut rutCosechador, int idPlan, int idCuadrilla, float cantidadKg, Calidad calidad) throws GestionHuertosException {
         //Condiciones que tiraran la excepcion GestionHuertosException
-        if (findPesaje(id).isPresent()) throw new GestionHuertosException("Ya existe un pesaje con el id indicado");
+        if (findPesajeById(id).isPresent()) throw new GestionHuertosException("Ya existe un pesaje con el id indicado");
         if (findPersona(rutCosechador).isEmpty()|| !(findPersona(rutCosechador).get() instanceof Cosechador cosechador)) throw new GestionHuertosException("No existe un cosechador con el rut indicado");
         if (findPlanCosecha(idPlan).isEmpty()) throw new GestionHuertosException("No existe un plan con el id indicado");
         if (!findPlanCosecha(idPlan).get().getEstado().equals(EstadoPlan.EJECUTANDO)) throw new GestionHuertosException("El plan no se encuentra en estado \"en ejecucion\"");
         //Utiliza el metodo getCosAsig para asegurarse de que este cosechador este asignado a una cuadrilla de un plna
         //ADVERTENCIA: El metodo getCosAsig todavia no existe.
-        if (cosechador.getCosAsig(idCuadrilla, idPlan).isEmpty()) throw new GestionHuertosException("El cosechador no tiene una asignacion a una cuadrilla con el id indicado en el plan con el id señalado");
+        if (cosechador.getAsignacion(idCuadrilla, idPlan).isEmpty()) throw new GestionHuertosException("El cosechador no tiene una asignacion a una cuadrilla con el id indicado en el plan con el id señalado");
         //Compara las fechas de asignación del cosechador asignado en esa cuadrilla con LocalDate.now()
-        if (LocalDate.now().isBefore(cosechador.getCosAsig(idCuadrilla,idPlan).get().getDesde()) || LocalDate.now().isAfter(cosechador.getCosAsig(idCuadrilla,idPlan).get().getHasta()))
+        if (LocalDate.now().isBefore(cosechador.getAsignacion(idCuadrilla,idPlan).get().getDesde()) || LocalDate.now().isAfter(cosechador.getAsignacion(idCuadrilla,idPlan).get().getHasta()))
             throw new GestionHuertosException("La fecha no esta en el rango de la asignacion del cosechador");
         if (!findPlanCosecha(idPlan).get().getCuartel().getEstado().equals(EstadoFenologico.COSECHA))
             throw new GestionHuertosException("El cultivo no se encuentra en estado fenológico cosecha");
         //La fecha del pesaje es LocalDateTime.now, ver enunciado si es que hay dudas con eso.
-        pesajes.add(new Pesaje(id, (double)cantidadKg, LocalDateTime.now(), cosechador.getCosAsig(idCuadrilla,idPlan).get()));
+        pesajes.add(new Pesaje(id, (double)cantidadKg, calidad, LocalDateTime.now(), cosechador.getAsignacion(idCuadrilla,idPlan).get()));
+    }
+    //Necesaria la implementacion de los metodos de cosechador y cosechador asignado.
+    public void addPagoPesaje(int id, Rut rutCosechador) throws  GestionHuertosException {
+        if (findPagoPesajeById(id).isPresent()) throw new GestionHuertosException("Ya existe un pago de pesaje con el id indicado");
+        if (findPersona(rutCosechador).isEmpty() || !(findPersona(rutCosechador).get() instanceof Cosechador cosechador))
+            throw new GestionHuertosException("No existe un cosechador con el rut indicado");
+        //Utiliza los metodos cosAsignadoTienePesajes y findCosPesajesImpagos
+        if (cosechador.getCuadrillas().length == 0 ||  findCosPesajesImpagos(cosechador).isEmpty()) throw new GestionHuertosException("El cosechador no tiene pesajes impagos");
+        pagosPesajes.add(new PagoPesaje(id, LocalDate.now(), findCosPesajesImpagos(cosechador)));
     }
     // Hecho por Ricardo Quintana
     public String[] listCultivos() {
@@ -385,27 +381,27 @@ public class ControlProduccion {
         //Si no existe, retorna -1.
         return -1;
     }
-    private Optional<Pesaje> findPesaje(int id){
+    private Optional<Pesaje> findPesajeById(int id){
         for (Pesaje pesaje : pesajes) {
             if (pesaje.getId() == id) return Optional.of(pesaje);
         }
         return Optional.empty();
     }
-
-    private void generateTestData() {
-        LocalDate born;
-        LocalDate fechaIni, fechaFin;
-        LocalDate fechaIniCos, fechaFinCos;
-        createPropietario(new Rut("22.222.222-2"), "Test", "Email@gmail.com", "Direccion 1200", "DireccionCo 1200");
-        createSupervisor(new Rut("33.333.333-3"), "Test", "Email.com", "Direccion 1000", "Ingeniero Comercial");
-        createCosechador(new Rut("44.444.444-4"), "Test", "Email.com", "Direccion 101", born = LocalDate.parse("20/10/1999", DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-        createCultivo(123, "Manzana", "Fuji", 0.05f);
-        createHuerto("Los Vasquez", 2000, "Los Aramos", findPersona(new Rut("22.222.222-2")).get().getRut());
-        addCuartelToHuerto("Los Vasquez", 124, 500, 123);
-        createPlanCosecha(0003, "NombrePlan", fechaIni = LocalDate.parse("20/10/2025",DateTimeFormatter.ofPattern("dd/MM/yyyy")), fechaFin =
-                LocalDate.parse("20/03/2026", DateTimeFormatter.ofPattern("dd/MM/yyyy")), 1000, 500, "Los Vasquez", 124);
-        addCuadrillaToPlan(0003, 456, "Max Steel", new Rut("33.333.333-3"));
-        addCosechadorToCuadrilla(0003, 456, fechaIniCos = LocalDate.parse("10/11/2025", DateTimeFormatter.ofPattern("dd/MM/yyyy")), fechaFinCos =
-                LocalDate.parse("02/01/2026", DateTimeFormatter.ofPattern("dd/MM/yyyy")), 300, new Rut("44.444.444-4"));
+    private Optional<PagoPesaje> findPagoPesajeById(int id){
+        for (PagoPesaje pesaje : pagosPesajes) {
+            if (pesaje.getId() == id) return Optional.of(pesaje);
+        }
+        return Optional.empty();
+    }
+    //Verifica que tiene pesajes impagos
+    private List<Pesaje> findCosPesajesImpagos(Cosechador cosechador) {
+        List<Pesaje> pesajesConPagoPendiente = new ArrayList<>();
+        if (cosechador.getAsignaciones().length == 0 )  return new ArrayList<>();
+        for (CosechadorAsignado cosAsig : cosechador.getAsignaciones()) {
+            for (Pesaje pesaje : cosAsig.getPesajes()) {
+                if (!pesaje.isPagado()) pesajesConPagoPendiente.add(pesaje);
+            }
+        }
+        return  pesajesConPagoPendiente;
     }
 }

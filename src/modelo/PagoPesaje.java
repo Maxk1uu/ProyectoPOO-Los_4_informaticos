@@ -12,6 +12,10 @@ public class PagoPesaje {
         this.id = id;
         this.fecha = fecha;
         this.pesajes = pesajes;
+        //Se realiza la relacion, añadiendo este PagoPesaje a cada Pesaje pasado por parametro.
+        for (Pesaje p : pesajes) {
+            p.setPago(this);
+        }
     }
     public int getId() {
         return id;
