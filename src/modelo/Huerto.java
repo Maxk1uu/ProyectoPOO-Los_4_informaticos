@@ -1,8 +1,14 @@
-package modelo;// Revisado por: Gabriel Rojas
+// Hecho por: Ricardo Quintana
+// Revisado por: Gabriel Rojas
+package modelo;
+
+import utilidades.EstadoFenologico;
+import utilidades.GestionHuertosException;
 
 import java.util.ArrayList;
 
 public class Huerto {
+
     // Atributos
     private String nombre;
     private float superficie;
@@ -11,7 +17,7 @@ public class Huerto {
     // Relacion singular
     private Propietario propietario;
     // Relacion Multiple
-    private final ArrayList <Cuartel> cuarteles;
+    private final ArrayList<Cuartel> cuarteles;
 
     //Constructor
     public Huerto(String nombre, float superficie, String ubicacion, Propietario propietario) {
@@ -58,33 +64,64 @@ public class Huerto {
         this.propietario = (Propietario) propietario;
     }
 
-    public boolean addCuartel(int id, float sup, Cultivo cult){
+    public void addCuartel(int id, float sup, Cultivo cult) throws GestionHuertosException {
         // Verifico si el cuartel pasado como parametro no existe en la lista
-        for(Cuartel c:cuarteles){
-            if(c.getId() == id){ // si es true ya existe
-                return false;
+        for (Cuartel c : cuarteles) {
+            if (c.getId() == id) { // si es true ya existe
+                throw new GestionHuertosException("Ya existe en el huerto un cuartel con id indicado");
             }
         }
-        return cuarteles.add(new Cuartel(id,sup,cult,this));
+        // Verifico que la superficie del cuartel + los cuarteles que tiene el huerto, no supere la superficie del huerto
+        float suma = 0;
+        for (Cuartel c : cuarteles) {
+            suma += c.getSuperficie();
+        }
+        suma += sup;
+        if (suma <= superficie) {
+            cuarteles.add(new Cuartel(id, sup, cult, this));
+        } else {
+            throw new GestionHuertosException("La superficie del cuartel supera el limite del huerto, al sumarle la superficie de sus cuarteles actuales");
+        }
     }
 
-    public Cuartel getCuartel(int id){
+    public Cuartel getCuartel(int id) {
         // Verifico si el cuartel pertence al modelo.Huerto
-        for(Cuartel c:cuarteles){
-            if(c.getId() == id){
+        for (Cuartel c : cuarteles) {
+            if (c.getId() == id) {
                 return c;
             }
         }
         return null; // si no lo encuentra retorna null
     }
 
-    public Cuartel [] getCuartels(){
-        Cuartel [] cuartelesArr = new Cuartel [cuarteles.size()];
-        int cont = 0; // contador para guardar en la posicion correcta
-        for(Cuartel c:cuarteles){
-            cuartelesArr[cont] = c;
-            cont++;
+    public Cuartel[] getCuartels() {
+        return cuarteles.toArray(new Cuartel[0]);
+    }
+
+    public void setEstadoCuartel(int id, EstadoFenologico estadoFenologico) throws GestionHuertosException {
+        Cuartel cuartel = null;
+
+        // Buscar el cuartel
+        for (Cuartel c : cuarteles) {
+            if (c.getId() == id) {
+                cuartel = c;
+                break;
+            }
         }
-        return cuartelesArr;
+
+        if (cuartel == null) {
+            throw new GestionHuertosException("No existe un cuartel con el id indicado");
+        }
+        if (cuartel.getEstado() == EstadoFenologico.REPOSO_INVERNAL && estadoFenologico == EstadoFenologico.FLORACION ||
+                cuartel.getEstado() == EstadoFenologico.FLORACION && estadoFenologico == EstadoFenologico.CUAJA ||
+                cuartel.getEstado() == EstadoFenologico.CUAJA && estadoFenologico == EstadoFenologico.FRUCTIFICACION ||
+                cuartel.getEstado() == EstadoFenologico.FRUCTIFICACION && estadoFenologico == EstadoFenologico.MADURACION ||
+                cuartel.getEstado() == EstadoFenologico.MADURACION && estadoFenologico == EstadoFenologico.COSECHA ||
+                cuartel.getEstado() == EstadoFenologico.COSECHA && estadoFenologico == EstadoFenologico.POSTCOSECHA ||
+                cuartel.getEstado() == EstadoFenologico.POSTCOSECHA && estadoFenologico == EstadoFenologico.REPOSO_INVERNAL) {
+            cuartel.setEstado(estadoFenologico);
+        } else {
+            throw new GestionHuertosException("No esta permitido el cambio de estado solicitado");
+        }
     }
 }
