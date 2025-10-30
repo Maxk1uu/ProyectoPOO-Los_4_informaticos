@@ -47,7 +47,7 @@ public class Cosechador extends Persona {
     //necesita revision.
     public Optional<CosechadorAsignado> getAsignacion(int idCuadrilla,int idPlanCosecha){
         for(CosechadorAsignado cosAs : cosechadoresAsignados) {
-            if(cosAs.getCuadrilla().getPlanCosecha().getId() == idPlanCosecha){
+            if(cosAs.getCuadrilla().getPlanCosecha().getId() == idPlanCosecha && cosAs.getCuadrilla().getId() == idCuadrilla) {
                 return Optional.of(cosAs);
             }
         }
