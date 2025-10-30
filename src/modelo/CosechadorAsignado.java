@@ -90,5 +90,14 @@ public class CosechadorAsignado {
         }
         return nroPesajePagados;
     }
+    public double getMontoPesajesPagados(){
+        double montoTotal = 0;
+        for(Pesaje p : pesajes){
+            if(p.isPagado()){
+                montoTotal += p.getMonto();
+            }
+        }
+        return montoTotal;
+    }
 
 }
