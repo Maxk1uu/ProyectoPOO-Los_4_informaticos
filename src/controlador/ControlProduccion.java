@@ -321,12 +321,23 @@ public class ControlProduccion {
         // Guardo los planes de Cosecha en el arreglo
         int cont = 0;
         for (PlanCosecha planCosecha : planCosechas) {
-            listaPlanesCosechas[cont] = String.join(", ", Integer.toString(planCosecha.getId()), planCosecha.getNombre(), planCosecha.getInicio().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+            listaPlanesCosechas[cont] = String.join("; ", Integer.toString(planCosecha.getId()), planCosecha.getNombre(), planCosecha.getInicio().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                     planCosecha.getFinEstimado().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), Double.toString(planCosecha.getMetaKilos()), Double.toString(planCosecha.getPrecioBaseKilo()), planCosecha.getEstado().toString(), Integer.toString(planCosecha.getCuartel().getId()),
                     planCosecha.getCuartel().getHuerto().getNombre(), Integer.toString(planCosecha.getCuadrillas().length));
             cont++;
         }
         return listaPlanesCosechas;
+    }
+
+    public String [] listPesajes() {
+        if (pesajes.isEmpty()) return new String[0];
+        String[] listaPesajes = new String[pesajes.size()];
+        for(Pesaje pesaje : pesajes) {
+            String pagadoPesaje = String.valueOf(pesaje.getPagoPesaje().getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+            if(pagadoPesaje == null) pagadoPesaje = "Impago"; {}
+            String.join("; ", Integer.toString(pesaje.getId()), pesaje.getFechaHora().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),pesaje.getCosechadorAsignado().getCosechador().getRut().toString(), String.valueOf(pesaje.getCalidad()), String.valueOf(pesaje.getCantidadKg()), String.valueOf(pesaje.getPrecioKg()), String.valueOf(pesaje.getMonto()), pagadoPesaje);
+        }
+        return listaPesajes;
     }
 
     // Hecho por Ricardo Quintana
