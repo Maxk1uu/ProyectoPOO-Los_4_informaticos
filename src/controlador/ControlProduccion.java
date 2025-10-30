@@ -135,7 +135,8 @@ public class ControlProduccion {
         if (findPlanCosecha(idPlan).isEmpty())
             throw new GestionHuertosException("No existe un plan cosecha con el id indicado");
         PlanCosecha plan = findPlanCosecha(idPlan).get();
-         if (!plan.setEstado(estado))  throw new GestionHuertosException("No esta permitido el cambio de estado solicitado");
+        if (!plan.setEstado(estado))
+            throw new GestionHuertosException("No esta permitido el cambio de estado solicitado");
     }
 
     //Creado por Gabriel Rojas
@@ -194,32 +195,41 @@ public class ControlProduccion {
             plan.addCosechadorToCuadrilla(idCuadrilla, fechaIniCosechador, fechaFinCosechador, metaKilosCosechador, cosechadorEncontrado);
         }
     }
+
     public void addPesaje(int id, Rut rutCosechador, int idPlan, int idCuadrilla, float cantidadKg, Calidad calidad) throws GestionHuertosException {
         //Condiciones que tiraran la excepcion GestionHuertosException
         if (findPesajeById(id).isPresent()) throw new GestionHuertosException("Ya existe un pesaje con el id indicado");
-        if (findPersona(rutCosechador).isEmpty()|| !(findPersona(rutCosechador).get() instanceof Cosechador cosechador)) throw new GestionHuertosException("No existe un cosechador con el rut indicado");
-        if (findPlanCosecha(idPlan).isEmpty()) throw new GestionHuertosException("No existe un plan con el id indicado");
-        if (!findPlanCosecha(idPlan).get().getEstado().equals(EstadoPlan.EJECUTANDO)) throw new GestionHuertosException("El plan no se encuentra en estado \"en ejecucion\"");
+        if (findPersona(rutCosechador).isEmpty() || !(findPersona(rutCosechador).get() instanceof Cosechador cosechador))
+            throw new GestionHuertosException("No existe un cosechador con el rut indicado");
+        if (findPlanCosecha(idPlan).isEmpty())
+            throw new GestionHuertosException("No existe un plan con el id indicado");
+        if (!findPlanCosecha(idPlan).get().getEstado().equals(EstadoPlan.EJECUTANDO))
+            throw new GestionHuertosException("El plan no se encuentra en estado \"en ejecucion\"");
         //Utiliza el metodo getCosAsig para asegurarse de que este cosechador este asignado a una cuadrilla de un plna
         //ADVERTENCIA: El metodo getCosAsig todavia no existe.
-        if (cosechador.getAsignacion(idCuadrilla, idPlan).isEmpty()) throw new GestionHuertosException("El cosechador no tiene una asignacion a una cuadrilla con el id indicado en el plan con el id señalado");
+        if (cosechador.getAsignacion(idCuadrilla, idPlan).isEmpty())
+            throw new GestionHuertosException("El cosechador no tiene una asignacion a una cuadrilla con el id indicado en el plan con el id señalado");
         //Compara las fechas de asignación del cosechador asignado en esa cuadrilla con LocalDate.now()
-        if (LocalDate.now().isBefore(cosechador.getAsignacion(idCuadrilla,idPlan).get().getDesde()) || LocalDate.now().isAfter(cosechador.getAsignacion(idCuadrilla,idPlan).get().getHasta()))
+        if (LocalDate.now().isBefore(cosechador.getAsignacion(idCuadrilla, idPlan).get().getDesde()) || LocalDate.now().isAfter(cosechador.getAsignacion(idCuadrilla, idPlan).get().getHasta()))
             throw new GestionHuertosException("La fecha no esta en el rango de la asignacion del cosechador");
         if (!findPlanCosecha(idPlan).get().getCuartel().getEstado().equals(EstadoFenologico.COSECHA))
             throw new GestionHuertosException("El cultivo no se encuentra en estado fenológico cosecha");
         //La fecha del pesaje es LocalDateTime.now, ver enunciado si es que hay dudas con eso.
-        pesajes.add(new Pesaje(id, (double)cantidadKg, calidad, LocalDateTime.now(), cosechador.getAsignacion(idCuadrilla,idPlan).get()));
+        pesajes.add(new Pesaje(id, (double) cantidadKg, calidad, LocalDateTime.now(), cosechador.getAsignacion(idCuadrilla, idPlan).get()));
     }
+
     //Necesaria la implementacion de los metodos de cosechador y cosechador asignado.
-    public void addPagoPesaje(int id, Rut rutCosechador) throws  GestionHuertosException {
-        if (findPagoPesajeById(id).isPresent()) throw new GestionHuertosException("Ya existe un pago de pesaje con el id indicado");
+    public void addPagoPesaje(int id, Rut rutCosechador) throws GestionHuertosException {
+        if (findPagoPesajeById(id).isPresent())
+            throw new GestionHuertosException("Ya existe un pago de pesaje con el id indicado");
         if (findPersona(rutCosechador).isEmpty() || !(findPersona(rutCosechador).get() instanceof Cosechador cosechador))
             throw new GestionHuertosException("No existe un cosechador con el rut indicado");
         //Utiliza los metodos cosAsignadoTienePesajes y findCosPesajesImpagos
-        if (cosechador.getCuadrillas().length == 0 ||  findCosPesajesImpagos(cosechador).isEmpty()) throw new GestionHuertosException("El cosechador no tiene pesajes impagos");
+        if (cosechador.getCuadrillas().length == 0 || findCosPesajesImpagos(cosechador).isEmpty())
+            throw new GestionHuertosException("El cosechador no tiene pesajes impagos");
         pagosPesajes.add(new PagoPesaje(id, LocalDate.now(), findCosPesajesImpagos(cosechador)));
     }
+
     // Hecho por Ricardo Quintana
     public String[] listCultivos() {
         if (cultivos.isEmpty()) return new String[0];
@@ -324,7 +334,7 @@ public class ControlProduccion {
         // creo el Scanner asociado al archivoDeTexto
         try {
             Scanner scGestionHuertos = new Scanner(new File("InputDataGestionHuertos.txt")).useLocale(Locale.UK);
-            scGestionHuertos.useDelimiter(";");
+            scGestionHuertos.useDelimiter("\\n\\r|;");
             while (scGestionHuertos.hasNextLine()) {
                 String linea = scGestionHuertos.nextLine().trim();
                 int nroDeLineas = 0;
@@ -569,27 +579,30 @@ public class ControlProduccion {
         //Si no existe, retorna -1.
         return -1;
     }
-    private Optional<Pesaje> findPesajeById(int id){
+
+    private Optional<Pesaje> findPesajeById(int id) {
         for (Pesaje pesaje : pesajes) {
             if (pesaje.getId() == id) return Optional.of(pesaje);
         }
         return Optional.empty();
     }
-    private Optional<PagoPesaje> findPagoPesajeById(int id){
+
+    private Optional<PagoPesaje> findPagoPesajeById(int id) {
         for (PagoPesaje pesaje : pagosPesajes) {
             if (pesaje.getId() == id) return Optional.of(pesaje);
         }
         return Optional.empty();
     }
+
     //Verifica que tiene pesajes impagos
     private List<Pesaje> findCosPesajesImpagos(Cosechador cosechador) {
         List<Pesaje> pesajesConPagoPendiente = new ArrayList<>();
-        if (cosechador.getAsignaciones().length == 0 )  return new ArrayList<>();
+        if (cosechador.getAsignaciones().length == 0) return new ArrayList<>();
         for (CosechadorAsignado cosAsig : cosechador.getAsignaciones()) {
             for (Pesaje pesaje : cosAsig.getPesajes()) {
                 if (!pesaje.isPagado()) pesajesConPagoPendiente.add(pesaje);
             }
         }
-        return  pesajesConPagoPendiente;
+        return pesajesConPagoPendiente;
     }
 }
