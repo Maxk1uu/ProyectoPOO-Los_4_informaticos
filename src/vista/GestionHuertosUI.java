@@ -216,19 +216,23 @@ public class GestionHuertosUI {
         String nombreHuerto;
         int nroCuarteles, idCuartel, idCultivo;
         float superficieCuartel;
-        System.out.println("\n---Agregando Cuarteles al Huerto---");
-        nombreHuerto = leerTextoNoVacio("> Nombre del Huerto: ");
-        nroCuarteles = leerNumeroPositivo("> Nro. de Cuarteles: ");
-        for (int i = 1; i <= nroCuarteles; i++) {
-            idCuartel = leerNumeroPositivo("\n> ID del cuartel: ");
-            superficieCuartel = leerFloatPositivo("> Superficie del cuartel: ");
-            idCultivo = leerNumeroPositivo("> ID del cultivo del cuartel: ");
-            try {
-                controlProduccion.addCuartelToHuerto(nombreHuerto, idCuartel, superficieCuartel, idCultivo);
-                System.out.println("\nCuartel agregado exitosamente al huerto.");
-            } catch (GestionHuertosException e) {
-                System.err.println("\nX Error: " + e.getMessage() + "\n");
+        try { //Captura el error si el nombre del Huerto no existe.
+            System.out.println("\n---Agregando Cuarteles al Huerto---");
+            nombreHuerto = leerTextoNoVacio("> Nombre del Huerto: ");
+            nroCuarteles = leerNumeroPositivo("> Nro. de Cuarteles: ");
+            for (int i = 1; i <= nroCuarteles; i++) {
+                idCuartel = leerNumeroPositivo("\n> ID del cuartel: ");
+                superficieCuartel = leerFloatPositivo("> Superficie del cuartel: ");
+                idCultivo = leerNumeroPositivo("> ID del cultivo del cuartel: ");
+                try { //Captura el error si no se puede agregar el cuartel al huerto.
+                    controlProduccion.addCuartelToHuerto(nombreHuerto, idCuartel, superficieCuartel, idCultivo);
+                    System.out.println("\nCuartel agregado exitosamente al huerto.");
+                } catch (GestionHuertosException e) {
+                    System.err.println("\nX Error: " + e.getMessage() + "\n");
+                }
             }
+        } catch (GestionHuertosException e) {
+            System.err.println("\nX Error: " + e.getMessage() + "\n");
         }
     }
 
@@ -271,10 +275,9 @@ public class GestionHuertosUI {
 
     private void creaPlanDeCosecha() {
         double metaKilos, precioBaseKilos;
-        int idPlanDeCosecha, idCuartel, nroCuadrillas, idCuadrilla;
-        String nombrePlanDeCosecha, nombreHuerto, nombreCuadrilla;
+        int idPlanDeCosecha, idCuartel;
+        String nombrePlanDeCosecha, nombreHuerto;
         LocalDate fechaInicio, fechaTermino;
-        Rut rutSupervisor;
         System.out.println("\n---Creando Plan de Cosecha---");
         idPlanDeCosecha = leerNumeroPositivo("> ID del plan : ");
         nombrePlanDeCosecha = leerTextoNoVacio("> Nombre del Plan de Cosecha: ");
@@ -290,47 +293,8 @@ public class GestionHuertosUI {
             controlProduccion.createPlanCosecha(idPlanDeCosecha, nombrePlanDeCosecha, fechaInicio, fechaTermino,
                     metaKilos, precioBaseKilos, nombreHuerto, idCuartel);
             System.out.println("\nPlan de Cosecha creado exitosamente.");
-            System.out.println("\n-Agregando Cuadrillas al Plan de Cosecha-");
-            nroCuadrillas = leerNumeroPositivo("Nro. de Cuadrillas: ");
-            for (int i = 1; i <= nroCuadrillas; i++) {
-                idCuadrilla = leerNumeroPositivo("> ID de la cuadrilla: ");
-                nombreCuadrilla = leerTextoNoVacio("> Nombre de la Cuadrilla: ");
-                rutSupervisor = Rut.of(leerTextoNoVacio("> Rut del Supervisor: "));
-                try {
-                controlProduccion.addCuadrillaToPlan(idPlanDeCosecha, idCuadrilla, nombreCuadrilla, rutSupervisor);
-                    System.out.println("\nCuadrilla agregada exitosamente al Plan de Cosecha.");
-                } catch (GestionHuertosException e) {
-                    System.err.println("\nX Error: "+e.getMessage() + "\n");
-                }
-            }
         } catch (GestionHuertosException e) {
             System.err.println("\nX Error: "+e.getMessage() + "\n");
-        }
-    }
-
-    private void asignaCosechadoresAPlan() {
-        int idPlan, idCuadrilla, nroCosechadores;
-        LocalDate fechaInicioAsignacion, fechaTerminoAsignacion;
-        double metaKilos;
-        Rut rutCosechador;
-        System.out.println("\n---Asignando Cosechadores a Plan de Cosecha---");
-        idPlan = leerNumeroPositivo("> ID del Plan: ");
-        idCuadrilla = leerNumeroPositivo("> ID de la Cuadrilla: ");
-        nroCosechadores = leerNumeroPositivo("> Nro. de Cosechadores a asignar: ");
-        for (int i = 1; i <= nroCosechadores; i++) {
-            do {
-                fechaInicioAsignacion = leerFechaExistente("\n> Fecha de Inicio de asignacion (dd/mm/yyyy): ");
-                fechaTerminoAsignacion = leerFechaExistente("> Fecha de Termino de asignacion (dd/mm/yyyy): ");
-            } while (comparaFechas(fechaInicioAsignacion, fechaTerminoAsignacion));
-            metaKilos = leerDoublePositivo("> Meta (Kilos): ");
-            rutCosechador = Rut.of(leerTextoNoVacio("> Rut del Cosechador: "));
-            try {
-                controlProduccion.addCosechadorToCuadrilla(idPlan, idCuadrilla, fechaInicioAsignacion,
-                        fechaTerminoAsignacion, metaKilos, rutCosechador);
-                System.out.println("\nCosechador asignado exitosamente a la cuadrilla del plan de Cosecha");
-            } catch (GestionHuertosException e) {
-                System.err.println("\nX Error: " + e.getMessage() + "\n");
-            }
         }
     }
 
@@ -363,6 +327,57 @@ public class GestionHuertosUI {
             System.err.println("\nX Error: "+e.getMessage() + "\n");
         }
     }
+
+    private void agregaCuadrillasAPLan() {
+        String nombreCuadrilla;
+        int idPlanDeCosecha, nroCuadrillas, idCuadrilla;
+        Rut rutSupervisor;
+        try {
+            System.out.println("\n-Agregando Cuadrillas al Plan de Cosecha-");
+            idPlanDeCosecha = leerNumeroPositivo("> ID del Plan de Cosecha: ");
+            nroCuadrillas = leerNumeroPositivo("Nro. de Cuadrillas: ");
+            for (int i = 1; i <= nroCuadrillas; i++) {
+                idCuadrilla = leerNumeroPositivo("> ID de la cuadrilla: ");
+                nombreCuadrilla = leerTextoNoVacio("> Nombre de la Cuadrilla: ");
+                rutSupervisor = Rut.of(leerTextoNoVacio("> Rut del Supervisor: "));
+                try { //Captura el error si no se puede agregar la cuadrilla al plan de cosecha.
+                    controlProduccion.addCuadrillaToPlan(idPlanDeCosecha, idCuadrilla, nombreCuadrilla, rutSupervisor);
+                    System.out.println("\nCuadrilla agregada exitosamente al Plan de Cosecha.");
+                } catch (GestionHuertosException e) {
+                    System.err.println("\nX Error: " + e.getMessage() + "\n");
+                }
+            }
+        } catch (GestionHuertosException e) {
+            System.err.println("\nX Error: " + e.getMessage() + "\n");
+        }
+    }
+
+    private void asignaCosechadoresAPlan() {
+        int idPlan, idCuadrilla, nroCosechadores;
+        LocalDate fechaInicioAsignacion, fechaTerminoAsignacion;
+        double metaKilos;
+        Rut rutCosechador;
+        System.out.println("\n---Asignando Cosechadores a Plan de Cosecha---");
+        idPlan = leerNumeroPositivo("> ID del Plan: ");
+        idCuadrilla = leerNumeroPositivo("> ID de la Cuadrilla: ");
+        nroCosechadores = leerNumeroPositivo("> Nro. de Cosechadores a asignar: ");
+        for (int i = 1; i <= nroCosechadores; i++) {
+            do {
+                fechaInicioAsignacion = leerFechaExistente("\n> Fecha de Inicio de asignacion (dd/mm/yyyy): ");
+                fechaTerminoAsignacion = leerFechaExistente("> Fecha de Termino de asignacion (dd/mm/yyyy): ");
+            } while (comparaFechas(fechaInicioAsignacion, fechaTerminoAsignacion));
+            metaKilos = leerDoublePositivo("> Meta (Kilos): ");
+            rutCosechador = Rut.of(leerTextoNoVacio("> Rut del Cosechador: "));
+            try {
+                controlProduccion.addCosechadorToCuadrilla(idPlan, idCuadrilla, fechaInicioAsignacion,
+                        fechaTerminoAsignacion, metaKilos, rutCosechador);
+                System.out.println("\nCosechador asignado exitosamente a la cuadrilla del plan de Cosecha");
+            } catch (GestionHuertosException e) {
+                System.err.println("\nX Error: " + e.getMessage() + "\n");
+            }
+        }
+    }
+
 
     private void agregarPesajeCosechador() {
         int idPesaje, idPlan, idCuadrilla, opcion;
