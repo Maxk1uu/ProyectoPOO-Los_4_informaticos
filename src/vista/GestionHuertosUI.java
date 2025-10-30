@@ -1,15 +1,12 @@
 package vista;
 import controlador.ControlProduccion;
-import modelo.PagoPesaje;
 import utilidades.*;
 
-import javax.crypto.spec.PSource;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
-import java.util.function.DoubleToIntFunction;
 
 public class GestionHuertosUI {
     //Atributos
@@ -142,7 +139,7 @@ public class GestionHuertosUI {
         System.out.println("\n--Creando una Persona---");
         System.out.print("> Rol Persona ([1] Propietario ; [2] Supervisor ; [3] Cosechador): ");
         rol = leerNumeroPositivo("> Rol: ");
-        Rut rut = new Rut(leerTextoNoVacio("> Rut: "));
+        Rut rut = Rut.of(leerTextoNoVacio("> Rut: "));
         nombre = leerTextoNoVacio("> Nombre: ");
         email = leerTextoNoVacio("> Email: ");
         direccion = leerTextoNoVacio("> Direccion: ");
@@ -207,7 +204,7 @@ public class GestionHuertosUI {
         nombreHuerto = leerTextoNoVacio("> Nombre del Huerto: ");
         ubicacion = leerTextoNoVacio("> Ubicacion: ");
         superficieHuerto = leerFloatPositivo("> Superficie (metros cuadrados): ");
-        rutPropietario = new Rut(leerTextoNoVacio("> Rut Propietario: "));
+        rutPropietario = Rut.of(leerTextoNoVacio("> Rut Propietario: "));
         try {
             controlProduccion.createHuerto(nombreHuerto, superficieHuerto, ubicacion, rutPropietario);
             System.out.println("\nEl Huerto a sido creado exitosamente.");
@@ -292,7 +289,7 @@ public class GestionHuertosUI {
             for (int i = 1; i <= nroCuadrillas; i++) {
                 idCuadrilla = leerNumeroPositivo("> ID de la cuadrilla: ");
                 nombreCuadrilla = leerTextoNoVacio("> Nombre de la Cuadrilla: ");
-                rutSupervisor = new Rut(leerTextoNoVacio("> Rut del Supervisor: "));
+                rutSupervisor = Rut.of(leerTextoNoVacio("> Rut del Supervisor: "));
                 try {
                 controlProduccion.addCuadrillaToPlan(idPlanDeCosecha, idCuadrilla, nombreCuadrilla, rutSupervisor);
                     System.out.println("\nCuadrilla agregada exitosamente al Plan de Cosecha.");
@@ -320,7 +317,7 @@ public class GestionHuertosUI {
                 fechaTerminoAsignacion = leerFechaExistente("> Fecha de Termino de asignacion (dd/mm/yyyy): ");
             } while (comparaFechas(fechaInicioAsignacion, fechaTerminoAsignacion));
             metaKilos = leerDoublePositivo("> Meta (Kilos): ");
-            rutCosechador = new Rut(leerTextoNoVacio("> Rut del Cosechador: "));
+            rutCosechador = Rut.of(leerTextoNoVacio("> Rut del Cosechador: "));
             try {
                 controlProduccion.addCosechadorToCuadrilla(idPlan, idCuadrilla, fechaInicioAsignacion,
                         fechaTerminoAsignacion, metaKilos, rutCosechador);
@@ -369,7 +366,7 @@ public class GestionHuertosUI {
         boolean error;
         System.out.println("\n---Agregando Pesaje a un Cosechador---");
         idPesaje = leerNumeroPositivo("> ID del Pesaje: ");
-        rutCosechador = new Rut(leerTextoNoVacio("> Rut del Cosechador: "));
+        rutCosechador = Rut.of(leerTextoNoVacio("> Rut del Cosechador: "));
         idPlan = leerNumeroPositivo("> ID del Plan: ");
         idCuadrilla = leerNumeroPositivo("> ID de la Cuadrilla: ");
         cantKilos = leerFloatPositivo("> Cantidad de Kilos: ");
@@ -401,7 +398,7 @@ public class GestionHuertosUI {
         Rut rutCosechador;
         System.out.println("\n---Pagando Pesaje a un Cosechador---");
         idPagoPesaje = leerNumeroPositivo("> ID del Pago de Pesaje: ");
-        rutCosechador = new Rut(leerTextoNoVacio("> Rut del Cosechador: "));
+        rutCosechador = Rut.of(leerTextoNoVacio("> Rut del Cosechador: "));
         try {
             controlProduccion.addPagoPesaje(idPagoPesaje, rutCosechador);
             System.out.println("\nMonto Pagado al Cosechador: $"); //Aqui debe ir el monto a pagar pero aun no sé como debe ser.
@@ -537,7 +534,7 @@ public class GestionHuertosUI {
 
     private void listaPesajesCosechadores() {
         System.out.println("\nLISTA DE PESAJES DEL COSECHADOR");
-        Rut rutCosechador = new Rut(leerTextoNoVacio("> Rut del Cosechador: "));
+        Rut rutCosechador = Rut.of(leerTextoNoVacio("> Rut del Cosechador: "));
         if (controlProduccion.listPesajesCosechadores(/*Rut Cosechador*/).length != 0) {
             System.out.println("--------------------------");
             System.out.printf("%-8s%-15s%-15s%-18s%-18s%-16s%-15s%n", "ID", "Fecha",
