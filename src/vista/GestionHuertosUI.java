@@ -197,9 +197,8 @@ public class GestionHuertosUI {
 
     private void creaHuerto() {
         String nombreHuerto, ubicacion;
-        float superficieHuerto, superficieCuartel;
+        float superficieHuerto;
         Rut rutPropietario;
-        int nroCuarteles, idCuartel, idCultivo;
         System.out.println("\n---Creando Huerto---");
         nombreHuerto = leerTextoNoVacio("> Nombre del Huerto: ");
         ubicacion = leerTextoNoVacio("> Ubicacion: ");
@@ -208,21 +207,28 @@ public class GestionHuertosUI {
         try {
             controlProduccion.createHuerto(nombreHuerto, superficieHuerto, ubicacion, rutPropietario);
             System.out.println("\nEl Huerto a sido creado exitosamente.");
-            System.out.println("\n-Agregando Cuarteles al Huerto-");
-            nroCuarteles = leerNumeroPositivo("> Nro. de Cuarteles: ");
-            for (int i = 1; i <= nroCuarteles; i++) {
-                idCuartel = leerNumeroPositivo("\n> ID del cuartel: ");
-                superficieCuartel = leerFloatPositivo("> Superficie del cuartel: ");
-                idCultivo = leerNumeroPositivo("> ID del cultivo del cuartel: ");
-                try {
-                    controlProduccion.addCuartelToHuerto(nombreHuerto, idCuartel, superficieCuartel, idCultivo);
-                    System.out.println("\nCuartel agregado exitosamente al huerto.");
-                } catch (GestionHuertosException e) {
-                    System.err.println("\nX Error: "+e.getMessage() + "\n");
-                }
-            }
         } catch (GestionHuertosException e) {
             System.err.println("\nX Error: "+e.getMessage() + "\n");
+        }
+    }
+
+    private void agregaCuartelesAHuerto() {
+        String nombreHuerto;
+        int nroCuarteles, idCuartel, idCultivo;
+        float superficieCuartel;
+        System.out.println("\n---Agregando Cuarteles al Huerto---");
+        nombreHuerto = leerTextoNoVacio("> Nombre del Huerto: ");
+        nroCuarteles = leerNumeroPositivo("> Nro. de Cuarteles: ");
+        for (int i = 1; i <= nroCuarteles; i++) {
+            idCuartel = leerNumeroPositivo("\n> ID del cuartel: ");
+            superficieCuartel = leerFloatPositivo("> Superficie del cuartel: ");
+            idCultivo = leerNumeroPositivo("> ID del cultivo del cuartel: ");
+            try {
+                controlProduccion.addCuartelToHuerto(nombreHuerto, idCuartel, superficieCuartel, idCultivo);
+                System.out.println("\nCuartel agregado exitosamente al huerto.");
+            } catch (GestionHuertosException e) {
+                System.err.println("\nX Error: " + e.getMessage() + "\n");
+            }
         }
     }
 
