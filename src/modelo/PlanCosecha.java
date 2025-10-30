@@ -67,10 +67,24 @@ public class PlanCosecha {
         this.precioBaseKilo = precioBaseKilo;
     }
     public EstadoPlan getEstado() {
-        return estado;
+      return estado;
     }
-    public void setEstado(EstadoPlan estado) {
+    public boolean setEstado(EstadoPlan estado) {
+        //Condicional bien largo.
+        // Si el estado indicado por parametros es el mismo que el del plan, entonces tirara una excepcion.
+        // Si el estado del plan es cancelado, entonces no se podra cambiar su estado nuevamente.
+        // si su estado es Cerrado y se quiere cambiar a ejecutando, entonces no se podra, porque el plan cosecha ya ha concluido.
+        // si el Estado es Cerrado y se quiere cambiar a planificado, entonces no se podra.
+        // si el estado es Ejecutando y se quiere cambiar a planificado, entonces no se podra porque el plan ya esta en ejecucion.
+        // Disclaimer: Estas son condiciones que talvez no sean correctas, hablar de estas condiciones con la profesora.
+
+        if (getEstado().equals(estado) || getEstado().equals(EstadoPlan.CANCELADO)
+                || getEstado().equals(EstadoPlan.CERRADO)
+                || getEstado().equals(EstadoPlan.PLANIFICADO) && estado.equals(EstadoPlan.CERRADO)
+                || getEstado().equals(EstadoPlan.EJECUTANDO) && estado.equals(EstadoPlan.PLANIFICADO))
+            return false;
         this.estado = estado;
+        return true;
     }
     public Cuartel getCuartel() {
         return cuartel;

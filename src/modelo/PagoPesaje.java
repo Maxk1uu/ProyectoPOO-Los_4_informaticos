@@ -3,7 +3,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class PagoPesaje {
-    private int id;
+    private final int id;
     LocalDate fecha;
     //Relacion
     private List<Pesaje> pesajes;
@@ -12,6 +12,10 @@ public class PagoPesaje {
         this.id = id;
         this.fecha = fecha;
         this.pesajes = pesajes;
+        //Se realiza la relacion, añadiendo este PagoPesaje a cada Pesaje pasado por parametro.
+        for (Pesaje p : pesajes) {
+            p.setPago(this);
+        }
     }
     public int getId() {
         return id;
