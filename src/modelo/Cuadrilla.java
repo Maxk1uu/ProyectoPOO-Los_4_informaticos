@@ -60,13 +60,23 @@ public class Cuadrilla {
     }
 
     public Cosechador[] getCosechadores() {
-        return cosechadoresAsignados.toArray(new Cosechador[0]);
+        //CORECCION
+        //Este metodo devolvia cosechadores asignados:
+        //return cosechadoresAsignados.toArray(new Cosechador[0])
+        //se necesitaban objetos de Cosechador.
+        ArrayList<Cosechador> cosechadores = new ArrayList<>();
+        for (CosechadorAsignado cosechador : cosechadoresAsignados) {
+            cosechadores.add(cosechador.getCosechador());
+        }
+        return cosechadores.toArray(new Cosechador[0]);
     }
 
     public double getKilosPesados() { //Revisar
         double totalKilosPesados = 0, pesajeTotalPorCosechador=0;
         for(CosechadorAsignado cosAs :  cosechadoresAsignados) {
-            for(Pesaje pesaje : cosAs.getCosechador().getPesajes()) {
+            //CORRECION
+            //Cosechador no tienen el metodo getPesajes, Cosechador asignado si.
+            for(Pesaje pesaje : cosAs.getPesajes()) {
                 pesajeTotalPorCosechador += pesaje.getCantidadKg();
             }
             totalKilosPesados += pesajeTotalPorCosechador;
