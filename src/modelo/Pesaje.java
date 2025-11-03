@@ -21,6 +21,7 @@ public class Pesaje {
         this.cosechadorAsignado = cosechadorAsignado;
         //Por hacer, añadir addPesaje a cosechador asignado.
         this.cosechadorAsignado.addPesaje(this);
+        this.precioKg = cosechadorAsignado.getCuadrilla().getPlanCosecha().getPrecioBaseKilo();
     }
     public  int getId() {
         return id;
