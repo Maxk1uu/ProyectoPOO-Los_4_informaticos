@@ -241,7 +241,7 @@ public class ControlProduccion {
         String[] listaCultivos = new String[cultivos.size()];
         for (int i = 0; i < cultivos.size(); i++) {
             Cultivo cultivo = cultivos.get(i);
-            listaCultivos[i] = String.join(", ", Integer.toString(cultivo.getId()), cultivo.getEspecie(), cultivo.getVariedad(), Double.toString(cultivo.getRendimiento()), Integer.toString(cultivo.getCuarteles().length));
+            listaCultivos[i] = String.join("; ", Integer.toString(cultivo.getId()), cultivo.getEspecie(), cultivo.getVariedad(), Double.toString(cultivo.getRendimiento()), Integer.toString(cultivo.getCuarteles().length));
         }
         return listaCultivos;
     }
@@ -251,7 +251,7 @@ public class ControlProduccion {
         if (huertos.isEmpty()) return new String[0];
         String[] listaHuertos = new String[huertos.size()];
         for (int i = 0; i < huertos.size(); i++) {
-            listaHuertos[i] = String.join(", ", huertos.get(i).getNombre(), Float.toString(huertos.get(i).getSuperficie()), huertos.get(i).getUbicacion(),
+            listaHuertos[i] = String.join("; ", huertos.get(i).getNombre(), Float.toString(huertos.get(i).getSuperficie()), huertos.get(i).getUbicacion(),
                     huertos.get(i).getPropietario().getRut().toString(), huertos.get(i).getPropietario().getNombre(), Integer.toString(huertos.get(i).getCuartels().length));
         }
         return listaHuertos;
@@ -269,7 +269,7 @@ public class ControlProduccion {
         // Busco los propietarios de la lista de personas
         for (int i = 0, j = 0; i < personas.size(); i++) {
             if (personas.get(i) instanceof Propietario) {
-                listaPropietarios[j] = String.join(", ", personas.get(i).getRut().toString(), personas.get(i).getNombre(), personas.get(i).getDireccion(),
+                listaPropietarios[j] = String.join("; ", personas.get(i).getRut().toString(), personas.get(i).getNombre(), personas.get(i).getDireccion(),
                         personas.get(i).getEmail(), ((Propietario) personas.get(i)).getDirComercial(), Integer.toString(((Propietario) personas.get(i)).getHuertos().length));
                 j++;
             }
@@ -287,11 +287,11 @@ public class ControlProduccion {
         for (int i = 0, j = 0; i < personas.size(); i++) {
             if (personas.get(i) instanceof Supervisor) {
                 if (((Supervisor) personas.get(i)).getCuadrillaAsignada() == null) {
-                    listaSupervisores[j] = String.join(", ", personas.get(i).getRut().toString(), personas.get(i).getNombre(), personas.get(i).getDireccion(), personas.get(i).getEmail(),
+                    listaSupervisores[j] = String.join("; ", personas.get(i).getRut().toString(), personas.get(i).getNombre(), personas.get(i).getDireccion(), personas.get(i).getEmail(),
                             ((Supervisor) personas.get(i)).getProfesion(), "S/A");
 
                 } else {
-                    listaSupervisores[j] = String.join(", ", personas.get(i).getRut().toString(), personas.get(i).getNombre(), personas.get(i).getDireccion(), personas.get(i).getEmail(),
+                    listaSupervisores[j] = String.join("; ", personas.get(i).getRut().toString(), personas.get(i).getNombre(), personas.get(i).getDireccion(), personas.get(i).getEmail(),
                             ((Supervisor) personas.get(i)).getProfesion(), ((Supervisor) personas.get(i)).getCuadrillaAsignada().getNombre());
                 }
                 j++;
@@ -310,7 +310,7 @@ public class ControlProduccion {
         for (int i = 0, j = 0; i < personas.size(); i++) {
             if (personas.get(i) instanceof Cosechador) {
                 int cuadrillasAsignadas = ((Cosechador) personas.get(i)).getCuadrillas().length;
-                listaCosechadores[j] = String.join(", ", personas.get(i).getRut().toString(), personas.get(i).getNombre(), personas.get(i).getDireccion(), personas.get(i).getEmail(),
+                listaCosechadores[j] = String.join("; ", personas.get(i).getRut().toString(), personas.get(i).getNombre(), personas.get(i).getDireccion(), personas.get(i).getEmail(),
                         ((Cosechador) personas.get(i)).getFechaNacimiento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), Integer.toString(cuadrillasAsignadas));
                 j++;
             }
@@ -383,7 +383,7 @@ public class ControlProduccion {
         // creo el Scanner asociado al archivoDeTexto
         try {
             Scanner scGestionHuertos = new Scanner(new File("InputDataGestionHuertos.txt")).useLocale(Locale.UK);
-            scGestionHuertos.useDelimiter("\\n\\r|;");
+            scGestionHuertos.useDelimiter("[\\n\\r|;]+");
             while (scGestionHuertos.hasNextLine()) {
                 String linea = scGestionHuertos.nextLine().trim();
                 int nroDeLineas = 0;

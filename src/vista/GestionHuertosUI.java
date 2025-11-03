@@ -45,9 +45,10 @@ public class GestionHuertosUI {
                 case 2 -> menuHuertos();
                 case 3 -> menuPlanesDeCosecha();
                 case 4 -> menuListados();
+                case 5 -> System.out.println("\nCerrando Sistema de Gestion de Huertos...\n");
                 default -> System.out.println("\nX Error: La opcion seleccionada no existe.\n");
             }
-        } while (opcion != 10);
+        } while (opcion != 5);
     }
 
     private void menuHuertos() {
@@ -534,7 +535,7 @@ public class GestionHuertosUI {
                     "Fecha de inicio", "Fecha de Termino", "Meta (kg)", "Precio Base (kg)", "Estado",
                     "ID Cuartel", "Nombre del Huerto", "Nro. Cuadrillas");
             for (String plan : controlProduccion.listPlanes()) {
-                String[] infoPlan = plan.split(", ");
+                String[] infoPlan = plan.split("; ");
                 System.out.printf("%-8s%-25s%-20s%-20s%-15s%-20s%-15s%-15s%-25s%-16s%n", infoPlan[0], infoPlan[1],
                         infoPlan[2], infoPlan[3], infoPlan[4], infoPlan[5], infoPlan[6], infoPlan[7], infoPlan[8],
                         infoPlan[9]);

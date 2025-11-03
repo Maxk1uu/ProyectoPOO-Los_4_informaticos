@@ -25,7 +25,7 @@ public class Cuadrilla {
         //Correción hecha por: Gabriel
         //Se realiza la asociación, añadiendo esta cuadrilla con el supervisor pasado por el constructor.
         supervisor.setCuadrilla(this);
-        maximoCosechadores = 1;
+        maximoCosechadores = 5;
     }
 
     //Metodos

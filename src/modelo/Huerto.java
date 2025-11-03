@@ -112,15 +112,7 @@ public class Huerto {
         if (cuartel == null) {
             throw new GestionHuertosException("No existe un cuartel con el id indicado");
         }
-        if (cuartel.getEstado() == EstadoFenologico.REPOSO_INVERNAL && estadoFenologico == EstadoFenologico.FLORACION ||
-                cuartel.getEstado() == EstadoFenologico.FLORACION && estadoFenologico == EstadoFenologico.CUAJA ||
-                cuartel.getEstado() == EstadoFenologico.CUAJA && estadoFenologico == EstadoFenologico.FRUCTIFICACION ||
-                cuartel.getEstado() == EstadoFenologico.FRUCTIFICACION && estadoFenologico == EstadoFenologico.MADURACION ||
-                cuartel.getEstado() == EstadoFenologico.MADURACION && estadoFenologico == EstadoFenologico.COSECHA ||
-                cuartel.getEstado() == EstadoFenologico.COSECHA && estadoFenologico == EstadoFenologico.POSTCOSECHA ||
-                cuartel.getEstado() == EstadoFenologico.POSTCOSECHA && estadoFenologico == EstadoFenologico.REPOSO_INVERNAL) {
-            cuartel.setEstado(estadoFenologico);
-        } else {
+        if (!cuartel.setEstado(estadoFenologico)) {
             throw new GestionHuertosException("No esta permitido el cambio de estado solicitado");
         }
     }
