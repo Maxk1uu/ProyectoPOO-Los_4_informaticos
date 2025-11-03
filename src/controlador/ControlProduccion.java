@@ -320,12 +320,56 @@ public class ControlProduccion {
         // Guardo los planes de Cosecha en el arreglo
         int cont = 0;
         for (PlanCosecha planCosecha : planCosechas) {
-            listaPlanesCosechas[cont] = String.join(", ", Integer.toString(planCosecha.getId()), planCosecha.getNombre(), planCosecha.getInicio().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+            listaPlanesCosechas[cont] = String.join("; ", Integer.toString(planCosecha.getId()), planCosecha.getNombre(), planCosecha.getInicio().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                     planCosecha.getFinEstimado().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), Double.toString(planCosecha.getMetaKilos()), Double.toString(planCosecha.getPrecioBaseKilo()), planCosecha.getEstado().toString(), Integer.toString(planCosecha.getCuartel().getId()),
                     planCosecha.getCuartel().getHuerto().getNombre(), Integer.toString(planCosecha.getCuadrillas().length));
             cont++;
         }
         return listaPlanesCosechas;
+    }
+
+    public String [] listPesajes() {
+        if (pesajes.isEmpty()) return new String[0];
+        String[] listaPesajes = new String[pesajes.size()];
+        for(Pesaje pesaje : pesajes) {
+            String pagadoPesaje = String.valueOf(pesaje.getPagoPesaje().getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+            if(pagadoPesaje == null) pagadoPesaje = "Impago"; {}
+            String.join("; ", Integer.toString(pesaje.getId()), pesaje.getFechaHora().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),pesaje.getCosechadorAsignado().getCosechador().getRut().toString(), String.valueOf(pesaje.getCalidad()), String.valueOf(pesaje.getCantidadKg()), String.valueOf(pesaje.getPrecioKg()), String.valueOf(pesaje.getMonto()), pagadoPesaje);
+        }
+        return listaPesajes;
+    }
+
+    public String [] listPesajesCosechador(Rut rut) {
+        if (pesajes.isEmpty()) return new String[0];
+        ArrayList<String> lista = new ArrayList<>();
+        if(findPersona(rut).get() instanceof Cosechador cosechador) {
+            if(cosechador.getAsignaciones().length > 0){
+                for(CosechadorAsignado cosechadorAsignado : cosechador.getAsignaciones()) {
+                    for(Pesaje pesaje : pesajes) {
+                        lista.add(String.join("; ", Integer.toString(pesaje.getId()), pesaje.getFechaHora().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), pesaje.getCalidad().name(), Double.toString(pesaje.getCantidadKg()), Double.toString(pesaje.getPrecioKg()), Double.toString(pesaje.getMonto()), pesaje.getPagoPesaje().getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
+                    }
+                }
+                return lista.toArray(new String[0]);
+
+            } else {
+                throw new GestionHuertosException("El cosechador no ha sido asignado a una cuadrilla");
+            }
+        } else {
+            throw new GestionHuertosException("No existe un cosechador con el rut indicado");
+        }
+    }
+
+    // Hecho por Ricardo Quintana
+    public String [] listPagoPesajes() {
+        if (pesajes.isEmpty()) return new String[0];
+        ArrayList<String> lista = new ArrayList<>();
+        for(Pesaje pesaje : pesajes) {
+            if(pesaje.getPagoPesaje() != null){
+                PagoPesaje pagoPesaje = pesaje.getPagoPesaje();
+                lista.add(String.join("; ", Integer.toString(pagoPesaje.getId()), pagoPesaje.getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), Double.toString(pagoPesaje.getMonto()), Integer.toString(pagoPesaje.getPesajes().length), pesaje.getCosechadorAsignado().getCosechador().getRut().toString()));
+            }
+        }
+        return lista.toArray(new String[0]);
     }
 
     // Hecho por Ricardo Quintana
