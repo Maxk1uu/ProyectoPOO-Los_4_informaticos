@@ -147,12 +147,11 @@ public class PlanCosecha {
     }
 
     public double getCumplimientoMeta() {
-        int suma = 0;
+        double suma = 0;
         for (Cuadrilla cuadrilla : cuadrillas) {
             suma += cuadrilla.getKilosPesados();
         }
         // Calculo el porcentaje de kilos que lleva en total las cuadrillas con respecto a la meta de kilos
-        double porcentaje = (suma * 100) / this.metaKilos;
-        return porcentaje;
+        return (suma * 100) / this.metaKilos;
     }
 }

@@ -4,7 +4,7 @@ import java.util.List;
 
 public class PagoPesaje {
     private final int id;
-    LocalDate fecha;
+    private LocalDate fecha;
     //Relacion
     private List<Pesaje> pesajes;
     //Constructor

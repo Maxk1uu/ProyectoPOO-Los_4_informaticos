@@ -99,5 +99,11 @@ public class CosechadorAsignado {
         }
         return montoTotal;
     }
+    public void addPesaje(Pesaje p){
+        pesajes.add(p);
+    }
+    public Pesaje[] getPesajes(){
+        return pesajes.toArray(new Pesaje[0]);
+    }
 
 }
