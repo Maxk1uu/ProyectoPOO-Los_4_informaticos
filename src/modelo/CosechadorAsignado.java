@@ -110,7 +110,7 @@ public class CosechadorAsignado {
         for(int i = 0; i<pesajes1.length; i++){
             pesajes1[i] = pesajes.get(i);
         }
-        return pesajes1;
+        return pesajes1;    
 
     }
 
