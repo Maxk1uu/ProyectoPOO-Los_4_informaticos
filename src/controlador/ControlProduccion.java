@@ -216,10 +216,10 @@ public class ControlProduccion {
         if (!findPlanCosecha(idPlan).get().getCuartel().getEstado().equals(EstadoFenologico.COSECHA))
             throw new GestionHuertosException("El cultivo no se encuentra en estado fenológico cosecha");
         //La fecha del pesaje es LocalDateTime.now, ver enunciado si es que hay dudas con eso.
-        pesajes.add(new Pesaje(id, (double) cantidadKg, calidad, LocalDateTime.now(), cosechador.getAsignacion(idCuadrilla, idPlan).get()));
+        pesajes.add(new Pesaje(id, cantidadKg, calidad, LocalDateTime.now(), cosechador.getAsignacion(idCuadrilla, idPlan).get()));
     }
     //Creado por Gabriel Rojas
-    public void addPagoPesaje(int id, Rut rutCosechador) throws  GestionHuertosException {
+    public double addPagoPesaje(int id, Rut rutCosechador) throws  GestionHuertosException {
         if (findPagoPesajeById(id).isPresent()) throw new GestionHuertosException("Ya existe un pago de pesaje con el id indicado");
         if (findPersona(rutCosechador).isEmpty() || !(findPersona(rutCosechador).get() instanceof Cosechador cosechador))
             throw new GestionHuertosException("No existe un cosechador con el rut indicado");
@@ -227,6 +227,7 @@ public class ControlProduccion {
         if (cosechador.getCuadrillas().length == 0 || findCosPesajesImpagos(cosechador).isEmpty())
             throw new GestionHuertosException("El cosechador no tiene pesajes impagos");
         pagosPesajes.add(new PagoPesaje(id, LocalDate.now(), findCosPesajesImpagos(cosechador)));
+        return findPagoPesajeById(id).get().getMonto();
     }
 
     // Hecho por Ricardo Quintana
