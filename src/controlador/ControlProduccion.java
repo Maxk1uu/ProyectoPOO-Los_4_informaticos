@@ -360,6 +360,19 @@ public class ControlProduccion {
     }
 
     // Hecho por Ricardo Quintana
+    public String [] listPagoPesajes() {
+        if (pesajes.isEmpty()) return new String[0];
+        ArrayList<String> lista = new ArrayList<>();
+        for(Pesaje pesaje : pesajes) {
+            if(pesaje.getPagoPesaje() != null){
+                PagoPesaje pagoPesaje = pesaje.getPagoPesaje();
+                lista.add(String.join("; ", Integer.toString(pagoPesaje.getId()), pagoPesaje.getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), Double.toString(pagoPesaje.getMonto()), Integer.toString(pagoPesaje.getPesajes().length), pesaje.getCosechadorAsignado().getCosechador().getRut().toString()));
+            }
+        }
+        return lista.toArray(new String[0]);
+    }
+
+    // Hecho por Ricardo Quintana
     private void readDataFromTextFile() throws FileNotFoundException {
         // creo el Scanner asociado al archivoDeTexto
         try {
