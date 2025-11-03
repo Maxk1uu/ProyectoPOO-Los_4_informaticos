@@ -27,6 +27,11 @@ public class ControlProduccion {
     private static ControlProduccion instance = null;
 
     private ControlProduccion() {
+        try {
+            readDataFromTextFile();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     public static ControlProduccion getInstance() {

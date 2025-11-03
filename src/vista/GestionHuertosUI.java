@@ -176,7 +176,7 @@ public class GestionHuertosUI {
 
             }
             default -> {
-                System.err.println("Rol de Persona no valido. Por favor ingrese un rol valido.");
+                System.err.println("\nX Error: Rol de Persona no valido.\n");
             }
         }
     }
@@ -342,7 +342,7 @@ public class GestionHuertosUI {
             for (int i = 1; i <= nroCuadrillas; i++) {
                 idCuadrilla = leerNumeroPositivo("> ID de la cuadrilla: ");
                 nombreCuadrilla = leerTextoNoVacio("> Nombre de la Cuadrilla: ");
-                rutSupervisor = leerRutValido("> Rut del Supervisor: "));
+                rutSupervisor = leerRutValido("> Rut del Supervisor: ");
                 try { //Captura el error si no se puede agregar la cuadrilla al plan de cosecha.
                     controlProduccion.addCuadrillaToPlan(idPlanDeCosecha, idCuadrilla, nombreCuadrilla, rutSupervisor);
                     System.out.println("\nCuadrilla agregada exitosamente al Plan de Cosecha.");
@@ -370,7 +370,7 @@ public class GestionHuertosUI {
                 fechaTerminoAsignacion = leerFechaExistente("> Fecha de Termino de asignacion (dd/mm/yyyy): ");
             } while (comparaFechas(fechaInicioAsignacion, fechaTerminoAsignacion));
             metaKilos = leerDoublePositivo("> Meta (Kilos): ");
-            rutCosechador = leerRutValido("> Rut del Cosechador: "));
+            rutCosechador = leerRutValido("> Rut del Cosechador: ");
             try {
                 controlProduccion.addCosechadorToCuadrilla(idPlan, idCuadrilla, fechaInicioAsignacion,
                         fechaTerminoAsignacion, metaKilos, rutCosechador);
@@ -390,7 +390,7 @@ public class GestionHuertosUI {
         boolean error;
         System.out.println("\n---Agregando Pesaje a un Cosechador---");
         idPesaje = leerNumeroPositivo("> ID del Pesaje: ");
-        rutCosechador = leerRutValido("> Rut del Cosechador: "));
+        rutCosechador = leerRutValido("> Rut del Cosechador: ");
         idPlan = leerNumeroPositivo("> ID del Plan: ");
         idCuadrilla = leerNumeroPositivo("> ID de la Cuadrilla: ");
         cantKilos = leerFloatPositivo("> Cantidad de Kilos: ");
@@ -422,7 +422,7 @@ public class GestionHuertosUI {
         Rut rutCosechador;
         System.out.println("\n---Pagando Pesaje a un Cosechador---");
         idPagoPesaje = leerNumeroPositivo("> ID del Pago de Pesaje: ");
-        rutCosechador = leerRutValido("> Rut del Cosechador: "));
+        rutCosechador = leerRutValido("> Rut del Cosechador: ");
         try {
             System.out.println("\nMonto Pagado al Cosechador: $" + controlProduccion.addPagoPesaje(idPagoPesaje, rutCosechador));
         } catch (GestionHuertosException e) {
@@ -564,12 +564,12 @@ public class GestionHuertosUI {
 
     private void listaPesajesCosechadores() {
         System.out.println("\nLISTA DE PESAJES DEL COSECHADOR");
-        Rut rutCosechador = leerRutValido("> Rut del Cosechador: "));
-        if (controlProduccion.listPesajesCosechadores(/*Rut Cosechador*/).length != 0) {
+        Rut rutCosechador = leerRutValido("> Rut del Cosechador: ");
+        if (controlProduccion.listPesajesCosechador(rutCosechador).length != 0) {
             System.out.println("--------------------------");
             System.out.printf("%-8s%-15s%-15s%-18s%-18s%-16s%-15s%n", "ID", "Fecha",
                     "Calidad", "Cantidad (kg)", "Precio por Kg", "Monto Total", "Fecha Pago");
-            for (String pesajeCos : controlProduccion.listPesajesCosechadores(/*Rut Cosechador*/)) {
+            for (String pesajeCos : controlProduccion.listPesajesCosechador(rutCosechador)) {
                 String[] infoPesajeCos = pesajeCos.split("; ");
                 System.out.printf("%-8s%-15s%-15s%-18s%-18s%-16s%-15s%n", infoPesajeCos[0], infoPesajeCos[1],
                         infoPesajeCos[2], infoPesajeCos[3], infoPesajeCos[4], infoPesajeCos[5], infoPesajeCos[6]);
@@ -583,10 +583,10 @@ public class GestionHuertosUI {
     private void listaPagosPesajes() {
         System.out.println("\nLISTA DE PAGOS DE PESAJES");
         System.out.println("----------------------------");
-        if (controlProduccion.listPagosPesajes().length != 0) {
+        if (controlProduccion.listPagoPesajes().length != 0) {
             System.out.printf("%-8s%-15s%-16s%-17s%-20s%n", "ID", "Fecha Pago", "Monto Total", "Nro. Pesajes",
                     "Rut Cosechador");
-            for (String pagos : controlProduccion.listPagosPesajes()) {
+            for (String pagos : controlProduccion.listPagoPesajes()) {
                 String[] infoPagos = pagos.split("; ");
                 System.out.printf("%-8s%-15s%-16s%-17s%-20s%n", infoPagos[0], infoPagos[1], infoPagos[2], infoPagos[3],
                         infoPagos[4]);
