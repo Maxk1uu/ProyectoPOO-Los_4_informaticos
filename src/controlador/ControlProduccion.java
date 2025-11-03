@@ -339,6 +339,26 @@ public class ControlProduccion {
         return listaPesajes;
     }
 
+    public String [] listPesajesCosechador(Rut rut) {
+        if (pesajes.isEmpty()) return new String[0];
+        ArrayList<String> lista = new ArrayList<>();
+        if(findPersona(rut).get() instanceof Cosechador cosechador) {
+            if(cosechador.getAsignaciones().length > 0){
+                for(CosechadorAsignado cosechadorAsignado : cosechador.getAsignaciones()) {
+                    for(Pesaje pesaje : pesajes) {
+                        lista.add(String.join("; ", Integer.toString(pesaje.getId()), pesaje.getFechaHora().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), pesaje.getCalidad().name(), Double.toString(pesaje.getCantidadKg()), Double.toString(pesaje.getPrecioKg()), Double.toString(pesaje.getMonto()), pesaje.getPagoPesaje().getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
+                    }
+                }
+                return lista.toArray(new String[0]);
+
+            } else {
+                throw new GestionHuertosException("El cosechador no ha sido asignado a una cuadrilla");
+            }
+        } else {
+            throw new GestionHuertosException("No existe un cosechador con el rut indicado");
+        }
+    }
+
     // Hecho por Ricardo Quintana
     private void readDataFromTextFile() throws FileNotFoundException {
         // creo el Scanner asociado al archivoDeTexto
