@@ -131,8 +131,7 @@ public class ControlProduccion {
             //Crea el nuevo plan de cosecha.
             planCosechas.add(new PlanCosecha(id, nombrePlan, fechaInicio, fechaFin, metaKilos, precioBaseKilo, cuartelEncontrado));
         } else {
-            // Condicion que no se especifica en el enunciado, dejarlo aquí porsiacaso.
-            // throw new GestionHuertosException("ERROR: El cuartel con el ID " +idCuartel + " no existe o no forma parte del Huerto asignado.");
+            throw new GestionHuertosException("No existe en el huerto un cuartel con el id indicado");
         }
     }
     //Creado por Gabriel Rojas
@@ -653,5 +652,13 @@ public class ControlProduccion {
             }
         }
         return pesajesConPagoPendiente;
+    }
+    private String reconstruyeRut(String rut) {
+        String dosNumeros = rut.substring(0,2);
+        String tresNumeros = rut.substring(2,5);
+        String resto = rut.substring(5);
+        StringBuilder unirDosyTres = new StringBuilder();
+        unirDosyTres.append(dosNumeros).append(".").append(tresNumeros).append(".").append(resto);
+        return unirDosyTres.toString();
     }
 }
