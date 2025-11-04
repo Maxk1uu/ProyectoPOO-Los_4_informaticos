@@ -32,7 +32,7 @@ public class GestionHuertosUI {
     public void menu() {
         int opcion;
         do {
-            System.out.println("\n*** SISTEMA DE GESTION DE HUERTOS ***\n");
+            System.out.println("\n\n*** SISTEMA DE GESTION DE HUERTOS ***\n");
             System.out.println("::: Menú de Opciones :::");
             System.out.println("1. Crear Personas");
             System.out.println("2. Menu Huertos");
@@ -154,7 +154,7 @@ public class GestionHuertosUI {
                     controlProduccion.createPropietario(rut, nombre, email, direccion, dirComercial);
                     System.out.println("\nPropietario creado exitosamente");
                 } catch (GestionHuertosException e) {
-                    System.err.println("\nX Error: " + e.getMessage() + "\n");
+                    System.out.println("\nX Error: " + e.getMessage() + "\n");
                 }
             }
             case 2 -> { //Supervisor
@@ -163,7 +163,7 @@ public class GestionHuertosUI {
                     controlProduccion.createSupervisor(rut, nombre, email, direccion, profesion);
                     System.out.println("\nSupervisor creado exitosamente.");
                 } catch (GestionHuertosException e) {
-                    System.err.println("\nX Error: " + e.getMessage() + "\n");
+                    System.out.println("\nX Error: " + e.getMessage() + "\n");
                 }
             }
             case 3 -> { //Cosechador
@@ -172,12 +172,12 @@ public class GestionHuertosUI {
                     controlProduccion.createCosechador(rut, nombre, email, direccion, fNac);
                     System.out.println("\nEl Cosechador a sido creado exitosamente.");
                 } catch (GestionHuertosException e) {
-                    System.err.println("\nX Error: " + e.getMessage() + "\n");
+                    System.out.println("\nX Error: " + e.getMessage() + "\n");
                 }
 
             }
             default -> {
-                System.err.println("\nX Error: Rol de Persona no valido.\n");
+                System.out.println("\nX Error: Rol de Persona no valido.\n");
             }
         }
     }
@@ -195,7 +195,7 @@ public class GestionHuertosUI {
             controlProduccion.createCultivo(id, especie, variedad, rendimiento); //En el controlador se verifica que no exista un cultivo con ese ID.
             System.out.println("\nEl Cultivo a sido creado exitosamente.");
         } catch (GestionHuertosException e) {
-            System.err.println("\nX Error: " + e.getMessage() + "\n");
+            System.out.println("\nX Error: " + e.getMessage() + "\n");
         }
     }
 
@@ -212,7 +212,7 @@ public class GestionHuertosUI {
             controlProduccion.createHuerto(nombreHuerto, superficieHuerto, ubicacion, rutPropietario);
             System.out.println("\nEl Huerto a sido creado exitosamente.");
         } catch (GestionHuertosException e) {
-            System.err.println("\nX Error: " + e.getMessage() + "\n");
+            System.out.println("\nX Error: " + e.getMessage() + "\n");
         }
     }
 
@@ -232,11 +232,11 @@ public class GestionHuertosUI {
                     controlProduccion.addCuartelToHuerto(nombreHuerto, idCuartel, superficieCuartel, idCultivo);
                     System.out.println("\nCuartel agregado exitosamente al huerto.");
                 } catch (GestionHuertosException e) {
-                    System.err.println("\nX Error: " + e.getMessage() + "\n");
+                    System.out.println("\nX Error: " + e.getMessage() + "\n");
                 }
             }
         } catch (GestionHuertosException e) {
-            System.err.println("\nX Error: " + e.getMessage() + "\n");
+            System.out.println("\nX Error: " + e.getMessage() + "\n");
         }
     }
 
@@ -257,7 +257,7 @@ public class GestionHuertosUI {
             opcion = leerNumeroPositivo("> Opcion: ");
             if (opcion < 1 || opcion > 7) {
                 error = true;
-                System.err.println("\nX Error: La opcion seleccionada no existe. \n");
+                System.out.println("\nX Error: La opcion seleccionada no existe. \n");
             }
         } while (error);
         switch (opcion) {
@@ -273,7 +273,7 @@ public class GestionHuertosUI {
             controlProduccion.changeEstadoCuartel(nomHuerto, idCuartel, newEstadoCuartel);
             System.out.println("\nEstado del Cuartel cambiado exitosamente.");
         } catch (GestionHuertosException e) {
-            System.err.println("\nX Error: " + e.getMessage() + "\n");
+            System.out.println("\nX Error: " + e.getMessage() + "\n");
         }
     }
 
@@ -298,7 +298,7 @@ public class GestionHuertosUI {
                     metaKilos, precioBaseKilos, nombreHuerto, idCuartel);
             System.out.println("\nPlan de Cosecha creado exitosamente.");
         } catch (GestionHuertosException e) {
-            System.err.println("\nX Error: " + e.getMessage() + "\n");
+            System.out.println("\nX Error: " + e.getMessage() + "\n");
         }
     }
 
@@ -314,7 +314,7 @@ public class GestionHuertosUI {
             System.out.printf("%-20s%-20s%n%-20s%-20s%n", "[1] Planificado", "[2] Ejecutando", "[3] Cerrado", "[4] Cancelado");
             opcion = leerNumeroPositivo("> Opcion: ");
             if (opcion < 1 || opcion > 4) {
-                System.err.println("\nX Error: La opcion seleccionada no existe.\n");
+                System.out.println("\nX Error: La opcion seleccionada no existe.\n");
                 error = true;
             }
         } while (error);
@@ -328,7 +328,7 @@ public class GestionHuertosUI {
             controlProduccion.changeEstadoPlan(idPlan, newEstadoPlan);
             System.out.println("\nEstado del Plan cambiado exitosamente.");
         } catch (GestionHuertosException e) {
-            System.err.println("\nX Error: " + e.getMessage() + "\n");
+            System.out.println("\nX Error: " + e.getMessage() + "\n");
         }
     }
 
@@ -348,11 +348,11 @@ public class GestionHuertosUI {
                     controlProduccion.addCuadrillaToPlan(idPlanDeCosecha, idCuadrilla, nombreCuadrilla, rutSupervisor);
                     System.out.println("\nCuadrilla agregada exitosamente al Plan de Cosecha.");
                 } catch (GestionHuertosException e) {
-                    System.err.println("\nX Error: " + e.getMessage() + "\n");
+                    System.out.println("\nX Error: " + e.getMessage() + "\n");
                 }
             }
         } catch (GestionHuertosException e) {
-            System.err.println("\nX Error: " + e.getMessage() + "\n");
+            System.out.println("\nX Error: " + e.getMessage() + "\n");
         }
     }
 
@@ -377,7 +377,7 @@ public class GestionHuertosUI {
                         fechaTerminoAsignacion, metaKilos, rutCosechador);
                 System.out.println("\nCosechador asignado exitosamente a la cuadrilla del plan de Cosecha");
             } catch (GestionHuertosException e) {
-                System.err.println("\nX Error: " + e.getMessage() + "\n");
+                System.out.println("\nX Error: " + e.getMessage() + "\n");
             }
         }
     }
@@ -401,7 +401,7 @@ public class GestionHuertosUI {
             System.out.println("> [1] Excelente   [2] Suficiente   [3] Deficiente");
             opcion = leerNumeroPositivo("> Opcion: ");
             if (opcion < 1 || opcion > 3) {
-                System.err.println("\nX Error: Opcion no valida. Por favor ingrese una opcion valida.\n");
+                System.out.println("\nX Error: Opcion no valida. Por favor ingrese una opcion valida.\n");
                 error = true;
             }
         } while (error);
@@ -414,7 +414,7 @@ public class GestionHuertosUI {
             controlProduccion.addPesaje(idPesaje, rutCosechador, idPlan, idCuadrilla, cantKilos, calidad);
             System.out.println("\nPesaje agregado exitosamente.");
         } catch (GestionHuertosException e) {
-            System.err.println("\nX Error: " + e.getMessage() + "\n");
+            System.out.println("\nX Error: " + e.getMessage() + "\n");
         }
     }
 
@@ -427,7 +427,7 @@ public class GestionHuertosUI {
         try {
             System.out.println("\nMonto Pagado al Cosechador: $" + controlProduccion.addPagoPesaje(idPagoPesaje, rutCosechador));
         } catch (GestionHuertosException e) {
-            System.err.println("\nX Error: " + e.getMessage() + "\n");
+            System.out.println("\nX Error: " + e.getMessage() + "\n");
         }
     }
 
@@ -446,6 +446,7 @@ public class GestionHuertosUI {
             System.out.println("----------------------");
         } else {
             System.out.println("\nNo hay cultivos registrados.");
+            System.out.println("----------------------------");
         }
     }
 
@@ -464,6 +465,7 @@ public class GestionHuertosUI {
             System.out.println("----------------------");
         } else {
             System.out.println("\nNo hay huertos registrados.");
+            System.out.println("----------------------------");
         }
     }
 
@@ -483,6 +485,7 @@ public class GestionHuertosUI {
             System.out.println("----------------------");
         } else {
             System.out.println("\nNo hay propietarios registrados.");
+            System.out.println("----------------------------");
         }
     }
 
@@ -505,6 +508,7 @@ public class GestionHuertosUI {
             System.out.println("----------------------");
         } else {
             System.out.println("\nNo hay supervisores registrados.");
+            System.out.println("----------------------------");
         }
     }
 
@@ -524,6 +528,7 @@ public class GestionHuertosUI {
             System.out.println("----------------------");
         } else {
             System.out.println("\nNo hay cosechadores registrados.");
+            System.out.println("----------------------------");
         }
     }
 
@@ -543,6 +548,7 @@ public class GestionHuertosUI {
             System.out.println("-----------------------------");
         } else {
             System.out.println("\nNo hay planes de cosecha registrados.");
+            System.out.println("----------------------------");
         }
     }
 
@@ -559,7 +565,8 @@ public class GestionHuertosUI {
             }
             System.out.println("----------------------------");
         } else {
-            System.err.println("\nNo hay pesajes registrados.");
+            System.out.println("\nNo hay pesajes registrados.");
+            System.out.println("----------------------------");
         }
     }
 
@@ -577,7 +584,8 @@ public class GestionHuertosUI {
             }
             System.out.println("--------------------------");
         } else {
-            System.err.println("\nNo hay pesajes registrados para el cosechador ingresado.");
+            System.out.println("\nNo hay pesajes registrados para el cosechador ingresado.");
+            System.out.println("----------------------------");
         }
     }
 
@@ -594,7 +602,8 @@ public class GestionHuertosUI {
             }
             System.out.println("----------------------------");
         } else {
-            System.err.println("\nNo hay pagos registrados.");
+            System.out.println("\nNo hay pagos registrados.");
+            System.out.println("----------------------------");
         }
     }
 
@@ -624,6 +633,7 @@ public class GestionHuertosUI {
             } catch (
                     InputMismatchException e) { //Captura excepcion si el usuario ingresa un caracter en vez de un numero.
                 System.out.println("\nX Error: Solo se permiten numeros enteros.\n");
+                sc.next();
             }
         } while (numeroNegativo);
         return numero;
@@ -642,6 +652,7 @@ public class GestionHuertosUI {
             } catch (
                     InputMismatchException e) { //Captura excepcion si el usuario ingresa un caracter en vez de un numero.
                 System.out.println("\nX Error: Solo se permiten numeros, no caracteres.\n");
+                sc.next();
             }
         } while (nroNegativo);
         return nro;
@@ -660,6 +671,7 @@ public class GestionHuertosUI {
             } catch (
                     InputMismatchException e) { //Captura excepcion si el usuario ingresa un caracter en vez de un numero.
                 System.out.println("\nX Error: Solo se permiten numeros, no caracteres.\n");
+                sc.next();
             }
         } while (nroNegativo);
         return nro;
@@ -675,8 +687,9 @@ public class GestionHuertosUI {
                 fecha = LocalDate.parse(sc.next(), formato);
                 fechaExistente = true;
             } catch (DateTimeParseException e) {
-                System.err.println("\nX Error: la fecha es invalida o no cumple el formato dd/MM/yyyy.\n");
+                System.out.println("\nX Error: la fecha es invalida o no cumple el formato dd/MM/yyyy.\n");
                 fechaExistente = false;
+                sc.next();
             }
         } while (!fechaExistente);
         return fecha;
@@ -698,7 +711,7 @@ public class GestionHuertosUI {
             if (rutStr.matches(formatoValido)) {
                 rutInvalido = false;
             } else {
-                System.err.println("\nX Error: El rut ingresado no cumple el formato XX.XXX.XXX-X.\n");
+                System.out.println("\nX Error: El rut ingresado no cumple el formato XX.XXX.XXX-X.\n");
             }
         } while (rutInvalido);
         return Rut.of(rutStr);
@@ -706,7 +719,7 @@ public class GestionHuertosUI {
 
     private boolean comparaFechas(LocalDate fechaInicio, LocalDate fechaTermino) {
         if(fechaInicio.isAfter(fechaTermino)){
-            System.err.println("\nX Error: La fecha de inicio es posterior a la fecha de termino.\n");
+            System.out.println("\nX Error: La fecha de inicio es posterior a la fecha de termino.\n");
             return false;
         }
         return true;

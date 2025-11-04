@@ -3,8 +3,6 @@ package vista;//Codigo hecho por: Maximiliano Maureira
 
 import utilidades.*;
 
-import java.util.Scanner;
-
 public class GestionHuertosApp {
     //Relaciones
     private static final GestionHuertosUI gestionHuertosUI = GestionHuertosUI.getInstance();
