@@ -101,8 +101,9 @@ public class ControlProduccion {
         // if (findCuartel(idCuartel,nombreHuerto).isPresent()) throw new GestionHuertosException("ERROR: EL ID del Cuartel " + idCuartel+ " ya está asignado al Huerto.");
         findHuerto(nombreHuerto).get().addCuartel(idCuartel, superficie, findCultivo(idCultivo).get());
     }
+
     //Creado por Gabriel Rojas
-    public void changeEstadoCuartel(String nombreHuerto, int idCuartel, EstadoFenologico estado) throws  GestionHuertosException {
+    public void changeEstadoCuartel(String nombreHuerto, int idCuartel, EstadoFenologico estado) throws GestionHuertosException {
         //Excepciones
         if (findHuerto(nombreHuerto).isEmpty())
             throw new GestionHuertosException("No existe un huerto con el nombre indicado");
@@ -135,6 +136,7 @@ public class ControlProduccion {
             // throw new GestionHuertosException("ERROR: El cuartel con el ID " +idCuartel + " no existe o no forma parte del Huerto asignado.");
         }
     }
+
     //Creado por Gabriel Rojas
     public void changeEstadoPlan(int idPlan, EstadoPlan estado) throws GestionHuertosException {
         if (findPlanCosecha(idPlan).isEmpty())
@@ -197,10 +199,12 @@ public class ControlProduccion {
             if (fechaIniCosechador.isAfter(fechaFinCosechador) || fechaIniCosechador.isBefore(plan.getInicio()) || fechaIniCosechador.isAfter(plan.getFinEstimado())
                     || fechaFinCosechador.isAfter(plan.getFinEstimado()) || fechaFinCosechador.isBefore(plan.getInicio()))
                 throw new GestionHuertosException("El rango de fechas de asignación del cosechador a la cuadrilla está fuera del rango de fechas del plan");
-            if (cuadrillaEncontrada.getCosechadores().length >= Cuadrilla.getMaximoCosechadores()) throw new GestionHuertosException("El número de cosechadores ya alcanzó el máximo permitido");
+            if (cuadrillaEncontrada.getCosechadores().length >= Cuadrilla.getMaximoCosechadores())
+                throw new GestionHuertosException("El número de cosechadores ya alcanzó el máximo permitido");
             plan.addCosechadorToCuadrilla(idCuadrilla, fechaIniCosechador, fechaFinCosechador, metaKilosCosechador, cosechadorEncontrado);
         }
     }
+
     //Creado por Gabriel Rojas.
     public void addPesaje(int id, Rut rutCosechador, int idPlan, int idCuadrilla, float cantidadKg, Calidad calidad) throws GestionHuertosException {
         //Condiciones que tiraran la excepcion GestionHuertosException
@@ -223,9 +227,11 @@ public class ControlProduccion {
         //La fecha del pesaje es LocalDateTime.now, ver enunciado si es que hay dudas con eso.
         pesajes.add(new Pesaje(id, cantidadKg, calidad, LocalDateTime.now(), cosechador.getAsignacion(idCuadrilla, idPlan).get()));
     }
+
     //Creado por Gabriel Rojas
-    public double addPagoPesaje(int id, Rut rutCosechador) throws  GestionHuertosException {
-        if (findPagoPesajeById(id).isPresent()) throw new GestionHuertosException("Ya existe un pago de pesaje con el id indicado");
+    public double addPagoPesaje(int id, Rut rutCosechador) throws GestionHuertosException {
+        if (findPagoPesajeById(id).isPresent())
+            throw new GestionHuertosException("Ya existe un pago de pesaje con el id indicado");
         if (findPersona(rutCosechador).isEmpty() || !(findPersona(rutCosechador).get() instanceof Cosechador cosechador))
             throw new GestionHuertosException("No existe un cosechador con el rut indicado");
         //Utiliza los metodos cosAsignadoTienePesajes y findCosPesajesImpagos
@@ -334,24 +340,28 @@ public class ControlProduccion {
         return listaPlanesCosechas;
     }
 
-    public String [] listPesajes() {
+    public String[] listPesajes() {
         if (pesajes.isEmpty()) return new String[0];
-        String[] listaPesajes = new String[pesajes.size()];
-        for(Pesaje pesaje : pesajes) {
-            String pagadoPesaje = String.valueOf(pesaje.getPagoPesaje().getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
-            if(pagadoPesaje == null) pagadoPesaje = "Impago"; {}
-            String.join("; ", Integer.toString(pesaje.getId()), pesaje.getFechaHora().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),pesaje.getCosechadorAsignado().getCosechador().getRut().toString(), String.valueOf(pesaje.getCalidad()), String.valueOf(pesaje.getCantidadKg()), String.valueOf(pesaje.getPrecioKg()), String.valueOf(pesaje.getMonto()), pagadoPesaje);
+        ArrayList<String> listaPesajes = new ArrayList<>();
+        for (Pesaje pesaje : pesajes) {
+            String pagoPesaje;
+            if (pesaje.getPagoPesaje() == null) {
+                pagoPesaje = "Impago";
+            } else {
+                pagoPesaje = String.valueOf(pesaje.getPagoPesaje().getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+            }
+            listaPesajes.add(String.join("; ", Integer.toString(pesaje.getId()), pesaje.getFechaHora().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), pesaje.getCosechadorAsignado().getCosechador().getRut().toString(), String.valueOf(pesaje.getCalidad()), String.valueOf(pesaje.getCantidadKg()), String.valueOf(pesaje.getPrecioKg()), String.valueOf(pesaje.getMonto()), pagoPesaje));
         }
-        return listaPesajes;
+        return listaPesajes.toArray(new String[0]);
     }
 
-    public String [] listPesajesCosechador(Rut rut) {
+    public String[] listPesajesCosechador(Rut rut) {
         if (pesajes.isEmpty()) return new String[0];
         ArrayList<String> lista = new ArrayList<>();
-        if(findPersona(rut).get() instanceof Cosechador cosechador) {
-            if(cosechador.getAsignaciones().length > 0){
-                for(CosechadorAsignado cosechadorAsignado : cosechador.getAsignaciones()) {
-                    for(Pesaje pesaje : pesajes) {
+        if (findPersona(rut).get() instanceof Cosechador cosechador) {
+            if (cosechador.getAsignaciones().length > 0) {
+                for (CosechadorAsignado cosechadorAsignado : cosechador.getAsignaciones()) {
+                    for (Pesaje pesaje : pesajes) {
                         lista.add(String.join("; ", Integer.toString(pesaje.getId()), pesaje.getFechaHora().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), pesaje.getCalidad().name(), Double.toString(pesaje.getCantidadKg()), Double.toString(pesaje.getPrecioKg()), Double.toString(pesaje.getMonto()), pesaje.getPagoPesaje().getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
                     }
                 }
@@ -366,11 +376,11 @@ public class ControlProduccion {
     }
 
     // Hecho por Ricardo Quintana
-    public String [] listPagoPesajes() {
+    public String[] listPagoPesajes() {
         if (pesajes.isEmpty()) return new String[0];
         ArrayList<String> lista = new ArrayList<>();
-        for(Pesaje pesaje : pesajes) {
-            if(pesaje.getPagoPesaje() != null){
+        for (Pesaje pesaje : pesajes) {
+            if (pesaje.getPagoPesaje() != null) {
                 PagoPesaje pagoPesaje = pesaje.getPagoPesaje();
                 lista.add(String.join("; ", Integer.toString(pagoPesaje.getId()), pagoPesaje.getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), Double.toString(pagoPesaje.getMonto()), Integer.toString(pagoPesaje.getPesajes().length), pesaje.getCosechadorAsignado().getCosechador().getRut().toString()));
             }
