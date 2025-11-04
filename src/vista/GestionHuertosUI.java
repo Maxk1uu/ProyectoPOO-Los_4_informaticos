@@ -189,7 +189,7 @@ public class GestionHuertosUI {
         id = leerNumeroPositivo("> Identificacion: ");
         especie = leerTextoNoVacio("> Especie: ");
         variedad = leerTextoNoVacio("> Variedad: ");
-        rendimiento = leerNumeroPositivo("> Rendimiento : ");
+        rendimiento = leerFloatPositivo("> Rendimiento : ");
         try {
             controlProduccion.createCultivo(id, especie, variedad, rendimiento); //En el controlador se verifica que no exista un cultivo con ese ID.
             System.out.println("\nEl Cultivo a sido creado exitosamente.");
