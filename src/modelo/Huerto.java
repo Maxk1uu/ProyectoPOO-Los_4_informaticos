@@ -87,7 +87,7 @@ public class Huerto {
     public Cuartel getCuartel(int id) {
         // Verifico si el cuartel pertence al modelo.Huerto
         if(getCuartelById(id).isPresent()){
-            return cuarteles.get(id);
+            return getCuartelById(id).get();
         }
         return null; // si no lo encuentra retorna null
     }
@@ -100,7 +100,7 @@ public class Huerto {
         if (getCuartelById(id).isEmpty()) {
             throw new GestionHuertosException("No existe un cuartel con el id indicado");
         }
-        if (!cuartel.setEstado(estadoFenologico)) {
+        if (!getCuartelById(id).get().setEstado(estadoFenologico)) {
             throw new GestionHuertosException("No esta permitido el cambio de estado solicitado");
         }
     }
