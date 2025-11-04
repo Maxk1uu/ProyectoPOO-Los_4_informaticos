@@ -251,7 +251,7 @@ public class ControlProduccion {
         String[] listaHuertos = new String[huertos.size()];
         for (int i = 0; i < huertos.size(); i++) {
             listaHuertos[i] = String.join("; ", huertos.get(i).getNombre(), Float.toString(huertos.get(i).getSuperficie()), huertos.get(i).getUbicacion(),
-                    huertos.get(i).getPropietario().getRut().toString(), huertos.get(i).getPropietario().getNombre(), Integer.toString(huertos.get(i).getCuartels().length));
+                    reconstruyeRut(huertos.get(i).getPropietario().getRut().toString()), huertos.get(i).getPropietario().getNombre(), Integer.toString(huertos.get(i).getCuartels().length));
         }
         return listaHuertos;
     }
@@ -268,7 +268,7 @@ public class ControlProduccion {
         // Busco los propietarios de la lista de personas
         for (int i = 0, j = 0; i < personas.size(); i++) {
             if (personas.get(i) instanceof Propietario) {
-                listaPropietarios[j] = String.join("; ", personas.get(i).getRut().toString(), personas.get(i).getNombre(), personas.get(i).getDireccion(),
+                listaPropietarios[j] = String.join("; ",reconstruyeRut(personas.get(i).getRut().toString()), personas.get(i).getNombre(), personas.get(i).getDireccion(),
                         personas.get(i).getEmail(), ((Propietario) personas.get(i)).getDirComercial(), Integer.toString(((Propietario) personas.get(i)).getHuertos().length));
                 j++;
             }
@@ -286,11 +286,11 @@ public class ControlProduccion {
         for (int i = 0, j = 0; i < personas.size(); i++) {
             if (personas.get(i) instanceof Supervisor) {
                 if (((Supervisor) personas.get(i)).getCuadrillaAsignada() == null) {
-                    listaSupervisores[j] = String.join("; ", personas.get(i).getRut().toString(), personas.get(i).getNombre(), personas.get(i).getDireccion(), personas.get(i).getEmail(),
+                    listaSupervisores[j] = String.join("; ", reconstruyeRut(personas.get(i).getRut().toString()), personas.get(i).getNombre(), personas.get(i).getDireccion(), personas.get(i).getEmail(),
                             ((Supervisor) personas.get(i)).getProfesion(), "S/A");
 
                 } else {
-                    listaSupervisores[j] = String.join("; ", personas.get(i).getRut().toString(), personas.get(i).getNombre(), personas.get(i).getDireccion(), personas.get(i).getEmail(),
+                    listaSupervisores[j] = String.join("; ", reconstruyeRut(personas.get(i).getRut().toString()), personas.get(i).getNombre(), personas.get(i).getDireccion(), personas.get(i).getEmail(),
                             ((Supervisor) personas.get(i)).getProfesion(), ((Supervisor) personas.get(i)).getCuadrillaAsignada().getNombre());
                 }
                 j++;
@@ -309,7 +309,7 @@ public class ControlProduccion {
         for (int i = 0, j = 0; i < personas.size(); i++) {
             if (personas.get(i) instanceof Cosechador) {
                 int cuadrillasAsignadas = ((Cosechador) personas.get(i)).getCuadrillas().length;
-                listaCosechadores[j] = String.join("; ", personas.get(i).getRut().toString(), personas.get(i).getNombre(), personas.get(i).getDireccion(), personas.get(i).getEmail(),
+                listaCosechadores[j] = String.join("; ", reconstruyeRut(personas.get(i).getRut().toString()), personas.get(i).getNombre(), personas.get(i).getDireccion(), personas.get(i).getEmail(),
                         ((Cosechador) personas.get(i)).getFechaNacimiento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), Integer.toString(cuadrillasAsignadas));
                 j++;
             }
@@ -371,7 +371,7 @@ public class ControlProduccion {
         for(Pesaje pesaje : pesajes) {
             if(pesaje.getPagoPesaje() != null){
                 PagoPesaje pagoPesaje = pesaje.getPagoPesaje();
-                lista.add(String.join("; ", Integer.toString(pagoPesaje.getId()), pagoPesaje.getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), Double.toString(pagoPesaje.getMonto()), Integer.toString(pagoPesaje.getPesajes().length), pesaje.getCosechadorAsignado().getCosechador().getRut().toString()));
+                lista.add(String.join("; ", Integer.toString(pagoPesaje.getId()), pagoPesaje.getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), Double.toString(pagoPesaje.getMonto()), Integer.toString(pagoPesaje.getPesajes().length), reconstruyeRut(pesaje.getCosechadorAsignado().getCosechador().getRut().toString())));
             }
         }
         return lista.toArray(new String[0]);
@@ -657,8 +657,6 @@ public class ControlProduccion {
         String dosNumeros = rut.substring(0,2);
         String tresNumeros = rut.substring(2,5);
         String resto = rut.substring(5);
-        StringBuilder unirDosyTres = new StringBuilder();
-        unirDosyTres.append(dosNumeros).append(".").append(tresNumeros).append(".").append(resto);
-        return unirDosyTres.toString();
+        return dosNumeros + "." + tresNumeros + "." + resto;
     }
 }
