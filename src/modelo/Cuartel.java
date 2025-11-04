@@ -52,12 +52,18 @@ public class Cuartel {
         if(estado == est) {
             return false;
         }
-        return ((estado == est2 && est == est1) || //El cambio de estado solo puede avanzar, no retroceder.
+
+        if((estado == est2 && est == est1) || //El cambio de estado solo puede avanzar, no retroceder.
                 (estado == est3 && (est == est2 || est == est1)) ||
                 (estado == est4 && (est == est3 || est == est2 || est == est1)) ||
                 (estado == est5 && (est == est4 || est == est3 || est == est2 || est == est1)) ||
                 (estado == est6 && (est == est5 || est == est4 || est == est3 || est == est2 || est == est1)) ||
-                (estado == est7 && (est == est6 || est == est5 || est == est4 || est == est3 || est == est2 || est == est1)));
+                (estado == est7 && (est == est6 || est == est5 || est == est4 || est == est3 || est == est2 || est == est1))) {
+            return false;
+        }
+
+        estado = est;
+        return true;
     }
     public Huerto getHuerto() {
         return huerto;
