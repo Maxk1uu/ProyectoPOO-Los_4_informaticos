@@ -67,7 +67,6 @@ public class GestionHuertosUI {
                 case 4 -> cambiaEstadoCuartel();
                 case 5 -> {
                     System.out.println("\nVolviendo al menu...\n");
-                    menu();
                 }
                 default -> System.out.println("\nX Error: La opcion seleccionada no existe.\n");
             }
@@ -95,7 +94,6 @@ public class GestionHuertosUI {
                 case 6 -> pagaPesajesPendientesACosechador();
                 case 7 -> {
                     System.out.println("\nVolviendo al menu...\n");
-                    menu();
                 }
                 default -> System.out.println("\nX Error: La opcion seleccionada no existe.\n");
             }
@@ -128,7 +126,6 @@ public class GestionHuertosUI {
             case 9 -> listaPagosPesajes();
             case 10 -> {
                 System.out.println("\nVolviendo al menu...\n");
-                menu();
             }
             default -> System.out.println("\nX Error: La opcion seleccionada no existe.\n");
         }
@@ -175,9 +172,7 @@ public class GestionHuertosUI {
                 }
 
             }
-            default -> {
-                System.out.println("\nX Error: Rol de Persona no valido.\n");
-            }
+            default -> System.out.println("\nX Error: Rol de Persona no valido.\n");
         }
     }
 
@@ -649,7 +644,7 @@ public class GestionHuertosUI {
     }
 
     private String leerTextoNoVacio(String mensaje) {
-        String texto = "";
+        String texto;
         boolean textoVacio = true;
         do { //Bucle hasta que el usuario ingrese algo no vacio.
             System.out.print(mensaje);
@@ -738,7 +733,7 @@ public class GestionHuertosUI {
 
     private Rut leerRutValido(String mensaje) {
         boolean rutInvalido = true;
-        String rutStr = "";
+        String rutStr;
         String formatoValido = "^[0-9]{2}\\.[0-9]{3}\\.[0-9]{3}-[0-9kK]$";
         //^: Inicia la cadena
         //[0-9]: Cadena de numeros

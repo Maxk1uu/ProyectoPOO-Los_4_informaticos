@@ -1,17 +1,15 @@
 package controlador;//Ultima revision:
 // Error encontrado el arreglo debe ser del tamaño exacto de la cantidad de personas que tengan dicho rol
 
+import modelo.*;
+import utilidades.*;
+
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-
-import utilidades.*;
-import modelo.*;
 
 public class ControlProduccion {
     //Asociaciones.
@@ -27,11 +25,7 @@ public class ControlProduccion {
     private static ControlProduccion instance = null;
 
     private ControlProduccion() {
-        try {
-            readDataFromTextFile();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        readDataFromTextFile();
     }
 
     public static ControlProduccion getInstance() {
@@ -125,7 +119,6 @@ public class ControlProduccion {
         //Si no existe el huerto pasado por parametros, retorna false.
         if (findHuerto(nomHuerto).isEmpty())
             throw new GestionHuertosException("No existe un huerto con el nombre indicado");
-        Huerto huertoEncontrado = findHuerto(nomHuerto).get();
         //Condicion que asegura que el cuartel pasado por parametros exista y sea parte del huerto.
         if (findCuartel(idCuartel, nomHuerto).isPresent()) {
             Cuartel cuartelEncontrado = findCuartel(idCuartel, nomHuerto).get();
@@ -167,9 +160,6 @@ public class ControlProduccion {
             */
                 if (findCuadrilla(idCuadrilla, plan.getId()).isEmpty()) {
                     plan.addCuadrilla(idCuadrilla, nombreCuadrilla, supervisorEncontrado);
-                } else {
-                    // Condicion que no se usa, dejar aquí porsiacaso
-                    // throw new GestionHuertosException("ERROR: La Cuadrilla con el ID " + idCuadrilla +" ya está asignada a este Plan de Cosecha.");
                 }
             } else {
                 throw new GestionHuertosException("No existe un plan cosecha con el id indicado");
@@ -178,7 +168,7 @@ public class ControlProduccion {
     }
 
     //Creado por Gabriel Rojas
-    public void addCosechadorToCuadrilla(int idPlanCosecha, int idCuadrilla, LocalDate fechaIniCosechador, LocalDate fechaFinCosechador, double metaKilosCosechador, Rut rutCosechador) {
+    public void addCosechadorToCuadrilla(int idPlanCosecha, int idCuadrilla, LocalDate fechaIniCosechador, LocalDate fechaFinCosechador, double metaKilosCosechador, Rut rutCosechador) throws GestionHuertosException {
 
         //Condiciones que aseguran que estas variables existan, de lo contrario, devuelven false.
         if (findPlanCosecha(idPlanCosecha).isEmpty())
@@ -347,7 +337,7 @@ public class ControlProduccion {
             if (pesaje.getPagoPesaje() == null) {
                 pagoPesaje = "Impago";
             } else {
-                pagoPesaje = String.valueOf(pesaje.getPagoPesaje().getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+                pagoPesaje = pesaje.getPagoPesaje().getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
             }
             listaPesajes.add(String.join("; ", Integer.toString(pesaje.getId()), pesaje.getFechaHora().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), pesaje.getCosechadorAsignado().getCosechador().getRut().toString(), String.valueOf(pesaje.getCalidad()), String.valueOf(pesaje.getCantidadKg()), String.valueOf(pesaje.getPrecioKg()), String.valueOf(pesaje.getMonto()), pagoPesaje));
         }
@@ -359,10 +349,8 @@ public class ControlProduccion {
         ArrayList<String> lista = new ArrayList<>();
         if(findPersona(rut).isPresent() && findPersona(rut).get() instanceof Cosechador cosechador) {
             if(cosechador.getAsignaciones().length > 0){
-                for(CosechadorAsignado cosechadorAsignado : cosechador.getAsignaciones()) {
-                    for(Pesaje pesaje : pesajes) {
-                        lista.add(String.join("; ", Integer.toString(pesaje.getId()), pesaje.getFechaHora().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), pesaje.getCalidad().name(), Double.toString(pesaje.getCantidadKg()), Double.toString(pesaje.getPrecioKg()), Double.toString(pesaje.getMonto()), pesaje.getPagoPesaje().getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
-                    }
+                for(Pesaje pesaje : pesajes) {
+                    lista.add(String.join("; ", Integer.toString(pesaje.getId()), pesaje.getFechaHora().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), pesaje.getCalidad().name(), Double.toString(pesaje.getCantidadKg()), Double.toString(pesaje.getPrecioKg()), Double.toString(pesaje.getMonto()), pesaje.getPagoPesaje().getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
                 }
                 return lista.toArray(new String[0]);
 
@@ -388,14 +376,14 @@ public class ControlProduccion {
     }
 
     // Hecho por Ricardo Quintana
-    private void readDataFromTextFile() throws FileNotFoundException {
+    private void readDataFromTextFile() {
         // creo el Scanner asociado al archivoDeTexto
         try {
             Scanner scGestionHuertos = new Scanner(new File("InputDataGestionHuertos.txt")).useLocale(Locale.UK);
             scGestionHuertos.useDelimiter("[\\n\\r|;]+");
             while (scGestionHuertos.hasNextLine()) {
                 String linea = scGestionHuertos.nextLine().trim();
-                int nroDeLineas = 0;
+                int nroDeLineas;
                 if (!linea.startsWith("#") && !linea.isEmpty()) {
                     String[] operacion = linea.split(";");
                     switch (operacion[0]) {
