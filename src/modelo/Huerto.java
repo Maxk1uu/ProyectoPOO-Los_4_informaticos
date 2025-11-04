@@ -6,6 +6,7 @@ import utilidades.EstadoFenologico;
 import utilidades.GestionHuertosException;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class Huerto {
 
@@ -66,30 +67,27 @@ public class Huerto {
 
     public void addCuartel(int id, float sup, Cultivo cult) throws GestionHuertosException {
         // Verifico si el cuartel pasado como parametro no existe en la lista
-        for (Cuartel c : cuarteles) {
-            if (c.getId() == id) { // si es true ya existe
-                throw new GestionHuertosException("Ya existe en el huerto un cuartel con id indicado");
+        if(getCuartelById(id).isEmpty()){
+            // Verifico que la superficie del cuartel + los cuarteles que tiene el huerto, no supere la superficie del huerto
+            float suma = 0;
+            for (Cuartel c : cuarteles) {
+                suma += c.getSuperficie();
             }
-        }
-        // Verifico que la superficie del cuartel + los cuarteles que tiene el huerto, no supere la superficie del huerto
-        float suma = 0;
-        for (Cuartel c : cuarteles) {
-            suma += c.getSuperficie();
-        }
-        suma += sup;
-        if (suma <= superficie) {
-            cuarteles.add(new Cuartel(id, sup, cult, this));
+            suma += sup;
+            if (suma <= superficie) {
+                cuarteles.add(new Cuartel(id, sup, cult, this));
+            } else {
+                throw new GestionHuertosException("La superficie del cuartel supera el limite del huerto, al sumarle la superficie de sus cuarteles actuales");
+            }
         } else {
-            throw new GestionHuertosException("La superficie del cuartel supera el limite del huerto, al sumarle la superficie de sus cuarteles actuales");
+            throw new GestionHuertosException("Ya existe en el huerto un cuartel con el id indicado");
         }
     }
 
     public Cuartel getCuartel(int id) {
         // Verifico si el cuartel pertence al modelo.Huerto
-        for (Cuartel c : cuarteles) {
-            if (c.getId() == id) {
-                return c;
-            }
+        if(getCuartelById(id).isPresent()){
+            return cuarteles.get(id);
         }
         return null; // si no lo encuentra retorna null
     }
@@ -99,21 +97,20 @@ public class Huerto {
     }
 
     public void setEstadoCuartel(int id, EstadoFenologico estadoFenologico) throws GestionHuertosException {
-        Cuartel cuartel = null;
-
-        // Buscar el cuartel
-        for (Cuartel c : cuarteles) {
-            if (c.getId() == id) {
-                cuartel = c;
-                break;
-            }
-        }
-
-        if (cuartel == null) {
+        if (getCuartelById(id).isEmpty()) {
             throw new GestionHuertosException("No existe un cuartel con el id indicado");
         }
         if (!cuartel.setEstado(estadoFenologico)) {
             throw new GestionHuertosException("No esta permitido el cambio de estado solicitado");
         }
+    }
+
+    public Optional<Cuartel> getCuartelById(int id) {
+        for (Cuartel c : cuarteles) {
+            if (c.getId() == id) {
+                return Optional.of(c);
+            }
+        }
+        return Optional.empty();
     }
 }
