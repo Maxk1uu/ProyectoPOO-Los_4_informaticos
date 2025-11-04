@@ -323,7 +323,7 @@ public class ControlProduccion {
         for (PlanCosecha planCosecha : planCosechas) {
             listaPlanesCosechas[cont] = String.join("; ", Integer.toString(planCosecha.getId()), planCosecha.getNombre(), planCosecha.getInicio().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                     planCosecha.getFinEstimado().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), Double.toString(planCosecha.getMetaKilos()), Double.toString(planCosecha.getPrecioBaseKilo()), planCosecha.getEstado().toString(), Integer.toString(planCosecha.getCuartel().getId()),
-                    planCosecha.getCuartel().getHuerto().getNombre(), Integer.toString(planCosecha.getCuadrillas().length));
+                    planCosecha.getCuartel().getHuerto().getNombre(), Integer.toString(planCosecha.getCuadrillas().length), Double.toString(planCosecha.getCumplimientoMeta()));
             cont++;
         }
         return listaPlanesCosechas;
@@ -350,7 +350,10 @@ public class ControlProduccion {
         if(findPersona(rut).isPresent() && findPersona(rut).get() instanceof Cosechador cosechador) {
             if(cosechador.getAsignaciones().length > 0){
                 for(Pesaje pesaje : pesajes) {
-                    lista.add(String.join("; ", Integer.toString(pesaje.getId()), pesaje.getFechaHora().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), pesaje.getCalidad().name(), Double.toString(pesaje.getCantidadKg()), Double.toString(pesaje.getPrecioKg()), Double.toString(pesaje.getMonto()), pesaje.getPagoPesaje().getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
+                    lista.add(String.join("; ", Integer.toString(pesaje.getId()),
+                            pesaje.getFechaHora().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), pesaje.getCalidad().name(),
+                            Double.toString(pesaje.getCantidadKg()), Double.toString(pesaje.getPrecioKg()), Double.toString(pesaje.getMonto()),
+                            pesaje.getPagoPesaje().getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
                 }
                 return lista.toArray(new String[0]);
 

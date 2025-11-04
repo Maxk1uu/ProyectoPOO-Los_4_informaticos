@@ -557,14 +557,14 @@ public class GestionHuertosUI {
             if (controlProduccion.listPlanes().length != 0) {
                 System.out.println("\nLISTA DE PLANES DE COSECHA");
                 System.out.println("-----------------------------");
-                System.out.printf("%-8s%-25s%-20s%-20s%-15s%-20s%-15s%-15s%-25s%-16s%n", "ID", "Nombre",
+                System.out.printf("%-8s%-25s%-20s%-20s%-15s%-20s%-15s%-15s%-25s%-18s%-17s%n", "ID", "Nombre",
                         "Fecha de inicio", "Fecha de Termino", "Meta (kg)", "Precio Base (kg)", "Estado",
-                        "ID Cuartel", "Nombre del Huerto", "Nro. Cuadrillas");
+                        "ID Cuartel", "Nombre del Huerto", "Nro. Cuadrillas", "Cumplimiento Meta");
                 for (String plan : controlProduccion.listPlanes()) {
                     String[] infoPlan = plan.split("; ");
-                    System.out.printf("%-8s%-25s%-20s%-20s%-15s%-20s%-15s%-15s%-25s%-16s%n", infoPlan[0], infoPlan[1],
+                    System.out.printf("%-8s%-25s%-20s%-20s%-15s%-20s%-15s%-15s%-25s%-18s%-17s%n", infoPlan[0], infoPlan[1],
                             infoPlan[2], infoPlan[3], trunca(infoPlan[4]), trunca(infoPlan[5]), infoPlan[6], infoPlan[7], infoPlan[8],
-                            infoPlan[9]);
+                            infoPlan[9], trunca(infoPlan[10])+"%");
                 }
                 System.out.println("-----------------------------");
             } else {
@@ -763,8 +763,8 @@ public class GestionHuertosUI {
 
     private String trunca(String nroStr) {
         int punto = nroStr.indexOf('.');
-        int decimalesAfterPunto = nroStr.length() - punto + 1;
-        if (decimalesAfterPunto <= 2) { //Si el numero tiene 2 o menos decimales, se retorna normal.
+        int decimalesAfterPunto = nroStr.length() - punto;
+        if (decimalesAfterPunto <= 3) { //Si el numero tiene 2 o menos decimales, se retorna normal.
             return nroStr;
         } else {
             return nroStr.substring(0, punto + 3); //Si el numero tiene mas de 3 decimales, se retorna con 2 decimales.
