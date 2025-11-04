@@ -32,8 +32,7 @@ public class GestionHuertosUI {
     public void menu() {
         int opcion;
         do {
-            System.out.println("\n\n*** SISTEMA DE GESTION DE HUERTOS ***\n");
-            System.out.println("::: Menú de Opciones :::");
+            System.out.println("\n::: Menú de Opciones :::");
             System.out.println("1. Crear Personas");
             System.out.println("2. Menu Huertos");
             System.out.println("3. Menu Planes de Cosecha");
@@ -432,140 +431,176 @@ public class GestionHuertosUI {
     }
 
     private void listaCultivos() {
-        String[] listaDeCultivos = controlProduccion.listCultivos();
-        if (listaDeCultivos.length != 0) {
-            System.out.println("\nLISTA DE CULTIVOS");
-            System.out.println("----------------------");
-            System.out.printf("%-20s%-25s%-25s%-30s%-30s%n", "ID", "Especie", "Variedad", "Rendimiento",
-                    "Nro. Cuarteles");
-            for (String cultivo : listaDeCultivos) {
-                String[] infoCultivo = cultivo.split("; ");
-                System.out.printf("%-20s%-25s%-25s%-30s%-30s%n", infoCultivo[0], infoCultivo[1], infoCultivo[2],
-                        infoCultivo[3], infoCultivo[4]);
+        try {
+            String[] listaDeCultivos = controlProduccion.listCultivos();
+            if (listaDeCultivos.length != 0) {
+                System.out.println("\nLISTA DE CULTIVOS");
+                System.out.println("----------------------");
+                System.out.printf("%-20s%-25s%-25s%-30s%-30s%n", "ID", "Especie", "Variedad", "Rendimiento",
+                        "Nro. Cuarteles");
+                for (String cultivo : listaDeCultivos) {
+                    String[] infoCultivo = cultivo.split("; ");
+                    System.out.printf("%-20s%-25s%-25s%-30s%-30s%n", infoCultivo[0], infoCultivo[1], infoCultivo[2],
+                            infoCultivo[3], infoCultivo[4]);
+                }
+                System.out.println("----------------------");
+            } else {
+                System.out.println("\nNo hay cultivos registrados.");
+                System.out.println("----------------------------");
             }
-            System.out.println("----------------------");
-        } else {
-            System.out.println("\nNo hay cultivos registrados.");
+        } catch (GestionHuertosException e) {
+            System.out.println("\nX Error: " + e.getMessage() + "\n");
             System.out.println("----------------------------");
         }
     }
 
     private void listaHuertos() {
-        String[] listaDeHuertos = controlProduccion.listHuertos();
-        if (listaDeHuertos.length != 0) {
-            System.out.println("\nLISTA DE HUERTOS");
-            System.out.println("----------------------");
-            System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s%n", "Nombre", "Superficie", "Ubicacion",
-                    "Rut del Propietario", "Nombre del Propietario", "Nro. Cuarteles");
-            for (String huerto : listaDeHuertos) {
-                String[] infoHuerto = huerto.split("; ");
-                System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s%n", infoHuerto[0], infoHuerto[1], infoHuerto[2],
-                        infoHuerto[3], infoHuerto[4], infoHuerto[5]);
+        try {
+            String[] listaDeHuertos = controlProduccion.listHuertos();
+            if (listaDeHuertos.length != 0) {
+                System.out.println("\nLISTA DE HUERTOS");
+                System.out.println("----------------------");
+                System.out.printf("%-20s%-20s%-30s%-30s%-30s%-20s%n", "Nombre", "Superficie", "Ubicacion",
+                        "Rut del Propietario", "Nombre del Propietario", "Nro. Cuarteles");
+                for (String huerto : listaDeHuertos) {
+                    String[] infoHuerto = huerto.split("; ");
+                    System.out.printf("%-20s%-20s%-30s%-30s%-30s%-20s%n", infoHuerto[0], infoHuerto[1], infoHuerto[2],
+                            infoHuerto[3], infoHuerto[4], infoHuerto[5]);
+                }
+                System.out.println("----------------------");
+            } else {
+                System.out.println("\nNo hay huertos registrados.");
+                System.out.println("----------------------------");
             }
-            System.out.println("----------------------");
-        } else {
-            System.out.println("\nNo hay huertos registrados.");
+        } catch (GestionHuertosException e) {
+            System.out.println("\nX Error: " + e.getMessage() + "\n");
             System.out.println("----------------------------");
         }
     }
 
     private void listaPropietarios() {
-        if (controlProduccion.listPropietarios().length != 0) {
-            System.out.println("\nLISTA DE PROPIETARIOS");
-            System.out.println("----------------------");
-            System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s%n", "Rut", "Nombre", "Direccion", "Email",
-                    "Direccion Comercial", "Nro. de Huertos");
-            for (String propietario : controlProduccion.listPropietarios()) {
-                if (propietario != null) {
-                    String[] infoPropietario = propietario.split("; ");
-                    System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s%n", infoPropietario[0], infoPropietario[1],
-                            infoPropietario[2], infoPropietario[3], infoPropietario[4], infoPropietario[5]);
+        try {
+            if (controlProduccion.listPropietarios().length != 0) {
+                System.out.println("\nLISTA DE PROPIETARIOS");
+                System.out.println("----------------------");
+                System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s%n", "Rut", "Nombre", "Direccion", "Email",
+                        "Direccion Comercial", "Nro. de Huertos");
+                for (String propietario : controlProduccion.listPropietarios()) {
+                    if (propietario != null) {
+                        String[] infoPropietario = propietario.split("; ");
+                        System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s%n", infoPropietario[0], infoPropietario[1],
+                                infoPropietario[2], infoPropietario[3], infoPropietario[4], infoPropietario[5]);
+                    }
                 }
+                System.out.println("----------------------");
+            } else {
+                System.out.println("\nNo hay propietarios registrados.");
+                System.out.println("----------------------------");
             }
-            System.out.println("----------------------");
-        } else {
-            System.out.println("\nNo hay propietarios registrados.");
+        } catch (GestionHuertosException e) {
+            System.out.println("\nX Error: " + e.getMessage() + "\n");
             System.out.println("----------------------------");
         }
     }
 
     private void listaSupervisores() {
-        if (controlProduccion.listSupervisores().length != 0) {
-            System.out.println("\nLISTA DE SUPERVISORES");
-            System.out.println("----------------------");
-            System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s%n", "Rut", "Nombre", "Direccion", "Email", "Profesion",
-                    "Nombre Cuadrilla");
-            for (String supervisor : controlProduccion.listSupervisores()) {
-                if (supervisor != null) {
-                    String[] infoSupervisor = supervisor.split("; ");
-                    if (infoSupervisor[5] == null) { //Esto es por si el supervisor no tiene cuadrilla asignada.
-                        infoSupervisor[5] = "S/A";
+        try {
+            if (controlProduccion.listSupervisores().length != 0) {
+                System.out.println("\nLISTA DE SUPERVISORES");
+                System.out.println("----------------------");
+                System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s%n", "Rut", "Nombre", "Direccion", "Email", "Profesion",
+                        "Nombre Cuadrilla");
+                for (String supervisor : controlProduccion.listSupervisores()) {
+                    if (supervisor != null) {
+                        String[] infoSupervisor = supervisor.split("; ");
+                        if (infoSupervisor[5] == null) { //Esto es por si el supervisor no tiene cuadrilla asignada.
+                            infoSupervisor[5] = "S/A";
+                        }
+                        System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s%n", infoSupervisor[0], infoSupervisor[1],
+                                infoSupervisor[2], infoSupervisor[3], infoSupervisor[4], infoSupervisor[5]);
                     }
-                    System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s%n", infoSupervisor[0], infoSupervisor[1],
-                            infoSupervisor[2], infoSupervisor[3], infoSupervisor[4], infoSupervisor[5]);
                 }
+                System.out.println("----------------------");
+            } else {
+                System.out.println("\nNo hay supervisores registrados.");
+                System.out.println("----------------------------");
             }
-            System.out.println("----------------------");
-        } else {
-            System.out.println("\nNo hay supervisores registrados.");
+        } catch (GestionHuertosException e) {
+            System.out.println("\nX Error: " + e.getMessage() + "\n");
             System.out.println("----------------------------");
         }
+
     }
 
     private void listaCosechadores() {
-        if (controlProduccion.listCosechadores().length != 0) {
-            System.out.println("\nLISTA DE COSECHADORES");
-            System.out.println("----------------------");
-            System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s%n", "Rut", "Nombre", "Direccion", "Email",
-                    "Fecha De Nacimiento", "Nro. de Cuadrillas");
-            for (String cosechador : controlProduccion.listCosechadores()) {
-                if (cosechador != null) {
-                    String[] infoCosechador = cosechador.split("; ");
-                    System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s%n", infoCosechador[0], infoCosechador[1],
-                            infoCosechador[2], infoCosechador[3], infoCosechador[4], infoCosechador[5]);
+        try {
+            if (controlProduccion.listCosechadores().length != 0) {
+                System.out.println("\nLISTA DE COSECHADORES");
+                System.out.println("----------------------");
+                System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s%n", "Rut", "Nombre", "Direccion", "Email",
+                        "Fecha De Nacimiento", "Nro. de Cuadrillas");
+                for (String cosechador : controlProduccion.listCosechadores()) {
+                    if (cosechador != null) {
+                        String[] infoCosechador = cosechador.split("; ");
+                        System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s%n", infoCosechador[0], infoCosechador[1],
+                                infoCosechador[2], infoCosechador[3], infoCosechador[4], infoCosechador[5]);
+                    }
                 }
+                System.out.println("----------------------");
+            } else {
+                System.out.println("\nNo hay cosechadores registrados.");
+                System.out.println("----------------------------");
             }
-            System.out.println("----------------------");
-        } else {
-            System.out.println("\nNo hay cosechadores registrados.");
+        } catch (GestionHuertosException e) {
+            System.out.println("\nX Error: " + e.getMessage() + "\n");
             System.out.println("----------------------------");
         }
     }
 
     private void listaPlanesCosecha() {
-        if (controlProduccion.listPlanes().length != 0) {
-            System.out.println("\nLISTA DE PLANES DE COSECHA");
-            System.out.println("-----------------------------");
-            System.out.printf("%-8s%-25s%-20s%-20s%-15s%-20s%-15s%-15s%-25s%-16s%n", "ID", "Nombre",
-                    "Fecha de inicio", "Fecha de Termino", "Meta (kg)", "Precio Base (kg)", "Estado",
-                    "ID Cuartel", "Nombre del Huerto", "Nro. Cuadrillas");
-            for (String plan : controlProduccion.listPlanes()) {
-                String[] infoPlan = plan.split("; ");
-                System.out.printf("%-8s%-25s%-20s%-20s%-15s%-20s%-15s%-15s%-25s%-16s%n", infoPlan[0], infoPlan[1],
-                        infoPlan[2], infoPlan[3], infoPlan[4], infoPlan[5], infoPlan[6], infoPlan[7], infoPlan[8],
-                        infoPlan[9]);
+        try {
+            if (controlProduccion.listPlanes().length != 0) {
+                System.out.println("\nLISTA DE PLANES DE COSECHA");
+                System.out.println("-----------------------------");
+                System.out.printf("%-8s%-25s%-20s%-20s%-15s%-20s%-15s%-15s%-25s%-16s%n", "ID", "Nombre",
+                        "Fecha de inicio", "Fecha de Termino", "Meta (kg)", "Precio Base (kg)", "Estado",
+                        "ID Cuartel", "Nombre del Huerto", "Nro. Cuadrillas");
+                for (String plan : controlProduccion.listPlanes()) {
+                    String[] infoPlan = plan.split("; ");
+                    System.out.printf("%-8s%-25s%-20s%-20s%-15s%-20s%-15s%-15s%-25s%-16s%n", infoPlan[0], infoPlan[1],
+                            infoPlan[2], infoPlan[3], infoPlan[4], infoPlan[5], infoPlan[6], infoPlan[7], infoPlan[8],
+                            infoPlan[9]);
+                }
+                System.out.println("-----------------------------");
+            } else {
+                System.out.println("\nNo hay planes de cosecha registrados.");
+                System.out.println("----------------------------");
             }
-            System.out.println("-----------------------------");
-        } else {
-            System.out.println("\nNo hay planes de cosecha registrados.");
+        } catch (GestionHuertosException e) {
+            System.out.println("\nX Error: " + e.getMessage() + "\n");
             System.out.println("----------------------------");
         }
     }
 
     private void listaPesajes() {
-        if (controlProduccion.listPesajes().length != 0) {
-            System.out.println("\nLISTA DE PESAJES");
-            System.out.println("----------------------------");
-            System.out.printf("%-8s%-15s%-20s%-15s%-18s%-18s%-16s%-15s%n", "ID", "Fecha", "Rut Cosechador",
-                    "Calidad", "Cantidad (kg)", "Precio por Kg", "Monto Total", "Fecha Pago");
-            for (String pesaje : controlProduccion.listPesajes()) {
-                String[] infoPesaje = pesaje.split("; ");
-                System.out.printf("%-8s%-15s%-20s%-15s%-18s%-18s%-16s%-15s%n", infoPesaje[0], infoPesaje[1],
-                        infoPesaje[2], infoPesaje[3], infoPesaje[4], infoPesaje[5], infoPesaje[6], infoPesaje[7]);
+        try {
+            if (controlProduccion.listPesajes().length != 0) {
+                System.out.println("\nLISTA DE PESAJES");
+                System.out.println("----------------------------");
+                System.out.printf("%-8s%-15s%-20s%-15s%-18s%-18s%-16s%-15s%n", "ID", "Fecha", "Rut Cosechador",
+                        "Calidad", "Cantidad (kg)", "Precio por Kg", "Monto Total", "Fecha Pago");
+                for (String pesaje : controlProduccion.listPesajes()) {
+                    String[] infoPesaje = pesaje.split("; ");
+                    System.out.printf("%-8s%-15s%-20s%-15s%-18s%-18s%-16s%-15s%n", infoPesaje[0], infoPesaje[1],
+                            infoPesaje[2], infoPesaje[3], infoPesaje[4], infoPesaje[5], infoPesaje[6], infoPesaje[7]);
+                }
+                System.out.println("----------------------------");
+            } else {
+                System.out.println("\nNo hay pesajes registrados.");
+                System.out.println("----------------------------");
             }
-            System.out.println("----------------------------");
-        } else {
-            System.out.println("\nNo hay pesajes registrados.");
+        } catch (GestionHuertosException e) {
+            System.out.println("\nX Error: " + e.getMessage() + "\n");
             System.out.println("----------------------------");
         }
     }
@@ -573,18 +608,24 @@ public class GestionHuertosUI {
     private void listaPesajesCosechadores() {
         System.out.println("\nLISTA DE PESAJES DEL COSECHADOR");
         Rut rutCosechador = leerRutValido("> Rut del Cosechador: ");
-        if (controlProduccion.listPesajesCosechador(rutCosechador).length != 0) {
+        try {
             System.out.println("--------------------------");
-            System.out.printf("%-8s%-15s%-15s%-18s%-18s%-16s%-15s%n", "ID", "Fecha",
-                    "Calidad", "Cantidad (kg)", "Precio por Kg", "Monto Total", "Fecha Pago");
-            for (String pesajeCos : controlProduccion.listPesajesCosechador(rutCosechador)) {
-                String[] infoPesajeCos = pesajeCos.split("; ");
-                System.out.printf("%-8s%-15s%-15s%-18s%-18s%-16s%-15s%n", infoPesajeCos[0], infoPesajeCos[1],
-                        infoPesajeCos[2], infoPesajeCos[3], infoPesajeCos[4], infoPesajeCos[5], infoPesajeCos[6]);
+            if (controlProduccion.listPesajesCosechador(rutCosechador).length != 0) {
+
+                System.out.printf("%-8s%-15s%-15s%-18s%-18s%-16s%-15s%n", "ID", "Fecha",
+                        "Calidad", "Cantidad (kg)", "Precio por Kg", "Monto Total", "Fecha Pago");
+                for (String pesajeCos : controlProduccion.listPesajesCosechador(rutCosechador)) {
+                    String[] infoPesajeCos = pesajeCos.split("; ");
+                    System.out.printf("%-8s%-15s%-15s%-18s%-18s%-16s%-15s%n", infoPesajeCos[0], infoPesajeCos[1],
+                            infoPesajeCos[2], infoPesajeCos[3], infoPesajeCos[4], infoPesajeCos[5], infoPesajeCos[6]);
+                }
+                System.out.println("--------------------------");
+            } else {
+                System.out.println("\nNo hay pesajes registrados para el cosechador ingresado.");
+                System.out.println("----------------------------");
             }
-            System.out.println("--------------------------");
-        } else {
-            System.out.println("\nNo hay pesajes registrados para el cosechador ingresado.");
+        } catch (GestionHuertosException e) {
+            System.out.println("\nX Error: " + e.getMessage() + "\n");
             System.out.println("----------------------------");
         }
     }

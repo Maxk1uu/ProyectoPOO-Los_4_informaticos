@@ -348,7 +348,7 @@ public class ControlProduccion {
     public String [] listPesajesCosechador(Rut rut) {
         if (pesajes.isEmpty()) return new String[0];
         ArrayList<String> lista = new ArrayList<>();
-        if(findPersona(rut).get() instanceof Cosechador cosechador) {
+        if(findPersona(rut).isPresent() && findPersona(rut).get() instanceof Cosechador cosechador) {
             if(cosechador.getAsignaciones().length > 0){
                 for(CosechadorAsignado cosechadorAsignado : cosechador.getAsignaciones()) {
                     for(Pesaje pesaje : pesajes) {
