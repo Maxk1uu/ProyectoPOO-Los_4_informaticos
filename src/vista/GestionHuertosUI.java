@@ -436,7 +436,7 @@ public class GestionHuertosUI {
                 for (String cultivo : listaDeCultivos) {
                     String[] infoCultivo = cultivo.split("; ");
                     System.out.printf("%-20s%-25s%-25s%-30s%-30s%n", infoCultivo[0], infoCultivo[1], infoCultivo[2],
-                            infoCultivo[3], infoCultivo[4]);
+                            trunca(infoCultivo[3]), infoCultivo[4]);
                 }
                 System.out.println("----------------------");
             } else {
@@ -459,7 +459,7 @@ public class GestionHuertosUI {
                         "Rut del Propietario", "Nombre del Propietario", "Nro. Cuarteles");
                 for (String huerto : listaDeHuertos) {
                     String[] infoHuerto = huerto.split("; ");
-                    System.out.printf("%-20s%-20s%-30s%-30s%-30s%-20s%n", infoHuerto[0], infoHuerto[1], infoHuerto[2],
+                    System.out.printf("%-20s%-20s%-30s%-30s%-30s%-20s%n", infoHuerto[0], trunca(infoHuerto[1]), infoHuerto[2],
                             infoHuerto[3], infoHuerto[4], infoHuerto[5]);
                 }
                 System.out.println("----------------------");
@@ -563,7 +563,7 @@ public class GestionHuertosUI {
                 for (String plan : controlProduccion.listPlanes()) {
                     String[] infoPlan = plan.split("; ");
                     System.out.printf("%-8s%-25s%-20s%-20s%-15s%-20s%-15s%-15s%-25s%-16s%n", infoPlan[0], infoPlan[1],
-                            infoPlan[2], infoPlan[3], infoPlan[4], infoPlan[5], infoPlan[6], infoPlan[7], infoPlan[8],
+                            infoPlan[2], infoPlan[3], trunca(infoPlan[4]), trunca(infoPlan[5]), infoPlan[6], infoPlan[7], infoPlan[8],
                             infoPlan[9]);
                 }
                 System.out.println("-----------------------------");
@@ -587,7 +587,7 @@ public class GestionHuertosUI {
                 for (String pesaje : controlProduccion.listPesajes()) {
                     String[] infoPesaje = pesaje.split("; ");
                     System.out.printf("%-8s%-15s%-20s%-15s%-18s%-18s%-16s%-15s%n", infoPesaje[0], infoPesaje[1],
-                            infoPesaje[2], infoPesaje[3], infoPesaje[4], infoPesaje[5], infoPesaje[6], infoPesaje[7]);
+                            infoPesaje[2], infoPesaje[3], trunca(infoPesaje[4]), trunca(infoPesaje[5]), trunca(infoPesaje[6]), infoPesaje[7]);
                 }
                 System.out.println("----------------------------");
             } else {
@@ -612,7 +612,7 @@ public class GestionHuertosUI {
                 for (String pesajeCos : controlProduccion.listPesajesCosechador(rutCosechador)) {
                     String[] infoPesajeCos = pesajeCos.split("; ");
                     System.out.printf("%-8s%-15s%-15s%-18s%-18s%-16s%-15s%n", infoPesajeCos[0], infoPesajeCos[1],
-                            infoPesajeCos[2], infoPesajeCos[3], infoPesajeCos[4], infoPesajeCos[5], infoPesajeCos[6]);
+                            infoPesajeCos[2], trunca(infoPesajeCos[3]), trunca(infoPesajeCos[4]), trunca(infoPesajeCos[5]), infoPesajeCos[6]);
                 }
                 System.out.println("--------------------------");
             } else {
@@ -633,7 +633,7 @@ public class GestionHuertosUI {
                     "Rut Cosechador");
             for (String pagos : controlProduccion.listPagoPesajes()) {
                 String[] infoPagos = pagos.split("; ");
-                System.out.printf("%-8s%-15s%-16s%-17s%-20s%n", infoPagos[0], infoPagos[1], infoPagos[2], infoPagos[3],
+                System.out.printf("%-8s%-15s%-16s%-17s%-20s%n", infoPagos[0], infoPagos[1], trunca(infoPagos[2]), infoPagos[3],
                         infoPagos[4]);
             }
             System.out.println("----------------------------");
@@ -759,5 +759,15 @@ public class GestionHuertosUI {
             return false;
         }
         return true;
+    }
+
+    private String trunca(String nroStr) {
+        int punto = nroStr.indexOf('.');
+        int decimalesAfterPunto = nroStr.length() - punto + 1;
+        if (decimalesAfterPunto <= 2) { //Si el numero tiene 2 o menos decimales, se retorna normal.
+            return nroStr;
+        } else {
+            return nroStr.substring(0, punto + 3); //Si el numero tiene mas de 3 decimales, se retorna con 2 decimales.
+        }
     }
 }
