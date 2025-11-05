@@ -633,7 +633,7 @@ public class GestionHuertosUI {
                     "Rut Cosechador");
             for (String pagos : controlProduccion.listPagoPesajes()) {
                 String[] infoPagos = pagos.split("; ");
-                System.out.printf("%-8s%-15s%-16s%-17s%-20s%n", infoPagos[0], infoPagos[1], trunca(infoPagos[2]), infoPagos[3],
+                System.out.printf("%-8s%-15s%-16s%-17s%-20s%n", infoPagos[0], infoPagos[1], "$"+trunca(infoPagos[2]), infoPagos[3],
                         infoPagos[4]);
             }
             System.out.println("----------------------------");

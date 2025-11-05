@@ -381,12 +381,9 @@ public class ControlProduccion {
     public String[] listPagoPesajes() {
         if (pesajes.isEmpty()) return new String[0];
         ArrayList<String> lista = new ArrayList<>();
-        for (Pesaje pesaje : pesajes) {
-            if (pesaje.getPagoPesaje() != null) {
-                PagoPesaje pagoPesaje = pesaje.getPagoPesaje();
-                lista.add(String.join("; ", Integer.toString(pagoPesaje.getId()), pagoPesaje.getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), Double.toString(pagoPesaje.getMonto()), Integer.toString(pagoPesaje.getPesajes().length), reconstruyeRut(pesaje.getCosechadorAsignado().getCosechador().getRut().toString())));
+        for (PagoPesaje pagoPesaje : pagosPesajes) {
+                lista.add(String.join("; ", Integer.toString(pagoPesaje.getId()), pagoPesaje.getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), Double.toString(pagoPesaje.getMonto()), Integer.toString(pagoPesaje.getPesajes().length), reconstruyeRut(pagoPesaje.getPesajes()[0].getCosechadorAsignado().getCosechador().getRut().toString())));
             }
-        }
         return lista.toArray(new String[0]);
     }
 
