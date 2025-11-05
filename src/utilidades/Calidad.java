@@ -1,5 +1,5 @@
 package utilidades;
 
 public enum Calidad {
-    EXCELENTE, SUFICIENTE, DEFICIENTE;
+    EXCELENTE, SUFICIENTE, DEFICIENTE
 }

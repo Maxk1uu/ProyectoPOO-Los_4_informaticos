@@ -1,7 +1,7 @@
 package modelo;
+
 import utilidades.Calidad;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 public class Pesaje {
     private int id;

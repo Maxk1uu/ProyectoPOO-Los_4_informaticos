@@ -67,7 +67,6 @@ public class GestionHuertosUI {
                 case 4 -> cambiaEstadoCuartel();
                 case 5 -> {
                     System.out.println("\nVolviendo al menu...\n");
-                    menu();
                 }
                 default -> System.out.println("\nX Error: La opcion seleccionada no existe.\n");
             }
@@ -95,7 +94,6 @@ public class GestionHuertosUI {
                 case 6 -> pagaPesajesPendientesACosechador();
                 case 7 -> {
                     System.out.println("\nVolviendo al menu...\n");
-                    menu();
                 }
                 default -> System.out.println("\nX Error: La opcion seleccionada no existe.\n");
             }
@@ -128,7 +126,6 @@ public class GestionHuertosUI {
             case 9 -> listaPagosPesajes();
             case 10 -> {
                 System.out.println("\nVolviendo al menu...\n");
-                menu();
             }
             default -> System.out.println("\nX Error: La opcion seleccionada no existe.\n");
         }
@@ -175,9 +172,7 @@ public class GestionHuertosUI {
                 }
 
             }
-            default -> {
-                System.out.println("\nX Error: Rol de Persona no valido.\n");
-            }
+            default -> System.out.println("\nX Error: Rol de Persona no valido.\n");
         }
     }
 
@@ -441,7 +436,7 @@ public class GestionHuertosUI {
                 for (String cultivo : listaDeCultivos) {
                     String[] infoCultivo = cultivo.split("; ");
                     System.out.printf("%-20s%-25s%-25s%-30s%-30s%n", infoCultivo[0], infoCultivo[1], infoCultivo[2],
-                            infoCultivo[3], infoCultivo[4]);
+                            trunca(infoCultivo[3]), infoCultivo[4]);
                 }
                 System.out.println("----------------------");
             } else {
@@ -464,7 +459,7 @@ public class GestionHuertosUI {
                         "Rut del Propietario", "Nombre del Propietario", "Nro. Cuarteles");
                 for (String huerto : listaDeHuertos) {
                     String[] infoHuerto = huerto.split("; ");
-                    System.out.printf("%-20s%-20s%-30s%-30s%-30s%-20s%n", infoHuerto[0], infoHuerto[1], infoHuerto[2],
+                    System.out.printf("%-20s%-20s%-30s%-30s%-30s%-20s%n", infoHuerto[0], trunca(infoHuerto[1]), infoHuerto[2],
                             infoHuerto[3], infoHuerto[4], infoHuerto[5]);
                 }
                 System.out.println("----------------------");
@@ -562,14 +557,14 @@ public class GestionHuertosUI {
             if (controlProduccion.listPlanes().length != 0) {
                 System.out.println("\nLISTA DE PLANES DE COSECHA");
                 System.out.println("-----------------------------");
-                System.out.printf("%-8s%-25s%-20s%-20s%-15s%-20s%-15s%-15s%-25s%-16s%n", "ID", "Nombre",
+                System.out.printf("%-8s%-25s%-20s%-20s%-15s%-20s%-15s%-15s%-25s%-18s%-17s%n", "ID", "Nombre",
                         "Fecha de inicio", "Fecha de Termino", "Meta (kg)", "Precio Base (kg)", "Estado",
-                        "ID Cuartel", "Nombre del Huerto", "Nro. Cuadrillas");
+                        "ID Cuartel", "Nombre del Huerto", "Nro. Cuadrillas", "Cumplimiento Meta");
                 for (String plan : controlProduccion.listPlanes()) {
                     String[] infoPlan = plan.split("; ");
-                    System.out.printf("%-8s%-25s%-20s%-20s%-15s%-20s%-15s%-15s%-25s%-16s%n", infoPlan[0], infoPlan[1],
-                            infoPlan[2], infoPlan[3], infoPlan[4], infoPlan[5], infoPlan[6], infoPlan[7], infoPlan[8],
-                            infoPlan[9]);
+                    System.out.printf("%-8s%-25s%-20s%-20s%-15s%-20s%-15s%-15s%-25s%-18s%-17s%n", infoPlan[0], infoPlan[1],
+                            infoPlan[2], infoPlan[3], trunca(infoPlan[4]), trunca(infoPlan[5]), infoPlan[6], infoPlan[7], infoPlan[8],
+                            infoPlan[9], trunca(infoPlan[10])+"%");
                 }
                 System.out.println("-----------------------------");
             } else {
@@ -592,7 +587,7 @@ public class GestionHuertosUI {
                 for (String pesaje : controlProduccion.listPesajes()) {
                     String[] infoPesaje = pesaje.split("; ");
                     System.out.printf("%-8s%-15s%-20s%-15s%-18s%-18s%-16s%-15s%n", infoPesaje[0], infoPesaje[1],
-                            infoPesaje[2], infoPesaje[3], infoPesaje[4], infoPesaje[5], infoPesaje[6], infoPesaje[7]);
+                            infoPesaje[2], infoPesaje[3], trunca(infoPesaje[4]), trunca(infoPesaje[5]), trunca(infoPesaje[6]), infoPesaje[7]);
                 }
                 System.out.println("----------------------------");
             } else {
@@ -617,7 +612,7 @@ public class GestionHuertosUI {
                 for (String pesajeCos : controlProduccion.listPesajesCosechador(rutCosechador)) {
                     String[] infoPesajeCos = pesajeCos.split("; ");
                     System.out.printf("%-8s%-15s%-15s%-18s%-18s%-16s%-15s%n", infoPesajeCos[0], infoPesajeCos[1],
-                            infoPesajeCos[2], infoPesajeCos[3], infoPesajeCos[4], infoPesajeCos[5], infoPesajeCos[6]);
+                            infoPesajeCos[2], trunca(infoPesajeCos[3]), trunca(infoPesajeCos[4]), trunca(infoPesajeCos[5]), infoPesajeCos[6]);
                 }
                 System.out.println("--------------------------");
             } else {
@@ -638,7 +633,7 @@ public class GestionHuertosUI {
                     "Rut Cosechador");
             for (String pagos : controlProduccion.listPagoPesajes()) {
                 String[] infoPagos = pagos.split("; ");
-                System.out.printf("%-8s%-15s%-16s%-17s%-20s%n", infoPagos[0], infoPagos[1], infoPagos[2], infoPagos[3],
+                System.out.printf("%-8s%-15s%-16s%-17s%-20s%n", infoPagos[0], infoPagos[1], trunca(infoPagos[2]), infoPagos[3],
                         infoPagos[4]);
             }
             System.out.println("----------------------------");
@@ -649,7 +644,7 @@ public class GestionHuertosUI {
     }
 
     private String leerTextoNoVacio(String mensaje) {
-        String texto = "";
+        String texto;
         boolean textoVacio = true;
         do { //Bucle hasta que el usuario ingrese algo no vacio.
             System.out.print(mensaje);
@@ -738,7 +733,7 @@ public class GestionHuertosUI {
 
     private Rut leerRutValido(String mensaje) {
         boolean rutInvalido = true;
-        String rutStr = "";
+        String rutStr;
         String formatoValido = "^[0-9]{2}\\.[0-9]{3}\\.[0-9]{3}-[0-9kK]$";
         //^: Inicia la cadena
         //[0-9]: Cadena de numeros
@@ -764,5 +759,15 @@ public class GestionHuertosUI {
             return false;
         }
         return true;
+    }
+
+    private String trunca(String nroStr) {
+        int punto = nroStr.indexOf('.');
+        int decimalesAfterPunto = nroStr.length() - punto;
+        if (decimalesAfterPunto <= 3) { //Si el numero tiene 2 o menos decimales, se retorna normal.
+            return nroStr;
+        } else {
+            return nroStr.substring(0, punto + 3); //Si el numero tiene mas de 3 decimales, se retorna con 2 decimales.
+        }
     }
 }
