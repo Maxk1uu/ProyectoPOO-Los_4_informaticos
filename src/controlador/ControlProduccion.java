@@ -355,13 +355,16 @@ public class ControlProduccion {
     }
 
     public String[] listPesajesCosechador(Rut rut) {
+        String pagoPesaje;
         if (pesajes.isEmpty()) return new String[0];
         ArrayList<String> lista = new ArrayList<>();
         if(findPersona(rut).isPresent() && findPersona(rut).get() instanceof Cosechador cosechador) {
             if(cosechador.getAsignaciones().length > 0){
                 for(CosechadorAsignado cosechadorAsignado : cosechador.getAsignaciones()) {
                     for(Pesaje pesaje : pesajes) {
-                        lista.add(String.join("; ", Integer.toString(pesaje.getId()), pesaje.getFechaHora().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), pesaje.getCalidad().name(), Double.toString(pesaje.getCantidadKg()), Double.toString(pesaje.getPrecioKg()), Double.toString(pesaje.getMonto()), pesaje.getPagoPesaje().getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
+                        if (pesaje.getPagoPesaje() != null) pagoPesaje = pesaje.getPagoPesaje().getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                        else pagoPesaje = "IMPAGO";
+                        lista.add(String.join("; ", Integer.toString(pesaje.getId()), pesaje.getFechaHora().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), pesaje.getCalidad().name(), Double.toString(pesaje.getCantidadKg()), Double.toString(pesaje.getPrecioKg()), Double.toString(pesaje.getMonto()), pagoPesaje));
                     }
                 }
                 return lista.toArray(new String[0]);
