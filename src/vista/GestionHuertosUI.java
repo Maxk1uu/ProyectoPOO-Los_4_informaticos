@@ -37,7 +37,7 @@ public class GestionHuertosUI {
             System.out.println("2. Menu Huertos");
             System.out.println("3. Menu Planes de Cosecha");
             System.out.println("4. Menu Listados");
-            System.out.println("5. Salir.");
+            System.out.println("5. Salir");
             opcion = leerNumeroPositivo("\t> Opcion: ");
             switch (opcion) {
                 case 1 -> creaPersona();
@@ -65,9 +65,7 @@ public class GestionHuertosUI {
                 case 2 -> creaHuerto();
                 case 3 -> agregaCuartelesAHuerto();
                 case 4 -> cambiaEstadoCuartel();
-                case 5 -> {
-                    System.out.println("\nVolviendo al menu...\n");
-                }
+                case 5 -> System.out.println("\nVolviendo al menu...\n");
                 default -> System.out.println("\nX Error: La opcion seleccionada no existe.\n");
             }
         } while (opcion != 5);
@@ -92,9 +90,7 @@ public class GestionHuertosUI {
                 case 4 -> asignaCosechadoresAPlan();
                 case 5 -> agregaPesajeACosechador();
                 case 6 -> pagaPesajesPendientesACosechador();
-                case 7 -> {
-                    System.out.println("\nVolviendo al menu...\n");
-                }
+                case 7 -> System.out.println("\nVolviendo al menu...\n");
                 default -> System.out.println("\nX Error: La opcion seleccionada no existe.\n");
             }
         } while (opcion != 7);
@@ -102,33 +98,33 @@ public class GestionHuertosUI {
 
     private void menuListados() {
         int opcion;
-        System.out.println("\n<< SUBMENU LISTADOS >>");
-        System.out.println("1. Listado de Propietarios");
-        System.out.println("2. Listado de Supervisores");
-        System.out.println("3. Listado de Cosechadores");
-        System.out.println("4. Listado de Cultivos");
-        System.out.println("5. Listado de Huertos");
-        System.out.println("6. Listado de Planes de Cosecha");
-        System.out.println("7. Listado de Pesajes");
-        System.out.println("8. Listado de Pesajes de un Cosechador");
-        System.out.println("9. Listado de Pagos");
-        System.out.println("10. Volver");
-        opcion = leerNumeroPositivo("> Opcion: ");
-        switch (opcion) {
-            case 1 -> listaPropietarios();
-            case 2 -> listaSupervisores();
-            case 3 -> listaCosechadores();
-            case 4 -> listaCultivos();
-            case 5 -> listaHuertos();
-            case 6 -> listaPlanesCosecha();
-            case 7 -> listaPesajes();
-            case 8 -> listaPesajesCosechadores();
-            case 9 -> listaPagosPesajes();
-            case 10 -> {
-                System.out.println("\nVolviendo al menu...\n");
+        do {
+            System.out.println("\n<< SUBMENU LISTADOS >>");
+            System.out.println("1. Listado de Propietarios");
+            System.out.println("2. Listado de Supervisores");
+            System.out.println("3. Listado de Cosechadores");
+            System.out.println("4. Listado de Cultivos");
+            System.out.println("5. Listado de Huertos");
+            System.out.println("6. Listado de Planes de Cosecha");
+            System.out.println("7. Listado de Pesajes");
+            System.out.println("8. Listado de Pesajes de un Cosechador");
+            System.out.println("9. Listado de Pagos");
+            System.out.println("10. Volver");
+            opcion = leerNumeroPositivo("> Opcion: ");
+            switch (opcion) {
+                case 1 -> listaPropietarios();
+                case 2 -> listaSupervisores();
+                case 3 -> listaCosechadores();
+                case 4 -> listaCultivos();
+                case 5 -> listaHuertos();
+                case 6 -> listaPlanesCosecha();
+                case 7 -> listaPesajes();
+                case 8 -> listaPesajesCosechadores();
+                case 9 -> listaPagosPesajes();
+                case 10 -> System.out.println("\nVolviendo al menu...\n");
+                default -> System.out.println("\nX Error: La opcion seleccionada no existe.\n");
             }
-            default -> System.out.println("\nX Error: La opcion seleccionada no existe.\n");
-        }
+        } while (opcion != 10);
     }
 
     private void creaPersona() {
@@ -415,11 +411,13 @@ public class GestionHuertosUI {
     private void pagaPesajesPendientesACosechador() {
         int idPagoPesaje;
         Rut rutCosechador;
+        double montoAPagar;
         System.out.println("\n---Pagando Pesaje a un Cosechador---");
         idPagoPesaje = leerNumeroPositivo("> ID del Pago de Pesaje: ");
         rutCosechador = leerRutValido("> Rut del Cosechador: ");
         try {
-            System.out.println("\nMonto Pagado al Cosechador: $" + controlProduccion.addPagoPesaje(idPagoPesaje, rutCosechador));
+            montoAPagar = controlProduccion.addPagoPesaje(idPagoPesaje, rutCosechador);
+            System.out.println("\nMonto Pagado al Cosechador: $" + Math.round(montoAPagar * 100) / 100.0);
         } catch (GestionHuertosException e) {
             System.out.println("\nX Error: " + e.getMessage() + "\n");
         }
@@ -583,11 +581,11 @@ public class GestionHuertosUI {
                 System.out.println("\nLISTA DE PESAJES");
                 System.out.println("----------------------------");
                 System.out.printf("%-8s%-15s%-20s%-15s%-18s%-18s%-16s%-15s%n", "ID", "Fecha", "Rut Cosechador",
-                        "Calidad", "Cantidad (kg)", "Precio por Kg", "Monto Total", "Fecha Pago");
+                        "Calidad", "Cantidad", "Precio por Kg", "Monto Total", "Fecha Pago");
                 for (String pesaje : controlProduccion.listPesajes()) {
                     String[] infoPesaje = pesaje.split("; ");
                     System.out.printf("%-8s%-15s%-20s%-15s%-18s%-18s%-16s%-15s%n", infoPesaje[0], infoPesaje[1],
-                            infoPesaje[2], infoPesaje[3], trunca(infoPesaje[4]), trunca(infoPesaje[5]), trunca(infoPesaje[6]), infoPesaje[7]);
+                            infoPesaje[2], infoPesaje[3], trunca(infoPesaje[4])+" Kg", "$ "+trunca(infoPesaje[5]), "$ "+trunca(infoPesaje[6]), infoPesaje[7]);
                 }
                 System.out.println("----------------------------");
             } else {
@@ -608,11 +606,11 @@ public class GestionHuertosUI {
             if (controlProduccion.listPesajesCosechador(rutCosechador).length != 0) {
 
                 System.out.printf("%-8s%-15s%-15s%-18s%-18s%-16s%-15s%n", "ID", "Fecha",
-                        "Calidad", "Cantidad (kg)", "Precio por Kg", "Monto Total", "Fecha Pago");
+                        "Calidad", "Cantidad", "Precio por Kg", "Monto Total", "Fecha Pago");
                 for (String pesajeCos : controlProduccion.listPesajesCosechador(rutCosechador)) {
                     String[] infoPesajeCos = pesajeCos.split("; ");
                     System.out.printf("%-8s%-15s%-15s%-18s%-18s%-16s%-15s%n", infoPesajeCos[0], infoPesajeCos[1],
-                            infoPesajeCos[2], trunca(infoPesajeCos[3]), trunca(infoPesajeCos[4]), trunca(infoPesajeCos[5]), infoPesajeCos[6]);
+                            infoPesajeCos[2], trunca(infoPesajeCos[3])+" Kg", "$ "+trunca(infoPesajeCos[4]), "$ "+trunca(infoPesajeCos[5]), infoPesajeCos[6]);
                 }
                 System.out.println("--------------------------");
             } else {
@@ -633,7 +631,7 @@ public class GestionHuertosUI {
                     "Rut Cosechador");
             for (String pagos : controlProduccion.listPagoPesajes()) {
                 String[] infoPagos = pagos.split("; ");
-                System.out.printf("%-8s%-15s%-16s%-17s%-20s%n", infoPagos[0], infoPagos[1], "$"+trunca(infoPagos[2]), infoPagos[3],
+                System.out.printf("%-8s%-15s%-16s%-17s%-20s%n", infoPagos[0], infoPagos[1], "$ "+trunca(infoPagos[2]), infoPagos[3],
                         infoPagos[4]);
             }
             System.out.println("----------------------------");

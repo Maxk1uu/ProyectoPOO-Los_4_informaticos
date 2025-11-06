@@ -55,7 +55,6 @@ public class CosechadorAsignado {
         return cosechador;
     }
 
-    //necesita revision
     public double getCumplimientoMeta(){
         double sumKilos = 0;
         for(Pesaje p : pesajes){

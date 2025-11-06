@@ -347,7 +347,7 @@ public class ControlProduccion {
             if (pesaje.getPagoPesaje() == null) {
                 pagoPesaje = "Impago";
             } else {
-                pagoPesaje = String.valueOf(pesaje.getPagoPesaje().getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+                pagoPesaje = pesaje.getPagoPesaje().getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
             }
             listaPesajes.add(String.join("; ", Integer.toString(pesaje.getId()), pesaje.getFechaHora().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), pesaje.getCosechadorAsignado().getCosechador().getRut().toString(), String.valueOf(pesaje.getCalidad()), String.valueOf(pesaje.getCantidadKg()), String.valueOf(pesaje.getPrecioKg()), String.valueOf(pesaje.getMonto()), pagoPesaje));
         }
@@ -360,11 +360,14 @@ public class ControlProduccion {
         ArrayList<String> lista = new ArrayList<>();
         if(findPersona(rut).isPresent() && findPersona(rut).get() instanceof Cosechador cosechador) {
             if(cosechador.getAsignaciones().length > 0){
-                for(CosechadorAsignado cosechadorAsignado : cosechador.getAsignaciones()) {
-                    for(Pesaje pesaje : pesajes) {
-                        if (pesaje.getPagoPesaje() != null) pagoPesaje = pesaje.getPagoPesaje().getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                for(Pesaje pesaje : pesajes) {
+                    if(pesaje.getCosechadorAsignado().getCosechador().getRut().equals(rut)) {
+                        if (pesaje.getPagoPesaje() != null)
+                            pagoPesaje = pesaje.getPagoPesaje().getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
                         else pagoPesaje = "IMPAGO";
-                        lista.add(String.join("; ", Integer.toString(pesaje.getId()), pesaje.getFechaHora().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), pesaje.getCalidad().name(), Double.toString(pesaje.getCantidadKg()), Double.toString(pesaje.getPrecioKg()), Double.toString(pesaje.getMonto()), pagoPesaje));
+                        lista.add(String.join("; ", Integer.toString(pesaje.getId()), pesaje.getFechaHora().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                                pesaje.getCalidad().name(), Double.toString(pesaje.getCantidadKg()), Double.toString(pesaje.getPrecioKg()),
+                                Double.toString(pesaje.getMonto()), pagoPesaje));
                     }
                 }
                 return lista.toArray(new String[0]);
