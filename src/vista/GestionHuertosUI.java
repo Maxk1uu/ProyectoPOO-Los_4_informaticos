@@ -132,8 +132,14 @@ public class GestionHuertosUI {
         String nombre, email, direccion;
         Rut rut;
         System.out.println("\n--Creando una Persona---");
-        System.out.print("> Rol Persona ([1] Propietario ; [2] Supervisor ; [3] Cosechador): ");
-        rol = leerNumeroPositivo("> Rol: ");
+        do {
+            System.out.println("> Rol Persona ([1] Propietario ; [2] Supervisor ; [3] Cosechador)");
+            rol = leerNumeroPositivo("> Rol: ");
+            if(rol < 1 || rol > 3) {
+                System.out.println("\nX Error: El rol seleccionado no existe.\n");
+                rol = 0;
+            }
+        } while (rol < 1 || rol > 3);
         rut = leerRutValido("> Rut: ");
         nombre = leerTextoNoVacio("> Nombre: ");
         email = leerTextoNoVacio("> Email: ");
@@ -168,7 +174,6 @@ public class GestionHuertosUI {
                 }
 
             }
-            default -> System.out.println("\nX Error: Rol de Persona no valido.\n");
         }
     }
 
@@ -661,12 +666,14 @@ public class GestionHuertosUI {
             System.out.print(mensaje);
             try {
                 numero = sc.nextInt();
-                if (numero > 0) {
+                if (numero >= 0) {
                     numeroNegativo = false;
+                } else {
+                    System.out.println("\nX Error: Solo se permiten numeros enteros positivos y el cero.\n");
                 }
             } catch (
                     InputMismatchException e) { //Captura excepcion si el usuario ingresa un caracter en vez de un numero.
-                System.out.println("\nX Error: Solo se permiten numeros enteros.\n");
+                System.out.println("\nX Error: Solo se permiten numeros enteros, no caracteres.\n");
                 sc.next();
             }
         } while (numeroNegativo);
@@ -680,8 +687,10 @@ public class GestionHuertosUI {
             System.out.print(mensaje);
             try {
                 nro = sc.nextFloat();
-                if (nro > 0) {
+                if (nro >= 0) {
                     nroNegativo = false;
+                } else {
+                    System.out.println("\nX Error: Solo se permiten numeros positivos y el cero.\n");
                 }
             } catch (
                     InputMismatchException e) { //Captura excepcion si el usuario ingresa un caracter en vez de un numero.
@@ -699,8 +708,10 @@ public class GestionHuertosUI {
             try {
                 System.out.print(mensaje);
                 nro = sc.nextDouble();
-                if (nro > 0) {
+                if (nro >= 0) {
                     nroNegativo = false;
+                } else {
+                    System.out.println("\nX Error: Solo se permiten numeros positivos y el cero.\n");
                 }
             } catch (
                     InputMismatchException e) { //Captura excepcion si el usuario ingresa un caracter en vez de un numero.
@@ -716,14 +727,16 @@ public class GestionHuertosUI {
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         boolean fechaExistente;
         do {
-            System.out.println(mensaje);
+            System.out.print(mensaje);
             try {
                 fecha = LocalDate.parse(sc.next(), formato);
                 fechaExistente = true;
             } catch (DateTimeParseException e) {
                 System.out.println("\nX Error: la fecha es invalida o no cumple el formato dd/MM/yyyy.\n");
                 fechaExistente = false;
-                sc.next();
+                if(String.valueOf(fecha).matches("^[0-9]{2}/[0-9]{2}/[0-9]{4}$")) {
+                    sc.next();
+                }
             }
         } while (!fechaExistente);
         return fecha;
@@ -745,7 +758,7 @@ public class GestionHuertosUI {
             if (rutStr.matches(formatoValido)) {
                 rutInvalido = false;
             } else {
-                System.out.println("\nX Error: El rut ingresado no cumple el formato XX.XXX.XXX-X.\n");
+                System.out.println("\nX Error: El rut ingresado no cumple el formato 00.000.000-X.\n");
             }
         } while (rutInvalido);
         return Rut.of(rutStr);
