@@ -362,9 +362,10 @@ public class GestionHuertosUI {
         nroCosechadores = leerNumeroPositivo("> Nro. de Cosechadores a asignar: ");
         for (int i = 1; i <= nroCosechadores; i++) {
             do {
-                fechaInicioAsignacion = leerFechaExistente("\n> Fecha de Inicio de asignacion (dd/mm/yyyy): ");
+                System.out.println("\n-Cosechador "+i+" de "+nroCosechadores);
+                fechaInicioAsignacion = leerFechaExistente("> Fecha de Inicio de asignacion (dd/mm/yyyy): ");
                 fechaTerminoAsignacion = leerFechaExistente("> Fecha de Termino de asignacion (dd/mm/yyyy): ");
-            } while (comparaFechas(fechaInicioAsignacion, fechaTerminoAsignacion));
+            } while (!comparaFechas(fechaInicioAsignacion, fechaTerminoAsignacion));
             metaKilos = leerDoublePositivo("> Meta (Kilos): ");
             rutCosechador = leerRutValido("> Rut del Cosechador: ");
             try {
@@ -374,6 +375,7 @@ public class GestionHuertosUI {
             } catch (GestionHuertosException e) {
                 System.out.println("\nX Error: " + e.getMessage() + "\n");
             }
+            System.out.println("- - - - - - - - - - - - - - - -");
         }
     }
 

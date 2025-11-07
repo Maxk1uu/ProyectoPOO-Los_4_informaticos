@@ -154,7 +154,7 @@ public class ControlProduccion {
         if (findPersona(rutSupervisor).get() instanceof Supervisor supervisorEncontrado) {
             //Si encuentra una cuadrilla ya asignada al supervisor, retorna false.
             if (supervisorEncontrado.getCuadrillaAsignada() != null)
-                throw new GestionHuertosException("El supervisor ya tiene asignada una cuadrilla a a su cargo");
+                throw new GestionHuertosException("El supervisor ya tiene asignada una cuadrilla a su cargo");
             //Utiliza el metodo private findPlanCosecha, asegura que este no sea null.
             if (findPlanCosecha(idPlan).isPresent()) {
                 //Asigna este resultado a una variable.
@@ -187,7 +187,6 @@ public class ControlProduccion {
         PlanCosecha plan = findPlanCosecha(idPlanCosecha).get();
         // Condicion que no se especifica en el enunciado.
         // if (findCuadrilla(idCuadrilla, plan.getId()).isEmpty()) throw new GestionHuertosException("ERROR: Cuadrilla con el ID "+ idCuadrilla+" no existe o no está asignada al Plan de Cosecha con el ID " + idPlanCosecha + ".");
-        Cuadrilla cuadrillaEncontrada = findCuadrilla(idCuadrilla, plan.getId()).get();
         if (findPersona(rutCosechador).isEmpty())
             throw new GestionHuertosException("No existe un cosechador con el rut indicado");
         //Condicion que asegura  que el objeto encontrado sea modelo.Cosechador, para asi no
@@ -198,7 +197,7 @@ public class ControlProduccion {
             if (fechaIniCosechador.isAfter(fechaFinCosechador) || fechaIniCosechador.isBefore(plan.getInicio()) || fechaIniCosechador.isAfter(plan.getFinEstimado())
                     || fechaFinCosechador.isAfter(plan.getFinEstimado()) || fechaFinCosechador.isBefore(plan.getInicio()))
                 throw new GestionHuertosException("El rango de fechas de asignación del cosechador a la cuadrilla está fuera del rango de fechas del plan");
-            if (cuadrillaEncontrada.getCosechadores().length >= Cuadrilla.getMaximoCosechadores())
+            if (findCuadrilla(idCuadrilla, idPlanCosecha).isPresent() && findCuadrilla(idCuadrilla, idPlanCosecha).get().getCosechadores().length >= Cuadrilla.getMaximoCosechadores())
                 throw new GestionHuertosException("El número de cosechadores ya alcanzó el máximo permitido");
             plan.addCosechadorToCuadrilla(idCuadrilla, fechaIniCosechador, fechaFinCosechador, metaKilosCosechador, cosechadorEncontrado);
         }
