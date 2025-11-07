@@ -44,7 +44,7 @@ public class ControlProduccion {
     //Creado por Gabriel Rojas
     public void createPropietario(Rut rut, String nombre, String email, String direccionParticular, String direccionComercial) throws GestionHuertosException {
         //Asegura que esta persona no existe,  si existe, retorna false.
-        if (findPersona(rut).isPresent())
+        if (findPersona(rut).isPresent() && findPersona(rut).get() instanceof Propietario)
             throw new GestionHuertosException("Ya existe un propietario con el rut indicado");
 
         // De lo contrario, lo agrega a la colección.
@@ -54,7 +54,7 @@ public class ControlProduccion {
     //Creado por Gabriel Rojas
     public void createSupervisor(Rut rut, String nombre, String email, String direccion, String profesion) throws GestionHuertosException {
         //Check para asegurar que esta persona no existe.
-        if (findPersona(rut).isPresent())
+        if (findPersona(rut).isPresent() && findPersona(rut).get() instanceof Supervisor)
             throw new GestionHuertosException("Ya existe un supervisor con el rut indicado");
         //Agrega el supervisor a la coleccion.
         personas.add(new Supervisor(rut, nombre, email, direccion, profesion));
@@ -63,7 +63,7 @@ public class ControlProduccion {
     //Creado por Gabriel Rojas
     public void createCosechador(Rut rut, String nombre, String email, String direccion, LocalDate fechaNacimiento) throws GestionHuertosException {
         //Asegura que un cosechador con el mismo rut pasado por el parametro no exista.
-        if (findPersona(rut).isPresent())
+        if (findPersona(rut).isPresent() && findPersona(rut).get() instanceof Cosechador)
             throw new GestionHuertosException("Ya existe un cosechador con el rut indicado");
         //Agrega el cosechador a la coleccion.
         personas.add(new Cosechador(rut, nombre, email, direccion, fechaNacimiento));
