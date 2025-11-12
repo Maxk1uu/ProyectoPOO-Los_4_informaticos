@@ -1,3 +1,5 @@
+//Codigo Actualizado Por: Maximiliano Maureira (V2)
+//Revisado por: Gabriel Rojas (V2)
 package vista;
 import controlador.ControlProduccion;
 import utilidades.*;
@@ -139,7 +141,7 @@ public class GestionHuertosUI {
                 System.out.println("\nX Error: El rol seleccionado no existe.\n");
                 rol = 0;
             }
-        } while (rol < 1 || rol > 3);
+        } while (rol == 0);
         rut = leerRutValido("> Rut: ");
         nombre = leerTextoNoVacio("> Nombre: ");
         email = leerTextoNoVacio("> Email: ");

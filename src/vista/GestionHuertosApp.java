@@ -1,5 +1,6 @@
-package vista;//Codigo hecho por: Maximiliano Maureira
-//Revisado por: Gabriel Rojas y Ricardo Quintana
+package vista;
+//Codigo hecho por: Maximiliano Maureira (V2)
+//Revisado por: Gabriel Rojas (V2)
 
 public class GestionHuertosApp {
     //Relaciones

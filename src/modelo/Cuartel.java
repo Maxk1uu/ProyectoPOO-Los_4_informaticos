@@ -1,4 +1,6 @@
-package modelo;//Última revisión: Gabriel Rojas
+package modelo;
+//Codigo Actualizado Por: Maximiliano Maureira
+//Última revisión: Gabriel Rojas
 
 import utilidades.EstadoFenologico;
 
