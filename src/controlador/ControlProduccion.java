@@ -245,7 +245,7 @@ public class ControlProduccion {
         String[] listaCultivos = new String[cultivos.size()];
         for (int i = 0; i < cultivos.size(); i++) {
             Cultivo cultivo = cultivos.get(i);
-            listaCultivos[i] = String.join("; ", Integer.toString(cultivo.getId()), cultivo.getEspecie(), cultivo.getVariedad(), Double.toString(cultivo.getRendimiento()), Integer.toString(cultivo.getCuarteles().length));
+            listaCultivos[i] = String.join("; ", Integer.toString(cultivo.getId()), cultivo.getEspecie(), cultivo.getVariedad(), Double.toString(cultivo.getRendimiento()*100), Integer.toString(cultivo.getCuarteles().length));
         }
         return listaCultivos;
     }

@@ -443,7 +443,7 @@ public class GestionHuertosUI {
                 for (String cultivo : listaDeCultivos) {
                     String[] infoCultivo = cultivo.split("; ");
                     System.out.printf("%-20s%-25s%-25s%-30s%-30s%n", infoCultivo[0], infoCultivo[1], infoCultivo[2],
-                            trunca(infoCultivo[3]), infoCultivo[4]);
+                            trunca(infoCultivo[3])+" %", infoCultivo[4]);
                 }
                 System.out.println("----------------------");
             } else {
@@ -547,7 +547,7 @@ public class GestionHuertosUI {
                     if (cosechador != null) {
                         String[] infoCosechador = cosechador.split("; ");
                         System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s%-15s%-15s%n", infoCosechador[0], infoCosechador[1],
-                                infoCosechador[2], infoCosechador[3], infoCosechador[4], infoCosechador[5], "$ "+infoCosechador[6], "$ "+trunca(infoCosechador[7]));
+                                infoCosechador[2], infoCosechador[3], infoCosechador[4], infoCosechador[5], "$ "+trunca(infoCosechador[6]), "$ "+trunca(infoCosechador[7]));
                     }
                 }
                 System.out.println("----------------------");
