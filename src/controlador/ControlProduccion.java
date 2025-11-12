@@ -296,7 +296,8 @@ public class ControlProduccion {
 
                 } else {
                     listaSupervisores[j] = String.join("; ", reconstruyeRut(personas.get(i).getRut().toString()), personas.get(i).getNombre(), personas.get(i).getDireccion(), personas.get(i).getEmail(),
-                            ((Supervisor) personas.get(i)).getProfesion(), ((Supervisor) personas.get(i)).getCuadrillaAsignada().getNombre());
+                            ((Supervisor) personas.get(i)).getProfesion(), ((Supervisor) personas.get(i)).getCuadrillaAsignada().getNombre(),
+                             Double.toString(((Supervisor) personas.get(i)).getCuadrillaAsignada().getKilosPesados()),getNroPesajesImpagos((Supervisor) personas.get(i)));
                 }
                 j++;
             }
@@ -666,9 +667,17 @@ public class ControlProduccion {
         return pesajesConPagoPendiente;
     }
     private String reconstruyeRut(String rut) {
-        String dosNumeros = rut.substring(0,2);
-        String tresNumeros = rut.substring(2,5);
+        String dosNumeros = rut.substring(0, 2);
+        String tresNumeros = rut.substring(2, 5);
         String resto = rut.substring(5);
         return dosNumeros + "." + tresNumeros + "." + resto;
+    }
+
+    private String getNroPesajesImpagos(Supervisor supervisor) {
+        int nroPesajesImpagos = 0;
+        for(CosechadorAsignado cosechador : supervisor.getCuadrillaAsignada().getAsignaciones()) {
+            nroPesajesImpagos += cosechador.getNroPesajesImpagos();
+        }
+        return String.valueOf(nroPesajesImpagos);
     }
 }
