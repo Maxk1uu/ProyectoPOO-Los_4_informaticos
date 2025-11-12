@@ -1,4 +1,6 @@
-package utilidades;//Revisado por: Gabriel Rojas
+//Creado por: Gabriel Rojas
+//Revisado por: Gabriel Rojas
+package utilidades;
 
 public class Rut {
     //Atributos

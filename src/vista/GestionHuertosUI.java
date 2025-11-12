@@ -539,13 +539,13 @@ public class GestionHuertosUI {
             if (controlProduccion.listCosechadores().length != 0) {
                 System.out.println("\nLISTA DE COSECHADORES");
                 System.out.println("----------------------");
-                System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s%n", "Rut", "Nombre", "Direccion", "Email",
-                        "Fecha De Nacimiento", "Nro. de Cuadrillas");
+                System.out.printf("%-20s%-25s%-25s%-30s%-30s%-30s%-30s%-20s%n", "Rut", "Nombre", "Direccion", "Email",
+                        "Fecha De Nacimiento", "Nro. de Cuadrillas", "Monto Impago $", "Monto pagado $");
                 for (String cosechador : controlProduccion.listCosechadores()) {
                     if (cosechador != null) {
                         String[] infoCosechador = cosechador.split("; ");
-                        System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s%n", infoCosechador[0], infoCosechador[1],
-                                infoCosechador[2], infoCosechador[3], infoCosechador[4], infoCosechador[5]);
+                        System.out.printf("%-20s%-25s%-25s%-30s%-30s%-30s%-30s%-20s%n", infoCosechador[0], infoCosechador[1],
+                                infoCosechador[2], infoCosechador[3], infoCosechador[4], infoCosechador[5], trunca(infoCosechador[6]), trunca(infoCosechador[7]));
                     }
                 }
                 System.out.println("----------------------");
