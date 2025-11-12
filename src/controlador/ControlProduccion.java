@@ -316,7 +316,7 @@ public class ControlProduccion {
             if (personas.get(i) instanceof Cosechador) {
                 int cuadrillasAsignadas = ((Cosechador) personas.get(i)).getCuadrillas().length;
                 listaCosechadores[j] = String.join("; ", reconstruyeRut(personas.get(i).getRut().toString()), personas.get(i).getNombre(), personas.get(i).getDireccion(), personas.get(i).getEmail(),
-                        ((Cosechador) personas.get(i)).getFechaNacimiento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), Integer.toString(cuadrillasAsignadas));
+                        ((Cosechador) personas.get(i)).getFechaNacimiento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), Integer.toString(cuadrillasAsignadas), Double.toString(getMontoImpago((Cosechador) personas.get(i))), Double.toString(getMontoPagado((Cosechador) personas.get(i))));
                 j++;
             }
         }
@@ -671,6 +671,24 @@ public class ControlProduccion {
         String tresNumeros = rut.substring(2, 5);
         String resto = rut.substring(5);
         return dosNumeros + "." + tresNumeros + "." + resto;
+    }
+    private double getMontoImpago(Cosechador cosechador) {
+        double monto = 0;
+        for (CosechadorAsignado cosAsig : cosechador.getAsignaciones()) {
+            for (Pesaje pesaje : cosAsig.getPesajes()) {
+                if (!pesaje.isPagado()) monto += pesaje.getMonto();
+            }
+        }
+        return monto;
+    }
+    private double getMontoPagado(Cosechador cosechador) {
+        double monto = 0;
+        for (CosechadorAsignado cosAsig : cosechador.getAsignaciones()) {
+            for (Pesaje pesaje : cosAsig.getPesajes()) {
+                if (pesaje.isPagado()) monto += pesaje.getMonto();
+            }
+        }
+        return monto;
     }
 
     private String getNroPesajesImpagos(Supervisor supervisor) {

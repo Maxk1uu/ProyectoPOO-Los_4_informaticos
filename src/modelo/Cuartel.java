@@ -1,6 +1,8 @@
-package modelo;
-//Codigo Actualizado Por: Maximiliano Maureira
+
+//Creado por: Gabriel Rojas
+//Codigo Actualizado por: Maximiliano Maureira
 //Última revisión: Gabriel Rojas
+package modelo;
 
 import utilidades.EstadoFenologico;
 
