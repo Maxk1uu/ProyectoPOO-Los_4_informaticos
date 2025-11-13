@@ -1,7 +1,11 @@
-//Revisado por: Gabriel Rojas
+package modelo;//Revisado por: Gabriel Rojas
+
+import utilidades.Rut;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Optional;
+
 public class Cosechador extends Persona {
     //Atributos
     private LocalDate fechaNacimiento;
@@ -38,5 +42,17 @@ public class Cosechador extends Persona {
             cuadrillas[i] = cosechadoresAsignados.get(i).getCuadrilla(); //Guardo sólo la cuadrilla de cada cosechador.
         }
         return cuadrillas;
+    }
+
+    public Optional<CosechadorAsignado> getAsignacion(int idCuadrilla,int idPlanCosecha){
+        for(CosechadorAsignado cosAs : cosechadoresAsignados) {
+            if(cosAs.getCuadrilla().getPlanCosecha().getId() == idPlanCosecha && cosAs.getCuadrilla().getId() == idCuadrilla) {
+                return Optional.of(cosAs);
+            }
+        }
+        return Optional.empty();
+    }
+    public CosechadorAsignado[] getAsignaciones() {
+        return cosechadoresAsignados.toArray(new CosechadorAsignado[0]);
     }
 }

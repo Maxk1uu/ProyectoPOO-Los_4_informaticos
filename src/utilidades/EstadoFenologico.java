@@ -1,3 +1,5 @@
+package utilidades;
+
 public enum EstadoFenologico {
     REPOSO_INVERNAL,
     FLORACION,
@@ -5,5 +7,5 @@ public enum EstadoFenologico {
     FRUCTIFICACION,
     MADURACION,
     COSECHA,
-    POSTCOSECHA;
+    POSTCOSECHA
 }
