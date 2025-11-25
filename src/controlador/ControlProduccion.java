@@ -242,7 +242,9 @@ public class ControlProduccion {
 
     // Hecho por Ricardo Quintana
     public String[] listCultivos() {
+        Comparator<Cultivo> ordenarPorEspecieThenVariedad = Comparator.comparing(Cultivo::getEspecie).thenComparing(Cultivo::getVariedad);
         return cultivos.stream()
+                .sorted(ordenarPorEspecieThenVariedad)
                 .map( cultivo -> String.join("; ", Integer.toString(cultivo.getId()),
                         cultivo.getEspecie(), cultivo.getVariedad(), Double.toString(cultivo.getRendimiento()), Integer.toString(cultivo.getCuarteles().length)))
                 .toArray(String[]::new);
@@ -273,7 +275,7 @@ public class ControlProduccion {
         return personas.stream()
                 .filter(persona -> persona.getClass() == Supervisor.class)
                 .map(Supervisor.class::cast)
-                .sorted(ordenarPorKilosPesados)
+                .sorted(ordenarPorKilosPesados.reversed())
                 .map(supervisor -> String.join("; ", reconstruyeRut(supervisor.getRut().toString()), supervisor.getNombre(), supervisor.getDireccion(), supervisor.getEmail(),
                         supervisor.getProfesion(), (supervisor.getCuadrillaAsignada() == null) ? "S/A" : supervisor.getCuadrillaAsignada().getNombre()))
                 .toArray(String[]::new);
@@ -281,11 +283,15 @@ public class ControlProduccion {
 
     // Hecho por Ricardo Quintana, Programación funcional por Gabriel Rojas
     public String[] listCosechadores() {
-        if (personas.isEmpty()) return new String[0]; // Sino existen personas retorna un arreglo vacio
+        Comparator<Cosechador> ordenarPorMontoImpago =
+                Comparator.comparing(cosechador ->
+                Arrays.stream(cosechador.getAsignaciones())
+                .mapToDouble(CosechadorAsignado::getMontoPesajesImpagos)
+                        .sum());
         return personas.stream()
                 .filter(persona -> persona.getClass() == Cosechador.class)
                 .map(Cosechador.class::cast)
-                .sorted()
+                .sorted(ordenarPorMontoImpago.reversed())
                 .map(cosechador -> String.join("; ", reconstruyeRut(cosechador.getRut().toString()), cosechador.getNombre(), cosechador.getDireccion(), cosechador.getEmail(),
                         cosechador.getFechaNacimiento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), Integer.toString(cosechador.getCuadrillas().length), Double.toString(getMontoImpago(cosechador)), Double.toString(getMontoPagado(cosechador))))
                 .toArray(String[]::new);
@@ -294,7 +300,11 @@ public class ControlProduccion {
     // Hecho por Ricardo Quintana, Programación funcional por Gabriel Rojas
     public String[] listPlanes() {
         if (planCosechas.isEmpty()) return new String[0]; // Sino existen planes de cosechas retorna un arreglo vacío
+        Comparator<PlanCosecha> ordenarPorEspecieThenVariedad =
+                Comparator.comparing(planCosecha -> planCosecha.getCuartel().getCultivo().getEspecie());
         return planCosechas.stream()
+                .sorted(ordenarPorEspecieThenVariedad
+                        .thenComparing(planCosecha ->  planCosecha.getCuartel().getCultivo().getVariedad())) // Por alguna razón no me deja hacer el thenComparing en la misma variable.
                 .map(planCosecha -> String.join("; ", Integer.toString(planCosecha.getId()), planCosecha.getNombre(), planCosecha.getInicio().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                         planCosecha.getFinEstimado().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), Double.toString(planCosecha.getMetaKilos()), Double.toString(planCosecha.getPrecioBaseKilo()), planCosecha.getEstado().toString(), Integer.toString(planCosecha.getCuartel().getId()),
                         planCosecha.getCuartel().getHuerto().getNombre(), Integer.toString(planCosecha.getCuadrillas().length), Double.toString(planCosecha.getCumplimientoMeta())))
@@ -336,8 +346,6 @@ public class ControlProduccion {
                 .map(pagoPesaje -> String.join("; ", Integer.toString(pagoPesaje.getId()), pagoPesaje.getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), Double.toString(pagoPesaje.getMonto()), Integer.toString(pagoPesaje.getPesajes().length), reconstruyeRut(pagoPesaje.getPesajes()[0].getCosechadorAsignado().getCosechador().getRut().toString())))
                 .toArray(String[]::new);
     }
-
-    //public String[] getCuadrillasDeCosechadorDePlan(Rut rutCosechador){
 
 
 
