@@ -9,6 +9,7 @@ import java.util.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import utilidades.*;
 import modelo.*;
@@ -388,6 +389,33 @@ public class ControlProduccion {
                 lista.add(String.join("; ", Integer.toString(pagoPesaje.getId()), pagoPesaje.getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), Double.toString(pagoPesaje.getMonto()), Integer.toString(pagoPesaje.getPesajes().length), reconstruyeRut(pagoPesaje.getPesajes()[0].getCosechadorAsignado().getCosechador().getRut().toString())));
             }
         return lista.toArray(new String[0]);
+    }
+    public String[] getCuadrillasDeCosechadorDePlan(Rut rutCosechador) throws GestionHuertosException {
+        //Asegura que la fecha de hoy, que será la del pesaje, esta dentro de cada intervalo de asignación de su plan de cosecha correspondiente
+        Predicate<Cuadrilla> filterCuadrillaByDate = (cuadrilla ->
+                        LocalDate.now().isAfter(cuadrilla.getPlanCosecha().getInicio())
+                        && LocalDate.now().isBefore(cuadrilla.getPlanCosecha().getFinEstimado())
+                        || LocalDate.now().isEqual(cuadrilla.getPlanCosecha().getInicio())
+                        || LocalDate.now().isEqual(cuadrilla.getPlanCosecha().getFinEstimado()));
+
+        List<Cuadrilla> filteredCuadrillas = Arrays.stream(personas.stream()
+                .filter(persona -> persona.getRut().equals(rutCosechador))
+                .filter(persona -> persona.getClass() == Cosechador.class )
+                .findFirst()
+                .map(Cosechador.class::cast)
+                .orElseThrow(() -> new GestionHuertosException("No existe un cosechador con el rut indicado"))
+                .getCuadrillas())
+                .filter(cuadrilla -> (cuadrilla.getPlanCosecha().getEstado() == EstadoPlan.EJECUTANDO))
+                .filter(filterCuadrillaByDate)
+                .toList();
+
+        if (filteredCuadrillas.isEmpty()) throw new GestionHuertosException("El cosechador no tiene cuadrillas disponibles para pesaje");
+
+        return filteredCuadrillas.stream()
+                .map(cuadrilla ->
+                        String.join("; ", Integer.toString(cuadrilla.getId()), cuadrilla.getNombre(), Integer.toString(cuadrilla.getPlanCosecha().getId())))
+                .toArray(String[]::new);
+
     }
 
     // Hecho por Ricardo Quintana
