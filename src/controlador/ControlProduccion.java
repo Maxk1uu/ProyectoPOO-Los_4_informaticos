@@ -1,5 +1,4 @@
 package controlador;//Ultima revision:
-// Error encontrado el arreglo debe ser del tamaño exacto de la cantidad de personas que tengan dicho rol
 
 import java.io.File;
 import java.io.FileNotFoundException;
