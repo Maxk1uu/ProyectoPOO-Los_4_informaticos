@@ -1,6 +1,5 @@
-
-package controlador;
-
+package controlador;//Ultima revision:
+// Error encontrado el arreglo debe ser del tamaño exacto de la cantidad de personas que tengan dicho rol
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -594,8 +593,8 @@ public class ControlProduccion {
                 .toList();
     }
     private String reconstruyeRut(String rut) {
-        String dosNumeros = rut.substring(0,2);
-        String tresNumeros = rut.substring(2,5);
+        String dosNumeros = rut.substring(0, 2);
+        String tresNumeros = rut.substring(2, 5);
         String resto = rut.substring(5);
         return dosNumeros + "." + tresNumeros + "." + resto;
     }
@@ -614,5 +613,13 @@ public class ControlProduccion {
                 .filter(Pesaje::isPagado)
                 .mapToDouble(Pesaje::getMonto)
                 .sum();
+    }
+
+    private String getNroPesajesImpagos(Supervisor supervisor) {
+        int nroPesajesImpagos = 0;
+        for(CosechadorAsignado cosechador : supervisor.getCuadrillaAsignada().getAsignaciones()) {
+            nroPesajesImpagos += cosechador.getNroPesajesImpagos();
+        }
+        return String.valueOf(nroPesajesImpagos);
     }
 }
