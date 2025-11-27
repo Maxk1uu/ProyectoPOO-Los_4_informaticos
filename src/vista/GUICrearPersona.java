@@ -67,9 +67,10 @@ public class GUICrearPersona extends JDialog {
         cosechadorRadioButton.addActionListener(labelVariable);
 
         aceptarButton.addActionListener(e -> {
-            if (rutField.getText().isEmpty() || emailField.getText().isEmpty() || dirField.getText().isEmpty()
-                    || nameField.getText().isEmpty() || datoVariableField.getText().isEmpty()) {
+            if (hayCamposVacios()) {
                 guiMsg.error("Existen datos incorrectos o faltantes");
+            } else if(!isRutValido()) {
+                guiMsg.error("El formato del rut es incorrecto. Formato: 12.345.678-K");
             } else {
                 wasAcepted = true;
                 String persona = roles.getSelection().getActionCommand();
@@ -101,5 +102,15 @@ public class GUICrearPersona extends JDialog {
     }
     public boolean wasAcepted() {
         return wasAcepted;
+    }
+
+    //Validaciones
+    private boolean hayCamposVacios() {
+        return rutField.getText().isEmpty() || emailField.getText().isEmpty() || dirField.getText().isEmpty()
+                || nameField.getText().isEmpty() || datoVariableField.getText().isEmpty();
+    }
+    private boolean isRutValido() {
+        String formatoValido = "^[0-9]{2}\\.[0-9]{3}\\.[0-9]{3}-[0-9kK]$";
+        return rutField.getText().matches(formatoValido);
     }
 }
