@@ -2,6 +2,9 @@ package controlador;//Ultima revision:
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.lang.reflect.Array;
+import java.security.GeneralSecurityException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -9,6 +12,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import persistencia.GestionHuertosIO;
 import utilidades.*;
 import modelo.*;
 
@@ -244,7 +248,7 @@ public class ControlProduccion {
         String[] listaCultivos = new String[cultivos.size()];
         for (int i = 0; i < cultivos.size(); i++) {
             Cultivo cultivo = cultivos.get(i);
-            listaCultivos[i] = String.join("; ", Integer.toString(cultivo.getId()), cultivo.getEspecie(), cultivo.getVariedad(), Double.toString(cultivo.getRendimiento()*100), Integer.toString(cultivo.getCuarteles().length));
+            listaCultivos[i] = String.join("; ", Integer.toString(cultivo.getId()), cultivo.getEspecie(), cultivo.getVariedad(), Double.toString(cultivo.getRendimiento() * 100), Integer.toString(cultivo.getCuarteles().length));
         }
         return listaCultivos;
     }
@@ -272,7 +276,7 @@ public class ControlProduccion {
         // Busco los propietarios de la lista de personas
         for (int i = 0, j = 0; i < personas.size(); i++) {
             if (personas.get(i) instanceof Propietario) {
-                listaPropietarios[j] = String.join("; ",reconstruyeRut(personas.get(i).getRut().toString()), personas.get(i).getNombre(), personas.get(i).getDireccion(),
+                listaPropietarios[j] = String.join("; ", reconstruyeRut(personas.get(i).getRut().toString()), personas.get(i).getNombre(), personas.get(i).getDireccion(),
                         personas.get(i).getEmail(), ((Propietario) personas.get(i)).getDirComercial(), Integer.toString(((Propietario) personas.get(i)).getHuertos().length));
                 j++;
             }
@@ -296,7 +300,7 @@ public class ControlProduccion {
                 } else {
                     listaSupervisores[j] = String.join("; ", reconstruyeRut(personas.get(i).getRut().toString()), personas.get(i).getNombre(), personas.get(i).getDireccion(), personas.get(i).getEmail(),
                             ((Supervisor) personas.get(i)).getProfesion(), ((Supervisor) personas.get(i)).getCuadrillaAsignada().getNombre(),
-                             Double.toString(((Supervisor) personas.get(i)).getCuadrillaAsignada().getKilosPesados()),getNroPesajesImpagos((Supervisor) personas.get(i)));
+                            Double.toString(((Supervisor) personas.get(i)).getCuadrillaAsignada().getKilosPesados()), getNroPesajesImpagos((Supervisor) personas.get(i)));
                 }
                 j++;
             }
@@ -357,10 +361,10 @@ public class ControlProduccion {
         String pagoPesaje;
         if (pesajes.isEmpty()) return new String[0];
         ArrayList<String> lista = new ArrayList<>();
-        if(findPersona(rut).isPresent() && findPersona(rut).get() instanceof Cosechador cosechador) {
-            if(cosechador.getAsignaciones().length > 0){
-                for(Pesaje pesaje : pesajes) {
-                    if(pesaje.getCosechadorAsignado().getCosechador().getRut().equals(rut)) {
+        if (findPersona(rut).isPresent() && findPersona(rut).get() instanceof Cosechador cosechador) {
+            if (cosechador.getAsignaciones().length > 0) {
+                for (Pesaje pesaje : pesajes) {
+                    if (pesaje.getCosechadorAsignado().getCosechador().getRut().equals(rut)) {
                         if (pesaje.getPagoPesaje() != null)
                             pagoPesaje = pesaje.getPagoPesaje().getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
                         else pagoPesaje = "IMPAGO";
@@ -384,8 +388,8 @@ public class ControlProduccion {
         if (pesajes.isEmpty()) return new String[0];
         ArrayList<String> lista = new ArrayList<>();
         for (PagoPesaje pagoPesaje : pagosPesajes) {
-                lista.add(String.join("; ", Integer.toString(pagoPesaje.getId()), pagoPesaje.getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), Double.toString(pagoPesaje.getMonto()), Integer.toString(pagoPesaje.getPesajes().length), reconstruyeRut(pagoPesaje.getPesajes()[0].getCosechadorAsignado().getCosechador().getRut().toString())));
-            }
+            lista.add(String.join("; ", Integer.toString(pagoPesaje.getId()), pagoPesaje.getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), Double.toString(pagoPesaje.getMonto()), Integer.toString(pagoPesaje.getPesajes().length), reconstruyeRut(pagoPesaje.getPesajes()[0].getCosechadorAsignado().getCosechador().getRut().toString())));
+        }
         return lista.toArray(new String[0]);
     }
 
@@ -537,6 +541,36 @@ public class ControlProduccion {
         }
     }
 
+    // Hecho por Ricardo Quintana
+    public void saveSystemData() throws GestionHuertosException {
+        GestionHuertosIO persistencia = GestionHuertosIO.getInstance();
+
+        // Guardar personas
+        Persona[] personasObj = personas.toArray(new Persona[0]);
+        persistencia.savePersonas(personasObj);
+
+        // Guardar cultivos
+        Cultivo[] cultivosObj = cultivos.toArray(new Cultivo[0]);
+        persistencia.saveCultivos(cultivosObj);
+
+        // Guardar planes de cosecha
+        PlanCosecha[] planCosechasObj = planCosechas.toArray(new PlanCosecha[0]);
+        persistencia.savePlanesCosecha(planCosechasObj);
+    }
+
+    // Hecho por Ricardo Quintana
+    public void readSystemData() throws GestionHuertosException {
+        GestionHuertosIO persistencia = GestionHuertosIO.getInstance();
+        // primero limpio las colecciones para evitar objetos duplicados
+        personas.clear();
+        cultivos.clear();
+        planCosechas.clear();
+
+        personas.addAll(Arrays.asList(persistencia.readPersonas()));
+        cultivos.addAll(Arrays.asList(persistencia.readCultivos()));
+        planCosechas.addAll(Arrays.asList(persistencia.readPlanesCosecha()));
+    }
+
     //Metodo private que encuentra a una persona deseada a través de su rut.
     private Optional<Persona> findPersona(Rut rut) {
         //Busca a la persona.
@@ -665,12 +699,14 @@ public class ControlProduccion {
         }
         return pesajesConPagoPendiente;
     }
+
     private String reconstruyeRut(String rut) {
         String dosNumeros = rut.substring(0, 2);
         String tresNumeros = rut.substring(2, 5);
         String resto = rut.substring(5);
         return dosNumeros + "." + tresNumeros + "." + resto;
     }
+
     private double getMontoImpago(Cosechador cosechador) {
         double monto = 0;
         for (CosechadorAsignado cosAsig : cosechador.getAsignaciones()) {
@@ -680,6 +716,7 @@ public class ControlProduccion {
         }
         return monto;
     }
+
     private double getMontoPagado(Cosechador cosechador) {
         double monto = 0;
         for (CosechadorAsignado cosAsig : cosechador.getAsignaciones()) {
@@ -692,7 +729,7 @@ public class ControlProduccion {
 
     private String getNroPesajesImpagos(Supervisor supervisor) {
         int nroPesajesImpagos = 0;
-        for(CosechadorAsignado cosechador : supervisor.getCuadrillaAsignada().getAsignaciones()) {
+        for (CosechadorAsignado cosechador : supervisor.getCuadrillaAsignada().getAsignaciones()) {
             nroPesajesImpagos += cosechador.getNroPesajesImpagos();
         }
         return String.valueOf(nroPesajesImpagos);

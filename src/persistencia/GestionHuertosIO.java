@@ -1,3 +1,4 @@
+// Hecho por Ricardo Quintana
 package persistencia;
 
 import modelo.Cultivo;
