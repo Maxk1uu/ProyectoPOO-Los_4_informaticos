@@ -4,11 +4,15 @@ package vista;
 import controlador.ControlProduccion;
 import utilidades.*;
 
+import java.awt.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Date;
 import java.util.InputMismatchException;
+import java.util.Locale;
 import java.util.Scanner;
+import javax.swing.*;
 
 public class GestionHuertosUI {
     //Atributos
@@ -29,6 +33,7 @@ public class GestionHuertosUI {
 
     //Relaciones
     private final ControlProduccion controlProduccion = ControlProduccion.getInstance();
+    private GUICrearPersona guiCrearPersona;
 
     //Metodos
     public void menu() {
@@ -130,6 +135,7 @@ public class GestionHuertosUI {
     }
 
     private void creaPersona() {
+        /*
         int rol;
         String nombre, email, direccion;
         Rut rut;
@@ -177,6 +183,37 @@ public class GestionHuertosUI {
 
             }
         }
+
+         */
+       String nom, email, dir, datoVar, rol;
+       Rut rut;
+       guiCrearPersona = new GUICrearPersona();
+       guiCrearPersona.setVisible(true);
+       if(guiCrearPersona.wasAcepted()) { //Esto es para evitar procesar los datos al presionar cancelar
+           nom = guiCrearPersona.getNombre();
+           email = guiCrearPersona.getEmail();
+           dir = guiCrearPersona.getDir();
+           rol = guiCrearPersona.getRol();
+           try {
+               rut = Rut.of(guiCrearPersona.getRut());
+               switch (rol) {
+                   case "Propietario" -> {
+                        datoVar = guiCrearPersona.getDatoVariable();
+                        controlProduccion.createPropietario(rut,nom,email,dir,datoVar);
+                   }
+                   case "Supervisor" -> {
+                        datoVar = guiCrearPersona.getDatoVariable();
+                        controlProduccion.createSupervisor(rut,nom,email,dir,datoVar);
+                   }
+                   case "Cosechador" -> {
+                       LocalDate fNac = LocalDate.parse(guiCrearPersona.getDatoVariable());
+                       controlProduccion.createCosechador(rut,nom,email,dir,fNac);
+                   }
+               }
+           } catch (GestionHuertosException e) {
+               System.out.println("\nX Error: " + e.getMessage() + "\n");
+           }
+       }
     }
 
     private void creaCultivo() {
