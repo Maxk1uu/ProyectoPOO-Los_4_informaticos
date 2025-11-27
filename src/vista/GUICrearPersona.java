@@ -34,6 +34,7 @@ public class GUICrearPersona extends JDialog {
     public GUICrearPersona() {
         setTitle("Crear Persona");
         setContentPane(panel);
+        setAlwaysOnTop(true);
         pack();
         setLocationRelativeTo(null); //Esto centra la ventana
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);//Esto cierra la ventana al pulsar el boton de cerrar

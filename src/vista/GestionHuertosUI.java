@@ -8,9 +8,7 @@ import java.awt.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Date;
 import java.util.InputMismatchException;
-import java.util.Locale;
 import java.util.Scanner;
 import javax.swing.*;
 
@@ -33,7 +31,6 @@ public class GestionHuertosUI {
 
     //Relaciones
     private final ControlProduccion controlProduccion = ControlProduccion.getInstance();
-    private GUICrearPersona guiCrearPersona;
 
     //Metodos
     public void menu() {
@@ -187,7 +184,8 @@ public class GestionHuertosUI {
          */
        String nom, email, dir, datoVar, rol;
        Rut rut;
-       guiCrearPersona = new GUICrearPersona();
+       GUICrearPersona guiCrearPersona = new GUICrearPersona();
+       guiCrearPersona.setModal(true);
        guiCrearPersona.setVisible(true);
        if(guiCrearPersona.wasAcepted()) { //Esto es para evitar procesar los datos al presionar cancelar
            nom = guiCrearPersona.getNombre();
