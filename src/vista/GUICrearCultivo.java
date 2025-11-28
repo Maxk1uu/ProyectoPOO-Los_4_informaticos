@@ -19,7 +19,9 @@ public class GUICrearCultivo extends JDialog {
     private JLabel Image;
     private JPanel panelWithTextFields;
     private JTextField rendimientoFloatTextField;
-    private final GUICrearCultivoMsg cultivoMsg;
+    // mensaje emergente
+    private final GUIMsg errorMessage = new GUIMsg();
+
     public GUICrearCultivo() {
         super((Frame)null);
         setContentPane(contentPane);
@@ -28,7 +30,6 @@ public class GUICrearCultivo extends JDialog {
         setAlwaysOnTop(true);
         setLocationRelativeTo(null);
         cultivoTitle.setText("Creación de cultivo");
-        cultivoMsg = new GUICrearCultivoMsg();
         panelWithTextFields.setBorder(javax.swing.BorderFactory.createTitledBorder("Datos del cultivo"));
         buttonOK.addActionListener(actionEvent -> onOK());
 
@@ -55,28 +56,27 @@ public class GUICrearCultivo extends JDialog {
     }
 
     private void onOK() {
+        setAlwaysOnTop(false);
         String idCultivo = idInt.getText();
         String variedad = variedadText.getText();
         String especie = expecieText.getText();
         String rendimiento = rendimientoFloatTextField.getText();
         if (idCultivo.isBlank() ||  variedad.isBlank() || especie.isBlank() || rendimiento.isBlank()) {
-            setAlwaysOnTop(false);
-            cultivoMsg.errorMessageEmpty();
+            errorMessage.error("Existen datos incorrectos o faltantes");
         } else {
             try {
-                setAlwaysOnTop(false);
                 int id = Integer.parseInt(idCultivo);
                 float rendimientoParsed =  Float.parseFloat(rendimiento);
                 ControlProduccion.getInstance().createCultivo(id, especie, variedad, rendimientoParsed);
-                cultivoMsg.successMessage();
+                errorMessage.informacion("Cultivo registrado con exito");
                 idInt.setText("");
                 variedadText.setText("");
                 expecieText.setText("");
                 rendimientoFloatTextField.setText("");
             } catch(NumberFormatException e) {
-                cultivoMsg.errorMessageInvalid();
+                errorMessage.error("Un formato númerico indicado es inválido");
             } catch (GestionHuertosException e) {
-                cultivoMsg.cultivoAlreadyExists(e.getMessage());
+                errorMessage.error(e.getMessage());
             }
         }
     }

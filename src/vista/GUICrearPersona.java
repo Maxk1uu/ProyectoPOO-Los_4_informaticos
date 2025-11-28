@@ -37,7 +37,6 @@ public class GUICrearPersona extends JDialog {
         pack();
         setLocationRelativeTo(null); //Esto centra la ventana
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);//Esto cierra la ventana al pulsar el boton de cerrar
-
         //Estos son los "Nombres" de cada boton
         propietarioRadioButton.setActionCommand("Propietario");
         supervisorRadioButton.setActionCommand("Supervisor");
