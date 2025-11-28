@@ -215,7 +215,6 @@ public class ControlProduccion {
         if (!findPlanCosecha(idPlan).get().getEstado().equals(EstadoPlan.EJECUTANDO))
             throw new GestionHuertosException("El plan no se encuentra en estado \"en ejecucion\"");
         //Utiliza el metodo getCosAsig para asegurarse de que este cosechador este asignado a una cuadrilla de un plna
-        //ADVERTENCIA: El metodo getCosAsig todavia no existe.
         if (cosechador.getAsignacion(idCuadrilla, idPlan).isEmpty())
             throw new GestionHuertosException("El cosechador no tiene una asignacion a una cuadrilla con el id indicado en el plan con el id señalado");
         //Compara las fechas de asignación del cosechador asignado en esa cuadrilla con LocalDate.now()

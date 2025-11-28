@@ -8,7 +8,9 @@ import java.awt.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Date;
 import java.util.InputMismatchException;
+import java.util.Locale;
 import java.util.Scanner;
 import javax.swing.*;
 
@@ -31,6 +33,9 @@ public class GestionHuertosUI {
 
     //Relaciones
     private final ControlProduccion controlProduccion = ControlProduccion.getInstance();
+    private GUICrearPersona guiCrearPersona;
+    private GUICrearCultivo guiCultivo;
+    private GUIAgregarPesajeACosechador guiAgregarPesajeACosechador;
 
     //Metodos
     public void menu() {
@@ -188,7 +193,7 @@ public class GestionHuertosUI {
     }
 
     private void creaCultivo() {
-        int id;
+       /* int id;
         String especie, variedad;
         float rendimiento;
         System.out.println("\n---Creando un Cultivo---");
@@ -202,6 +207,14 @@ public class GestionHuertosUI {
         } catch (GestionHuertosException e) {
             System.out.println("\nX Error: " + e.getMessage() + "\n");
         }
+
+        */
+        SwingUtilities.invokeLater(()-> {
+            GUICrearCultivo guiCrearCultivo = new GUICrearCultivo();
+            guiCrearCultivo.pack();
+            guiCrearCultivo.setVisible(true);
+        });
+
     }
 
     private void creaHuerto() {
@@ -391,7 +404,7 @@ public class GestionHuertosUI {
 
 
     private void agregaPesajeACosechador() {
-        int idPesaje, idPlan, idCuadrilla, opcion;
+       /* int idPesaje, idPlan, idCuadrilla, opcion;
         float cantKilos;
         Rut rutCosechador;
         Calidad calidad = null;
@@ -423,6 +436,14 @@ public class GestionHuertosUI {
         } catch (GestionHuertosException e) {
             System.out.println("\nX Error: " + e.getMessage() + "\n");
         }
+
+        */
+        SwingUtilities.invokeLater(() -> {
+            guiAgregarPesajeACosechador = new GUIAgregarPesajeACosechador();
+            guiAgregarPesajeACosechador.setVisible(true);
+            guiAgregarPesajeACosechador.setLocationRelativeTo(null);
+        });
+
     }
 
     private void pagaPesajesPendientesACosechador() {
