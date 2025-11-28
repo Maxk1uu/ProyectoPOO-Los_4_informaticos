@@ -1,4 +1,8 @@
 package vista;
+import controlador.ControlProduccion;
+import utilidades.GestionHuertosException;
+import utilidades.Rut;
+
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.plaf.FontUIResource;
@@ -10,6 +14,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 public class GUICrearPersona extends JDialog {
@@ -26,9 +32,12 @@ public class GUICrearPersona extends JDialog {
     private JButton aceptarButton;
     private JLabel iconPersona;
     private JLabel datoVariable;
-    private boolean wasAcepted = false;
+    ButtonGroup roles = new ButtonGroup();//Esto es un grupo de botones para que solo se puedan seleccionar uno a la vez
+
+
 
     //Relacion
+    ControlProduccion controlProduccion = ControlProduccion.getInstance();
     GUIMsg guiMsg = new GUIMsg();
 
     public GUICrearPersona() {
@@ -44,8 +53,6 @@ public class GUICrearPersona extends JDialog {
         supervisorRadioButton.setActionCommand("Supervisor");
         cosechadorRadioButton.setActionCommand("Cosechador");
 
-        //Esto es un grupo de botones para que solo se puedan seleccionar uno a la vez
-        ButtonGroup roles = new ButtonGroup();
         roles.add(propietarioRadioButton);
         roles.add(supervisorRadioButton);
         roles.add(cosechadorRadioButton);
@@ -67,41 +74,41 @@ public class GUICrearPersona extends JDialog {
         cosechadorRadioButton.addActionListener(labelVariable);
 
         aceptarButton.addActionListener(e -> {
+            String rut = rutField.getText();
+            String email = emailField.getText();
+            String dir = dirField.getText();
+            String nom = nameField.getText();
+            String datoVar = datoVariableField.getText();
+            setAlwaysOnTop(false);
             if (hayCamposVacios()) {
                 guiMsg.error("Existen datos incorrectos o faltantes");
-            } else if(!isRutValido()) {
-                guiMsg.error("El formato del rut es incorrecto. Formato: 12.345.678-K");
             } else {
-                wasAcepted = true;
-                String persona = roles.getSelection().getActionCommand();
-                guiMsg.informacion(persona + " creado exitosamente");
-                dispose();
+                try {
+                    Rut rutPersona = Rut.of(rut);
+                    switch (roles.getSelection().getActionCommand()) {
+                        case "Propietario" -> {
+                            controlProduccion.createPropietario(rutPersona, nom, email, dir, datoVar);
+                        }
+                        case "Supervisor" -> {
+                            controlProduccion.createSupervisor(rutPersona, nom, email, dir, datoVar);
+                        }
+                        case "Cosechador" -> {
+                            LocalDate fechaNacimiento = LocalDate.parse(datoVar, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                            if(!isFechaValida(fechaNacimiento)) guiMsg.error("La fecha ingresada no es valida");
+                            else controlProduccion.createCosechador(rutPersona, nom, email, dir, fechaNacimiento);
+                        }
+                    }
+                    personaCreada();
+                } catch (IllegalArgumentException ex) {
+                    guiMsg.error("El rut ingresado no cumple el formato 12.345.678-K");
+                } catch (GestionHuertosException ex) {
+                    existeUnaPersona();
+                }
             }
-        });
-        cancelarButton.addActionListener(e -> dispose());
-    }
 
-    //Getters
-    public String getRut() {
-        return rutField.getText();
-    }
-    public String getEmail() {
-        return emailField.getText();
-    }
-    public String getDir() {
-        return dirField.getText();
-    }
-    public String getNombre() {
-        return nameField.getText();
-    }
-    public String getDatoVariable() {
-        return datoVariable.getText();
-    }
-    public String getRol() {
-        return propietarioRadioButton.getActionCommand();
-    }
-    public boolean wasAcepted() {
-        return wasAcepted;
+        });
+
+        cancelarButton.addActionListener(e -> dispose());
     }
 
     //Validaciones
@@ -109,8 +116,18 @@ public class GUICrearPersona extends JDialog {
         return rutField.getText().isEmpty() || emailField.getText().isEmpty() || dirField.getText().isEmpty()
                 || nameField.getText().isEmpty() || datoVariableField.getText().isEmpty();
     }
-    private boolean isRutValido() {
-        String formatoValido = "^[0-9]{2}\\.[0-9]{3}\\.[0-9]{3}-[0-9kK]$";
-        return rutField.getText().matches(formatoValido);
+    private boolean isFechaValida(LocalDate fecha) {
+        LocalDate fechaActual = LocalDate.now();
+        return fecha.isBefore(fechaActual);
+    }
+    public void existeUnaPersona() {
+        String persona = roles.getSelection().getActionCommand();
+        guiMsg.error("Ya existe un "+persona+" con el rut ingresado");
+        dispose();
+    }
+    public void personaCreada() {
+        String persona = roles.getSelection().getActionCommand();
+        guiMsg.informacion(persona + " creado correctamente");
+        dispose();
     }
 }
