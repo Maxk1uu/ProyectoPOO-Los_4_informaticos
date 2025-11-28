@@ -1,5 +1,6 @@
-package controlador;//Ultima revision:
-// Error encontrado el arreglo debe ser del tamaño exacto de la cantidad de personas que tengan dicho rol
+
+package controlador;
+
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -241,136 +242,95 @@ public class ControlProduccion {
 
     // Hecho por Ricardo Quintana
     public String[] listCultivos() {
-        if (cultivos.isEmpty()) return new String[0];
-        String[] listaCultivos = new String[cultivos.size()];
-        for (int i = 0; i < cultivos.size(); i++) {
-            Cultivo cultivo = cultivos.get(i);
-            listaCultivos[i] = String.join("; ", Integer.toString(cultivo.getId()), cultivo.getEspecie(), cultivo.getVariedad(), Double.toString(cultivo.getRendimiento()*100), Integer.toString(cultivo.getCuarteles().length));
-        }
-        return listaCultivos;
+        Comparator<Cultivo> ordenarPorEspecieThenVariedad = Comparator.comparing(Cultivo::getEspecie).thenComparing(Cultivo::getVariedad);
+        return cultivos.stream()
+                .sorted(ordenarPorEspecieThenVariedad)
+                .map( cultivo -> String.join("; ", Integer.toString(cultivo.getId()),
+                        cultivo.getEspecie(), cultivo.getVariedad(), Double.toString(cultivo.getRendimiento()), Integer.toString(cultivo.getCuarteles().length)))
+                .toArray(String[]::new);
     }
 
-    // Hecho por Ricardo Quintana
+    // Hecho por Ricardo Quintana, Programación funcional por Gabriel Rojas
     public String[] listHuertos() {
-        if (huertos.isEmpty()) return new String[0];
-        String[] listaHuertos = new String[huertos.size()];
-        for (int i = 0; i < huertos.size(); i++) {
-            listaHuertos[i] = String.join("; ", huertos.get(i).getNombre(), Float.toString(huertos.get(i).getSuperficie()), huertos.get(i).getUbicacion(),
-                    reconstruyeRut(huertos.get(i).getPropietario().getRut().toString()), huertos.get(i).getPropietario().getNombre(), Integer.toString(huertos.get(i).getCuartels().length));
-        }
-        return listaHuertos;
+        return huertos.stream()
+                .map(huertos ->String.join("; ", huertos.getNombre(), Float.toString(huertos.getSuperficie()), huertos.getUbicacion(),
+                        reconstruyeRut(huertos.getPropietario().getRut().toString()), huertos.getPropietario().getNombre(), Integer.toString(huertos.getCuartels().length)))
+                .toArray(String[]::new);
     }
-    // Hecho por Ricardo Quintana
-
+    // Hecho por Ricardo Quintana, programación funcional por Gabriel Rojas
     public String[] listPropietarios() {
-        /*Cambie los parametros del for de las listas de personas, listaXXX.length -> persona.size(). Ademas, agregue otra variable(j) que avanza cada vez que encuentra un tipo de persona.
-         **Este cambio permite buscar entre todas las personas y guardar en el arreglo solo las personas necesarias, ya que con el length se llenaba el arreglo de nulls, por que el for avanzaba de numero
-         * y eso iba avanzando espacios en el arreglo. */
-        if (personas.isEmpty()) return new String[0]; // Sino existen personas retorna un arreglo vacio
-        //El metodo findArraySize busca el tamaño del arreglo, si es -1, entonces no existen propietarios.
-        if (findArraySize(3) == -1) return new String[0];
-        String[] listaPropietarios = new String[findArraySize(3)];
-        // Busco los propietarios de la lista de personas
-        for (int i = 0, j = 0; i < personas.size(); i++) {
-            if (personas.get(i) instanceof Propietario) {
-                listaPropietarios[j] = String.join("; ",reconstruyeRut(personas.get(i).getRut().toString()), personas.get(i).getNombre(), personas.get(i).getDireccion(),
-                        personas.get(i).getEmail(), ((Propietario) personas.get(i)).getDirComercial(), Integer.toString(((Propietario) personas.get(i)).getHuertos().length));
-                j++;
-            }
-        }
-        return listaPropietarios;
+        Comparator<Propietario> ordenarPorNombre = Comparator.comparing(Propietario::getNombre, String.CASE_INSENSITIVE_ORDER);
+        return personas.stream()
+                .filter(persona -> persona.getClass() == Propietario.class)
+                .map(Propietario.class::cast)
+                .sorted(ordenarPorNombre)
+                .map( propietario ->  String.join("; ",reconstruyeRut(propietario.getRut().toString()), propietario.getNombre(), propietario.getDireccion(),
+                        propietario.getEmail(), propietario.getDirComercial(), Integer.toString((propietario).getHuertos().length)))
+                .toArray(String[]::new);
     }
 
-    // Hecho por Ricardo Quintana
+    // Hecho por Ricardo Quintana, Programación funcional por Gabriel Rojas
     public String[] listSupervisores() {
-        if (personas.isEmpty()) return new String[0]; // Sino existen personas retorna un arreglo vacio
-        //El metodo findArraySize busca el tamaño del arreglo, si es -1, entonces no existen supervisores
-        if (findArraySize(1) == -1) return new String[0];
-        String[] listaSupervisores = new String[findArraySize(1)];
-        // Busco los supervisores de la lista de personas
-        for (int i = 0, j = 0; i < personas.size(); i++) {
-            if (personas.get(i) instanceof Supervisor) {
-                if (((Supervisor) personas.get(i)).getCuadrillaAsignada() == null) {
-                    listaSupervisores[j] = String.join("; ", reconstruyeRut(personas.get(i).getRut().toString()), personas.get(i).getNombre(), personas.get(i).getDireccion(), personas.get(i).getEmail(),
-                            ((Supervisor) personas.get(i)).getProfesion(), "S/A");
-
-                } else {
-                    listaSupervisores[j] = String.join("; ", reconstruyeRut(personas.get(i).getRut().toString()), personas.get(i).getNombre(), personas.get(i).getDireccion(), personas.get(i).getEmail(),
-                            ((Supervisor) personas.get(i)).getProfesion(), ((Supervisor) personas.get(i)).getCuadrillaAsignada().getNombre(),
-                             Double.toString(((Supervisor) personas.get(i)).getCuadrillaAsignada().getKilosPesados()),getNroPesajesImpagos((Supervisor) personas.get(i)));
-                }
-                j++;
-            }
-        }
-        return listaSupervisores;
+        Comparator<Supervisor> ordenarPorKilosPesados = Comparator.comparing(supervisor -> supervisor.getCuadrillaAsignada().getKilosPesados());
+        return personas.stream()
+                .filter(persona -> persona.getClass() == Supervisor.class)
+                .map(Supervisor.class::cast)
+                .sorted(ordenarPorKilosPesados.reversed())
+                .map(supervisor -> String.join("; ", reconstruyeRut(supervisor.getRut().toString()), supervisor.getNombre(), supervisor.getDireccion(), supervisor.getEmail(),
+                        supervisor.getProfesion(), (supervisor.getCuadrillaAsignada() == null) ? "S/A" : supervisor.getCuadrillaAsignada().getNombre()))
+                .toArray(String[]::new);
     }
 
-    // Hecho por Ricardo Quintana
+    // Hecho por Ricardo Quintana, Programación funcional por Gabriel Rojas
     public String[] listCosechadores() {
-        if (personas.isEmpty()) return new String[0]; // Sino existen personas retorna un arreglo vacio
-        //El metodo findArraySize busca el tamaño del arreglo, si es -1, entonces no existen cosechadores
-        if (findArraySize(2) == -1) return new String[0];
-        String[] listaCosechadores = new String[findArraySize(2)];
-        // Busco los cosechadores de la lista de personas
-        for (int i = 0, j = 0; i < personas.size(); i++) {
-            if (personas.get(i) instanceof Cosechador) {
-                int cuadrillasAsignadas = ((Cosechador) personas.get(i)).getCuadrillas().length;
-                listaCosechadores[j] = String.join("; ", reconstruyeRut(personas.get(i).getRut().toString()), personas.get(i).getNombre(), personas.get(i).getDireccion(), personas.get(i).getEmail(),
-                        ((Cosechador) personas.get(i)).getFechaNacimiento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), Integer.toString(cuadrillasAsignadas), Double.toString(getMontoImpago((Cosechador) personas.get(i))), Double.toString(getMontoPagado((Cosechador) personas.get(i))));
-                j++;
-            }
-        }
-        return listaCosechadores;
+        Comparator<Cosechador> ordenarPorMontoImpago =
+                Comparator.comparing(cosechador ->
+                Arrays.stream(cosechador.getAsignaciones())
+                .mapToDouble(CosechadorAsignado::getMontoPesajesImpagos)
+                        .sum());
+        return personas.stream()
+                .filter(persona -> persona.getClass() == Cosechador.class)
+                .map(Cosechador.class::cast)
+                .sorted(ordenarPorMontoImpago.reversed())
+                .map(cosechador -> String.join("; ", reconstruyeRut(cosechador.getRut().toString()), cosechador.getNombre(), cosechador.getDireccion(), cosechador.getEmail(),
+                        cosechador.getFechaNacimiento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), Integer.toString(cosechador.getCuadrillas().length), Double.toString(getMontoImpago(cosechador)), Double.toString(getMontoPagado(cosechador))))
+                .toArray(String[]::new);
     }
 
-    // Hecho por Ricardo Quintana
+    // Hecho por Ricardo Quintana, Programación funcional por Gabriel Rojas
     public String[] listPlanes() {
         if (planCosechas.isEmpty()) return new String[0]; // Sino existen planes de cosechas retorna un arreglo vacío
-
-        String[] listaPlanesCosechas = new String[planCosechas.size()];
-        // Guardo los planes de Cosecha en el arreglo
-        int cont = 0;
-        for (PlanCosecha planCosecha : planCosechas) {
-            listaPlanesCosechas[cont] = String.join("; ", Integer.toString(planCosecha.getId()), planCosecha.getNombre(), planCosecha.getInicio().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
-                    planCosecha.getFinEstimado().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), Double.toString(planCosecha.getMetaKilos()), Double.toString(planCosecha.getPrecioBaseKilo()), planCosecha.getEstado().toString(), Integer.toString(planCosecha.getCuartel().getId()),
-                    planCosecha.getCuartel().getHuerto().getNombre(), Integer.toString(planCosecha.getCuadrillas().length), Double.toString(planCosecha.getCumplimientoMeta()));
-            cont++;
-        }
-        return listaPlanesCosechas;
+        Comparator<PlanCosecha> ordenarPorEspecieThenVariedad =
+                Comparator.comparing(planCosecha -> planCosecha.getCuartel().getCultivo().getEspecie());
+        return planCosechas.stream()
+                .sorted(ordenarPorEspecieThenVariedad
+                        .thenComparing(planCosecha ->  planCosecha.getCuartel().getCultivo().getVariedad())) // Por alguna razón no me deja hacer el thenComparing en la misma variable.
+                .map(planCosecha -> String.join("; ", Integer.toString(planCosecha.getId()), planCosecha.getNombre(), planCosecha.getInicio().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                        planCosecha.getFinEstimado().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), Double.toString(planCosecha.getMetaKilos()), Double.toString(planCosecha.getPrecioBaseKilo()), planCosecha.getEstado().toString(), Integer.toString(planCosecha.getCuartel().getId()),
+                        planCosecha.getCuartel().getHuerto().getNombre(), Integer.toString(planCosecha.getCuadrillas().length), Double.toString(planCosecha.getCumplimientoMeta())))
+                .toArray(String[]::new);
     }
 
     public String[] listPesajes() {
-        if (pesajes.isEmpty()) return new String[0];
-        ArrayList<String> listaPesajes = new ArrayList<>();
-        for (Pesaje pesaje : pesajes) {
-            String pagoPesaje;
-            if (pesaje.getPagoPesaje() == null) {
-                pagoPesaje = "Impago";
-            } else {
-                pagoPesaje = pesaje.getPagoPesaje().getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-            }
-            listaPesajes.add(String.join("; ", Integer.toString(pesaje.getId()), pesaje.getFechaHora().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), pesaje.getCosechadorAsignado().getCosechador().getRut().toString(), String.valueOf(pesaje.getCalidad()), String.valueOf(pesaje.getCantidadKg()), String.valueOf(pesaje.getPrecioKg()), String.valueOf(pesaje.getMonto()), pagoPesaje));
-        }
-        return listaPesajes.toArray(new String[0]);
+        return pesajes.stream()
+                .map(pesaje -> String.join("; ",
+                        Integer.toString(pesaje.getId()),
+                        pesaje.getFechaHora().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                        pesaje.getCosechadorAsignado().getCosechador().getRut().toString(),
+                        String.valueOf(pesaje.getCalidad()), String.valueOf(pesaje.getCantidadKg()),
+                        String.valueOf(pesaje.getPrecioKg()), String.valueOf(pesaje.getMonto()), (pesaje.getPagoPesaje() == null) ? "Impago" : pesaje.getPagoPesaje().getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))))
+                .toArray(String[]::new);
     }
 
     public String[] listPesajesCosechador(Rut rut) {
-        String pagoPesaje;
-        if (pesajes.isEmpty()) return new String[0];
-        ArrayList<String> lista = new ArrayList<>();
         if(findPersona(rut).isPresent() && findPersona(rut).get() instanceof Cosechador cosechador) {
             if(cosechador.getAsignaciones().length > 0){
-                for(Pesaje pesaje : pesajes) {
-                    if(pesaje.getCosechadorAsignado().getCosechador().getRut().equals(rut)) {
-                        if (pesaje.getPagoPesaje() != null)
-                            pagoPesaje = pesaje.getPagoPesaje().getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-                        else pagoPesaje = "IMPAGO";
-                        lista.add(String.join("; ", Integer.toString(pesaje.getId()), pesaje.getFechaHora().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
+                return pesajes.stream()
+                        .filter(pesaje -> pesaje.getCosechadorAsignado().getCosechador().getRut().equals(rut))
+                        .map(pesaje -> String.join("; ", Integer.toString(pesaje.getId()), pesaje.getFechaHora().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                                 pesaje.getCalidad().name(), Double.toString(pesaje.getCantidadKg()), Double.toString(pesaje.getPrecioKg()),
-                                Double.toString(pesaje.getMonto()), pagoPesaje));
-                    }
-                }
-                return lista.toArray(new String[0]);
+                                Double.toString(pesaje.getMonto()), (pesaje.getPagoPesaje() == null) ? "IMPAGO" : pesaje.getPagoPesaje().getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))))
+                        .toArray(String[]::new);
 
             } else {
                 throw new GestionHuertosException("El cosechador no ha sido asignado a una cuadrilla");
@@ -380,14 +340,11 @@ public class ControlProduccion {
         }
     }
 
-    // Hecho por Ricardo Quintana
+    // Hecho por Ricardo Quintana, Programación funcional por Gabriel Rojas
     public String[] listPagoPesajes() {
-        if (pesajes.isEmpty()) return new String[0];
-        ArrayList<String> lista = new ArrayList<>();
-        for (PagoPesaje pagoPesaje : pagosPesajes) {
-                lista.add(String.join("; ", Integer.toString(pagoPesaje.getId()), pagoPesaje.getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), Double.toString(pagoPesaje.getMonto()), Integer.toString(pagoPesaje.getPesajes().length), reconstruyeRut(pagoPesaje.getPesajes()[0].getCosechadorAsignado().getCosechador().getRut().toString())));
-            }
-        return lista.toArray(new String[0]);
+        return pagosPesajes.stream()
+                .map(pagoPesaje -> String.join("; ", Integer.toString(pagoPesaje.getId()), pagoPesaje.getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), Double.toString(pagoPesaje.getMonto()), Integer.toString(pagoPesaje.getPesajes().length), reconstruyeRut(pagoPesaje.getPesajes()[0].getCosechadorAsignado().getCosechador().getRut().toString())))
+                .toArray(String[]::new);
     }
     public String[] getCuadrillasDeCosechadorDePlan(Rut rutCosechador) throws GestionHuertosException {
         //Asegura que la fecha de hoy, que será la del pesaje, esta dentro de cada intervalo de asignación de su plan de cosecha correspondiente
@@ -416,6 +373,35 @@ public class ControlProduccion {
                 .toArray(String[]::new);
 
     }
+    public String[] getCuadrillasDeCosechadorDePlan(Rut rutCosechador) throws GestionHuertosException {
+        //Asegura que la fecha de hoy, que será la del pesaje, esta dentro de cada intervalo de asignación de su plan de cosecha correspondiente
+        Predicate<Cuadrilla> filterCuadrillaByDate = (cuadrilla ->
+                        LocalDate.now().isAfter(cuadrilla.getPlanCosecha().getInicio())
+                        && LocalDate.now().isBefore(cuadrilla.getPlanCosecha().getFinEstimado())
+                        || LocalDate.now().isEqual(cuadrilla.getPlanCosecha().getInicio())
+                        || LocalDate.now().isEqual(cuadrilla.getPlanCosecha().getFinEstimado()));
+
+        List<Cuadrilla> filteredCuadrillas = Arrays.stream(personas.stream()
+                .filter(persona -> persona.getRut().equals(rutCosechador))
+                .filter(persona -> persona.getClass() == Cosechador.class )
+                .findFirst()
+                .map(Cosechador.class::cast)
+                .orElseThrow(() -> new GestionHuertosException("No existe un cosechador con el rut indicado"))
+                .getCuadrillas())
+                .filter(cuadrilla -> (cuadrilla.getPlanCosecha().getEstado() == EstadoPlan.EJECUTANDO))
+                .filter(filterCuadrillaByDate)
+                .toList();
+
+        if (filteredCuadrillas.isEmpty()) throw new GestionHuertosException("El cosechador no tiene cuadrillas disponibles para pesaje");
+
+        return filteredCuadrillas.stream()
+                .map(cuadrilla ->
+                        String.join("; ", Integer.toString(cuadrilla.getId()), cuadrilla.getNombre(), Integer.toString(cuadrilla.getPlanCosecha().getId())))
+                .toArray(String[]::new);
+
+    }
+
+
 
     // Hecho por Ricardo Quintana
     private void readDataFromTextFile() throws FileNotFoundException {
@@ -567,162 +553,92 @@ public class ControlProduccion {
 
     //Metodo private que encuentra a una persona deseada a través de su rut.
     private Optional<Persona> findPersona(Rut rut) {
-        //Busca a la persona.
-        for (Persona persona : personas) {
-            //compara rut.
-            if (persona.getRut().equals(rut)) return Optional.of(persona);
-        }
-        //De lo contrario, no existe.
-        return Optional.empty();
+       return personas.stream()
+               .filter(persona -> persona.getRut().equals(rut))
+               .findFirst();
     }
 
     //private method para encontrar un cultivo.
     private Optional<Cultivo> findCultivo(int id) {
-        for (Cultivo cultivos : cultivos) {
-            //Compara el id pasado por parametro con el getId() del objeto.
-            if (id == cultivos.getId()) return Optional.of(cultivos);
-        }
-        //De lo contrario, retorna null.
-        return Optional.empty();
+        return cultivos.stream()
+                .filter(cultivo -> cultivo.getId() == id)
+                .findFirst();
     }
 
     //Metodo privado para encontar el plan de cosecha deseado.
     private Optional<PlanCosecha> findPlanCosecha(int id) {
-        //Si no existen planes de cosecha, retorna null
-        if (planCosechas.isEmpty()) return Optional.empty();
-        //Busca entre la coleccion
-        for (PlanCosecha planCosecha : planCosechas) {
-            //Compara, lo devuelve.
-            if (id == planCosecha.getId()) return Optional.of(planCosecha);
-        }
-        //De lo contrario.
-        return Optional.empty();
+       return planCosechas.stream()
+               .filter(planCosecha -> planCosecha.getId() == id)
+               .findFirst();
     }
 
     //Metodo private para encontrar una cuadrilla deseada
     private Optional<Cuadrilla> findCuadrilla(int idCuadrilla, int idPlan) {
-        //Para no repetir codigo, es necesario pasar por parametro el identificador del modelo.PlanCosecha.
-        //De esta forma, se reutiliza el codigo findPlanCosecha y se ahorra lineas de codigo.
         if (findPlanCosecha(idPlan).isEmpty()) return Optional.empty();
-        {
-            if (findPlanCosecha(idPlan).get().getCuadrillas().length == 0) return Optional.empty();
-            //Se asigna el array que retorna findPlanCosecha.getCuadrillas a una variable para mejor legibilidad.
-            Cuadrilla[] cuadrillas = findPlanCosecha(idPlan).get().getCuadrillas();//Ignorar advertencia. La linea de arriba asegura que findPlanCosecha no sea null.
-            for (Cuadrilla cuadrilla : cuadrillas) {
-                //Recorre el array, compara identificadores con su metodo getId().
-                //Lo encuentra, lo devuelve.
-                if (cuadrilla.getId() == idCuadrilla) return Optional.of(cuadrilla);
-            }
-        }
-        // De lo contrario, no existe.
-        return Optional.empty();
+        return Arrays.stream(planCosechas.stream()
+                .filter(planCosecha -> planCosecha.getId() == idPlan)
+                .findFirst()
+                .orElseThrow(()-> new GestionHuertosException("No existe el plan cosecha con el id indicado"))
+                .getCuadrillas())
+                .filter(planCosecha -> planCosecha.getId() == idCuadrilla)
+            .findFirst();
     }
 
     // Hecho por Ricardo Quintana
     private Optional<Huerto> findHuerto(String nombre) {
-        // Verifico que exista un huerto con esos datos
-        for (Huerto huerto : huertos) {
-            // Si existe retorna el huerto
-            if (huerto.getNombre().equals(nombre)) return Optional.of(huerto);
-        }
-        // De lo contrario retona null, por lo tanto no existe
-        return Optional.empty();
+        return huertos.stream()
+                .filter(huerto -> huerto.getNombre().equals(nombre))
+                .findFirst();
     }
 
     private Optional<Cuartel> findCuartel(int idCuartel, String nombreHuerto) {
-        /* Cuarteles no tiene un relacion directa con la clase, por lo que accedemos
-        por medio de alguna relacion que tenga, en este caso los huertos
-         */
-
-        // Si no existe el huerto, retona null
-        if (findHuerto(nombreHuerto).isEmpty()) return Optional.empty();
-
-        for (Huerto huerto : huertos) {
-            //Condicion que evita NullPointerException, porque getCuartel puede ser null.
-            if (huerto.getCuartel(idCuartel) != null) {
-                if (huerto.getCuartel(idCuartel).getId() == idCuartel) {
-
-                    // Devuelve el cuartel si es que lo tiene asignado
-                    return Optional.of(huerto.getCuartel(idCuartel));
-                }
-            }
-        }
-        // Si no tiene asignado el cuartel pasado como parametro retorna null
-        return Optional.empty();
-    }
-
-    private int findArraySize(int opcion) {
-        int supervisores = 0, cosechadores = 0, propietarios = 0;
-        if (!personas.isEmpty()) {
-            //dependiendo de opcion: 1 = supervisor, 2 == cosechador, 3 == propietarios;
-            for (Persona persona1 : personas) {
-                if (persona1 instanceof Supervisor) supervisores++;
-                if (persona1 instanceof Cosechador) cosechadores++;
-                if (persona1 instanceof Propietario) propietarios++;
-            }
-            if (opcion == 1 && supervisores != 0) return supervisores;
-            if (opcion == 2 && cosechadores != 0) return cosechadores;
-            if (opcion == 3 && propietarios != 0) return propietarios;
-        }
-        //Si no existe, retorna -1.
-        return -1;
+        return huertos.stream()
+                .filter(huerto -> huerto.getNombre().equals(nombreHuerto))
+                .findFirst()
+                .orElseThrow(()->new GestionHuertosException("No existe un huerto con el nombre indicado"))
+                .getCuartelById(idCuartel);
     }
 
     private Optional<Pesaje> findPesajeById(int id) {
-        for (Pesaje pesaje : pesajes) {
-            if (pesaje.getId() == id) return Optional.of(pesaje);
-        }
-        return Optional.empty();
+        return pesajes.stream()
+                .filter(pesaje -> pesaje.getId() == id)
+                .findFirst();
     }
 
     private Optional<PagoPesaje> findPagoPesajeById(int id) {
-        for (PagoPesaje pesaje : pagosPesajes) {
-            if (pesaje.getId() == id) return Optional.of(pesaje);
-        }
-        return Optional.empty();
+        return pagosPesajes.stream()
+                .filter(pagoPesaje -> pagoPesaje.getId() == id)
+                .findFirst();
     }
 
     //Verifica que tiene pesajes impagos
     private List<Pesaje> findCosPesajesImpagos(Cosechador cosechador) {
-        List<Pesaje> pesajesConPagoPendiente = new ArrayList<>();
-        if (cosechador.getAsignaciones().length == 0) return new ArrayList<>();
-        for (CosechadorAsignado cosAsig : cosechador.getAsignaciones()) {
-            for (Pesaje pesaje : cosAsig.getPesajes()) {
-                if (!pesaje.isPagado()) pesajesConPagoPendiente.add(pesaje);
-            }
-        }
-        return pesajesConPagoPendiente;
+        return Arrays.stream(cosechador.getAsignaciones())
+                .map(CosechadorAsignado::getPesajes)
+                .flatMap(Arrays::stream)
+                .filter(pesaje -> !pesaje.isPagado())
+                .toList();
     }
     private String reconstruyeRut(String rut) {
-        String dosNumeros = rut.substring(0, 2);
-        String tresNumeros = rut.substring(2, 5);
+        String dosNumeros = rut.substring(0,2);
+        String tresNumeros = rut.substring(2,5);
         String resto = rut.substring(5);
         return dosNumeros + "." + tresNumeros + "." + resto;
     }
     private double getMontoImpago(Cosechador cosechador) {
-        double monto = 0;
-        for (CosechadorAsignado cosAsig : cosechador.getAsignaciones()) {
-            for (Pesaje pesaje : cosAsig.getPesajes()) {
-                if (!pesaje.isPagado()) monto += pesaje.getMonto();
-            }
-        }
-        return monto;
+        return Arrays.stream(cosechador.getAsignaciones())
+                .map(CosechadorAsignado::getPesajes)
+                .flatMap(Arrays::stream)
+                .filter(pesaje -> !pesaje.isPagado())
+                .mapToDouble(Pesaje::getMonto)
+                .sum();
     }
     private double getMontoPagado(Cosechador cosechador) {
-        double monto = 0;
-        for (CosechadorAsignado cosAsig : cosechador.getAsignaciones()) {
-            for (Pesaje pesaje : cosAsig.getPesajes()) {
-                if (pesaje.isPagado()) monto += pesaje.getMonto();
-            }
-        }
-        return monto;
-    }
-
-    private String getNroPesajesImpagos(Supervisor supervisor) {
-        int nroPesajesImpagos = 0;
-        for(CosechadorAsignado cosechador : supervisor.getCuadrillaAsignada().getAsignaciones()) {
-            nroPesajesImpagos += cosechador.getNroPesajesImpagos();
-        }
-        return String.valueOf(nroPesajesImpagos);
+        return Arrays.stream(cosechador.getAsignaciones())
+                .map(CosechadorAsignado::getPesajes)
+                .flatMap(Arrays::stream)
+                .filter(Pesaje::isPagado)
+                .mapToDouble(Pesaje::getMonto)
+                .sum();
     }
 }
