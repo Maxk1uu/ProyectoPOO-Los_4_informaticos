@@ -94,15 +94,20 @@ public class GUICrearPersona extends JDialog {
                         }
                         case "Cosechador" -> {
                             LocalDate fechaNacimiento = LocalDate.parse(datoVar, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-                            if(!isFechaValida(fechaNacimiento)) guiMsg.error("La fecha ingresada no es valida");
-                            else controlProduccion.createCosechador(rutPersona, nom, email, dir, fechaNacimiento);
+                            if (!isFechaValida(fechaNacimiento)) {
+                                guiMsg.error("La fecha ingresada no es valida");
+                                datoVariableField.setText("");
+                            } else {
+                                controlProduccion.createCosechador(rutPersona, nom, email, dir, fechaNacimiento);
+                            }
                         }
                     }
-                    personaCreada();
+                    msgPersonaCreada();
                 } catch (IllegalArgumentException ex) {
                     guiMsg.error("El rut ingresado no cumple el formato 12.345.678-K");
+                    rutField.setText("");
                 } catch (GestionHuertosException ex) {
-                    existeUnaPersona();
+                    msgExisteUnaPersona();
                 }
             }
 
@@ -120,12 +125,16 @@ public class GUICrearPersona extends JDialog {
         LocalDate fechaActual = LocalDate.now();
         return fecha.isBefore(fechaActual);
     }
-    public void existeUnaPersona() {
+    public void msgExisteUnaPersona() {
         String persona = roles.getSelection().getActionCommand();
         guiMsg.error("Ya existe un "+persona+" con el rut ingresado");
-        dispose();
+        rutField.setText("");
+        emailField.setText("");
+        dirField.setText("");
+        datoVariableField.setText("");
+        nameField.setText("");
     }
-    public void personaCreada() {
+    public void msgPersonaCreada() {
         String persona = roles.getSelection().getActionCommand();
         guiMsg.informacion(persona + " creado correctamente");
         dispose();
