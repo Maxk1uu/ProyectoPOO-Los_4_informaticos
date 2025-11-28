@@ -354,16 +354,17 @@ public class ControlProduccion {
                         || LocalDate.now().isEqual(cuadrilla.getPlanCosecha().getInicio())
                         || LocalDate.now().isEqual(cuadrilla.getPlanCosecha().getFinEstimado()));
 
-        List<Cuadrilla> filteredCuadrillas = Arrays.stream(personas.stream()
-                .filter(persona -> persona.getRut().equals(rutCosechador))
-                .filter(persona -> persona.getClass() == Cosechador.class )
-                .findFirst()
-                .map(Cosechador.class::cast)
-                .orElseThrow(() -> new GestionHuertosException("No existe un cosechador con el rut indicado"))
-                .getCuadrillas())
-                .filter(cuadrilla -> (cuadrilla.getPlanCosecha().getEstado() == EstadoPlan.EJECUTANDO))
-                .filter(filterCuadrillaByDate)
-                .toList();
+        List<Cuadrilla> filteredCuadrillas = Arrays.stream(Optional.of(personas.stream()
+                                .filter(persona -> persona.getRut().equals(rutCosechador))
+                                .filter(persona -> persona.getClass() == Cosechador.class)
+                                .findFirst()
+                                .orElseThrow(() -> new GestionHuertosException("No existe un cosechador con el rut indicado")))//Evita un nullPointerException
+                        .map(Cosechador.class::cast)
+                        .get()
+                        .getCuadrillas())
+                        .filter(cuadrilla -> (cuadrilla.getPlanCosecha().getEstado() == EstadoPlan.EJECUTANDO))
+                        .filter(filterCuadrillaByDate)
+                        .toList();
 
         if (filteredCuadrillas.isEmpty()) throw new GestionHuertosException("El cosechador no tiene cuadrillas disponibles para pesaje");
 
