@@ -35,6 +35,9 @@ public class GestionHuertosUI {
     //Relaciones
     private final ControlProduccion controlProduccion = ControlProduccion.getInstance();
     private GUICrearPersona guiCrearPersona;
+    private GUICrearCultivo guiCultivo;
+    private GUIAgregarPesajeACosechador guiAgregarPesajeACosechador;
+    private GUICambiaEstadoPlan guiCambiaEstadoPlan;
 
     //Metodos
     public void menu() {
@@ -190,39 +193,13 @@ public class GestionHuertosUI {
         }
 
          */
-        String nom, email, dir, datoVar, rol;
-        Rut rut;
-        guiCrearPersona = new GUICrearPersona();
-        guiCrearPersona.setVisible(true);
-        if (guiCrearPersona.wasAcepted()) { //Esto es para evitar procesar los datos al presionar cancelar
-            nom = guiCrearPersona.getNombre();
-            email = guiCrearPersona.getEmail();
-            dir = guiCrearPersona.getDir();
-            rol = guiCrearPersona.getRol();
-            try {
-                rut = Rut.of(guiCrearPersona.getRut());
-                switch (rol) {
-                    case "Propietario" -> {
-                        datoVar = guiCrearPersona.getDatoVariable();
-                        controlProduccion.createPropietario(rut, nom, email, dir, datoVar);
-                    }
-                    case "Supervisor" -> {
-                        datoVar = guiCrearPersona.getDatoVariable();
-                        controlProduccion.createSupervisor(rut, nom, email, dir, datoVar);
-                    }
-                    case "Cosechador" -> {
-                        LocalDate fNac = LocalDate.parse(guiCrearPersona.getDatoVariable());
-                        controlProduccion.createCosechador(rut, nom, email, dir, fNac);
-                    }
-                }
-            } catch (GestionHuertosException e) {
-                System.out.println("\nX Error: " + e.getMessage() + "\n");
-            }
-        }
+       GUICrearPersona guiCrearPersona = new GUICrearPersona();
+       guiCrearPersona.setModal(true);
+       guiCrearPersona.setVisible(true);
     }
 
     private void creaCultivo() {
-        int id;
+       /* int id;
         String especie, variedad;
         float rendimiento;
         System.out.println("\n---Creando un Cultivo---");
@@ -236,6 +213,14 @@ public class GestionHuertosUI {
         } catch (GestionHuertosException e) {
             System.out.println("\nX Error: " + e.getMessage() + "\n");
         }
+
+        */
+        SwingUtilities.invokeLater(()-> {
+            GUICrearCultivo guiCrearCultivo = new GUICrearCultivo();
+            guiCrearCultivo.pack();
+            guiCrearCultivo.setVisible(true);
+        });
+
     }
 
     private void creaHuerto() {
@@ -342,7 +327,7 @@ public class GestionHuertosUI {
     }
 
     private void cambiaEstadoPlan() {
-        int idPlan, opcion;
+        /*int idPlan, opcion;
         EstadoPlan newEstadoPlan = null;
         boolean error;
         System.out.println("\n---Cambiando Estado de un Plan---");
@@ -368,7 +353,9 @@ public class GestionHuertosUI {
             System.out.println("\nEstado del Plan cambiado exitosamente.");
         } catch (GestionHuertosException e) {
             System.out.println("\nX Error: " + e.getMessage() + "\n");
-        }
+        }*/
+        guiCambiaEstadoPlan = new GUICambiaEstadoPlan();
+        guiCambiaEstadoPlan.setVisible(true);
     }
 
     private void agregaCuadrillasAPLan() {
@@ -425,7 +412,7 @@ public class GestionHuertosUI {
 
 
     private void agregaPesajeACosechador() {
-        int idPesaje, idPlan, idCuadrilla, opcion;
+       /* int idPesaje, idPlan, idCuadrilla, opcion;
         float cantKilos;
         Rut rutCosechador;
         Calidad calidad = null;
@@ -457,6 +444,14 @@ public class GestionHuertosUI {
         } catch (GestionHuertosException e) {
             System.out.println("\nX Error: " + e.getMessage() + "\n");
         }
+
+        */
+        SwingUtilities.invokeLater(() -> {
+            guiAgregarPesajeACosechador = new GUIAgregarPesajeACosechador();
+            guiAgregarPesajeACosechador.setVisible(true);
+            guiAgregarPesajeACosechador.setLocationRelativeTo(null);
+        });
+
     }
 
     private void pagaPesajesPendientesACosechador() {
