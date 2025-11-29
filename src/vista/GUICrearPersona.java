@@ -1,4 +1,8 @@
 package vista;
+import controlador.ControlProduccion;
+import utilidades.GestionHuertosException;
+import utilidades.Rut;
+
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.plaf.FontUIResource;
@@ -10,6 +14,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Locale;
 
 public class GUICrearPersona extends JDialog {
@@ -26,14 +33,18 @@ public class GUICrearPersona extends JDialog {
     private JButton aceptarButton;
     private JLabel iconPersona;
     private JLabel datoVariable;
-    private boolean wasAcepted = false;
+    ButtonGroup roles = new ButtonGroup();//Esto es un grupo de botones para que solo se puedan seleccionar uno a la vez
+
+
 
     //Relacion
+    ControlProduccion controlProduccion = ControlProduccion.getInstance();
     GUIMsg guiMsg = new GUIMsg();
 
     public GUICrearPersona() {
         setTitle("Crear Persona");
         setContentPane(panel);
+        setAlwaysOnTop(true);
         pack();
         setLocationRelativeTo(null); //Esto centra la ventana
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);//Esto cierra la ventana al pulsar el boton de cerrar
@@ -43,8 +54,6 @@ public class GUICrearPersona extends JDialog {
         supervisorRadioButton.setActionCommand("Supervisor");
         cosechadorRadioButton.setActionCommand("Cosechador");
 
-        //Esto es un grupo de botones para que solo se puedan seleccionar uno a la vez
-        ButtonGroup roles = new ButtonGroup();
         roles.add(propietarioRadioButton);
         roles.add(supervisorRadioButton);
         roles.add(cosechadorRadioButton);
@@ -66,39 +75,81 @@ public class GUICrearPersona extends JDialog {
         cosechadorRadioButton.addActionListener(labelVariable);
 
         aceptarButton.addActionListener(e -> {
-            if (rutField.getText().isEmpty() || emailField.getText().isEmpty() || dirField.getText().isEmpty()
-                    || nameField.getText().isEmpty() || datoVariableField.getText().isEmpty()) {
+            String rut = rutField.getText();
+            String email = emailField.getText();
+            String dir = dirField.getText();
+            String nom = nameField.getText();
+            String datoVar = datoVariableField.getText();
+            setAlwaysOnTop(false);
+            if (hayCamposVacios()) {
                 guiMsg.error("Existen datos incorrectos o faltantes");
             } else {
-                wasAcepted = true;
-                String persona = roles.getSelection().getActionCommand();
-                guiMsg.informacion(persona + " creado exitosamente");
-                dispose();
+                try {
+                    Rut rutPersona = Rut.of(rut);
+                    switch (roles.getSelection().getActionCommand()) {
+                        case "Propietario" -> {
+                            controlProduccion.createPropietario(rutPersona, nom, email, dir, datoVar);
+                            msgPersonaCreada();
+                        }
+                        case "Supervisor" -> {
+                            controlProduccion.createSupervisor(rutPersona, nom, email, dir, datoVar);
+                            msgPersonaCreada();
+                        }
+                        case "Cosechador" -> {
+                            if(isFechaValida(datoVar)) {
+                                controlProduccion.createCosechador(rutPersona, nom, email, dir, LocalDate.parse(datoVar, DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+                                msgPersonaCreada();
+                            }
+                        }
+                    }
+                } catch (IllegalArgumentException ex) {
+                    guiMsg.error("El rut ingresado no cumple el formato 12.345.678-K");
+                    rutField.setText("");
+                } catch (GestionHuertosException ex) {
+                    msgExisteUnaPersona();
+                }
             }
+
         });
+
         cancelarButton.addActionListener(e -> dispose());
     }
 
-    //Getters
-    public String getRut() {
-        return rutField.getText();
+    //Validaciones
+    private boolean hayCamposVacios() {
+        return rutField.getText().isBlank() || emailField.getText().isBlank() || dirField.getText().isBlank()
+                || nameField.getText().isBlank() || datoVariableField.getText().isBlank();
     }
-    public String getEmail() {
-        return emailField.getText();
+    private boolean isFechaValida(String fecha) {
+        LocalDate fechaNac;
+        LocalDate fechaActual = LocalDate.now();
+        try {
+            fechaNac = LocalDate.parse(fecha);
+            if (fechaNac.isAfter(fechaActual)) {
+                guiMsg.error("La fecha ingresada no puede ser posterior a la fecha actual");
+                datoVariableField.setText("");
+                return false;
+            }
+        } catch (DateTimeParseException e) {
+            guiMsg.error("El formato de la fecha es incorrecto. Formato valido: dd/mm/yyyy");
+            datoVariableField.setText("");
+            return false;
+        }
+        return true;
+
     }
-    public String getDir() {
-        return dirField.getText();
+    private void msgExisteUnaPersona() {
+        String persona = roles.getSelection().getActionCommand();
+        guiMsg.error("Ya existe un "+persona+" con el rut ingresado");
+        rutField.setText("");
+        emailField.setText("");
+        dirField.setText("");
+        datoVariableField.setText("");
+        nameField.setText("");
     }
-    public String getNombre() {
-        return nameField.getText();
-    }
-    public String getDatoVariable() {
-        return datoVariable.getText();
-    }
-    public String getRol() {
-        return propietarioRadioButton.getActionCommand();
-    }
-    public boolean wasAcepted() {
-        return wasAcepted;
+    private void msgPersonaCreada() {
+        String persona = roles.getSelection().getActionCommand();
+        guiMsg.informacion(persona + " creado correctamente");
+        dispose();
     }
 }
