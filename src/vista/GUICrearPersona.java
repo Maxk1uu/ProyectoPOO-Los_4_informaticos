@@ -123,8 +123,9 @@ public class GUICrearPersona extends JDialog {
     private boolean isFechaValida(String fecha) {
         LocalDate fechaNac;
         LocalDate fechaActual = LocalDate.now();
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         try {
-            fechaNac = LocalDate.parse(fecha);
+            fechaNac = LocalDate.parse(fecha, formato);
             if (fechaNac.isAfter(fechaActual)) {
                 guiMsg.error("La fecha ingresada no puede ser posterior a la fecha actual");
                 datoVariableField.setText("");
