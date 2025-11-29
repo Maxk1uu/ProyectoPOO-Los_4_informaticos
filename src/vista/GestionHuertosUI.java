@@ -36,6 +36,7 @@ public class GestionHuertosUI {
     private GUICrearPersona guiCrearPersona;
     private GUICrearCultivo guiCultivo;
     private GUIAgregarPesajeACosechador guiAgregarPesajeACosechador;
+    private GUICambiaEstadoPlan guiCambiaEstadoPlan;
 
     //Metodos
     public void menu() {
@@ -321,7 +322,7 @@ public class GestionHuertosUI {
     }
 
     private void cambiaEstadoPlan() {
-        int idPlan, opcion;
+        /*int idPlan, opcion;
         EstadoPlan newEstadoPlan = null;
         boolean error;
         System.out.println("\n---Cambiando Estado de un Plan---");
@@ -347,7 +348,9 @@ public class GestionHuertosUI {
             System.out.println("\nEstado del Plan cambiado exitosamente.");
         } catch (GestionHuertosException e) {
             System.out.println("\nX Error: " + e.getMessage() + "\n");
-        }
+        }*/
+        guiCambiaEstadoPlan = new GUICambiaEstadoPlan();
+        guiCambiaEstadoPlan.setVisible(true);
     }
 
     private void agregaCuadrillasAPLan() {
