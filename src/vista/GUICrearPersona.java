@@ -16,6 +16,7 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Locale;
 
 public class GUICrearPersona extends JDialog {
@@ -88,21 +89,19 @@ public class GUICrearPersona extends JDialog {
                     switch (roles.getSelection().getActionCommand()) {
                         case "Propietario" -> {
                             controlProduccion.createPropietario(rutPersona, nom, email, dir, datoVar);
+                            msgPersonaCreada();
                         }
                         case "Supervisor" -> {
                             controlProduccion.createSupervisor(rutPersona, nom, email, dir, datoVar);
+                            msgPersonaCreada();
                         }
                         case "Cosechador" -> {
-                            LocalDate fechaNacimiento = LocalDate.parse(datoVar, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-                            if (!isFechaValida(fechaNacimiento)) {
-                                guiMsg.error("La fecha ingresada no es valida");
-                                datoVariableField.setText("");
-                            } else {
-                                controlProduccion.createCosechador(rutPersona, nom, email, dir, fechaNacimiento);
+                            if(isFechaValida(datoVar)) {
+                                controlProduccion.createCosechador(rutPersona, nom, email, dir, LocalDate.parse(datoVar, DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+                                msgPersonaCreada();
                             }
                         }
                     }
-                    msgPersonaCreada();
                 } catch (IllegalArgumentException ex) {
                     guiMsg.error("El rut ingresado no cumple el formato 12.345.678-K");
                     rutField.setText("");
@@ -118,14 +117,28 @@ public class GUICrearPersona extends JDialog {
 
     //Validaciones
     private boolean hayCamposVacios() {
-        return rutField.getText().isEmpty() || emailField.getText().isEmpty() || dirField.getText().isEmpty()
-                || nameField.getText().isEmpty() || datoVariableField.getText().isEmpty();
+        return rutField.getText().isBlank() || emailField.getText().isBlank() || dirField.getText().isBlank()
+                || nameField.getText().isBlank() || datoVariableField.getText().isBlank();
     }
-    private boolean isFechaValida(LocalDate fecha) {
+    private boolean isFechaValida(String fecha) {
+        LocalDate fechaNac;
         LocalDate fechaActual = LocalDate.now();
-        return fecha.isBefore(fechaActual);
+        try {
+            fechaNac = LocalDate.parse(fecha);
+            if (fechaNac.isAfter(fechaActual)) {
+                guiMsg.error("La fecha ingresada no puede ser posterior a la fecha actual");
+                datoVariableField.setText("");
+                return false;
+            }
+        } catch (DateTimeParseException e) {
+            guiMsg.error("El formato de la fecha es incorrecto. Formato valido: dd/mm/yyyy");
+            datoVariableField.setText("");
+            return false;
+        }
+        return true;
+
     }
-    public void msgExisteUnaPersona() {
+    private void msgExisteUnaPersona() {
         String persona = roles.getSelection().getActionCommand();
         guiMsg.error("Ya existe un "+persona+" con el rut ingresado");
         rutField.setText("");
@@ -134,7 +147,7 @@ public class GUICrearPersona extends JDialog {
         datoVariableField.setText("");
         nameField.setText("");
     }
-    public void msgPersonaCreada() {
+    private void msgPersonaCreada() {
         String persona = roles.getSelection().getActionCommand();
         guiMsg.informacion(persona + " creado correctamente");
         dispose();
