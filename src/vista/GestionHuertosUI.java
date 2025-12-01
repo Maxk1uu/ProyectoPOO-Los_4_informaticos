@@ -574,6 +574,7 @@ public class GestionHuertosUI {
     }
 
     private void listaCosechadores() {
+        /*
         try {
             if (controlProduccion.listCosechadores().length != 0) {
                 System.out.println("\nLISTA DE COSECHADORES");
@@ -596,6 +597,10 @@ public class GestionHuertosUI {
             System.out.println("\nX Error: " + e.getMessage() + "\n");
             System.out.println("----------------------------");
         }
+         */
+        GUIListarCosechadores listarCosechadores = new GUIListarCosechadores();
+        listarCosechadores.setVisible(true);
+        listarCosechadores.setLocationRelativeTo(null);
     }
 
     private void listaPlanesCosecha() {
