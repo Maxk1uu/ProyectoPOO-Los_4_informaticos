@@ -12,13 +12,13 @@ public class GUICrearCultivo extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
+    private JTextField idCultivoInt;
     private JTextField variedadText;
-    private JTextField expecieText;
-    private JTextField idInt;
     private JLabel cultivoTitle;
     private JLabel Image;
     private JPanel panelWithTextFields;
     private JTextField rendimientoFloatTextField;
+    private JTextField especieText;
     // mensaje emergente
     private final GUIMsg errorMessage = new GUIMsg();
 
@@ -57,9 +57,9 @@ public class GUICrearCultivo extends JDialog {
 
     private void onOK() {
         setAlwaysOnTop(false);
-        String idCultivo = idInt.getText();
-        String variedad = variedadText.getText();
-        String especie = expecieText.getText();
+        String idCultivo = idCultivoInt.getText();
+        String variedad = idCultivoInt.getText();
+        String especie = variedadText.getText();
         String rendimiento = rendimientoFloatTextField.getText();
         if (idCultivo.isBlank() ||  variedad.isBlank() || especie.isBlank() || rendimiento.isBlank()) {
             errorMessage.error("Existen datos incorrectos o faltantes");
@@ -69,9 +69,9 @@ public class GUICrearCultivo extends JDialog {
                 float rendimientoParsed =  Float.parseFloat(rendimiento);
                 ControlProduccion.getInstance().createCultivo(id, especie, variedad, rendimientoParsed);
                 errorMessage.informacion("Cultivo registrado con exito");
-                idInt.setText("");
+                especieText.setText("");
+                idCultivoInt.setText("");
                 variedadText.setText("");
-                expecieText.setText("");
                 rendimientoFloatTextField.setText("");
             } catch(NumberFormatException e) {
                 errorMessage.error("Un formato númerico indicado es inválido");
