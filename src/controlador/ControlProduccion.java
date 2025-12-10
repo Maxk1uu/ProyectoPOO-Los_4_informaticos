@@ -37,6 +37,9 @@ public class ControlProduccion {
             readDataFromTextFile();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+        } catch (GestionHuertosException e) {
+            System.out.println("\nX Error: " + e.getMessage());
+            System.exit(1);
         }
     }
 
