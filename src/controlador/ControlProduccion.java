@@ -277,7 +277,8 @@ public class ControlProduccion {
                 .map(Supervisor.class::cast)
                 .sorted(ordenarPorKilosPesados.reversed())
                 .map(supervisor -> String.join("; ", reconstruyeRut(supervisor.getRut().toString()), supervisor.getNombre(), supervisor.getDireccion(), supervisor.getEmail(),
-                        supervisor.getProfesion(), (supervisor.getCuadrillaAsignada() == null) ? "S/A" : supervisor.getCuadrillaAsignada().getNombre()))
+                        supervisor.getProfesion(), (supervisor.getCuadrillaAsignada() == null) ? "S/A" : supervisor.getCuadrillaAsignada().getNombre(),
+                        (supervisor.getCuadrillaAsignada() == null) ? "N/A" :  (Double.toString(supervisor.getCuadrillaAsignada().getKilosPesados())), getNroPesajesImpagos(supervisor) ))
                 .toArray(String[]::new);
     }
 
@@ -614,5 +615,12 @@ public class ControlProduccion {
                 .filter(Pesaje::isPagado)
                 .mapToDouble(Pesaje::getMonto)
                 .sum();
+    }
+    private String getNroPesajesImpagos(Supervisor supervisor) {
+        int nroPesajesImpagos = 0;
+        for (CosechadorAsignado cosasig : supervisor.getCuadrillaAsignada().getAsignaciones()) {
+            nroPesajesImpagos += cosasig.getNroPesajesImpagos();
+        }
+        return String.valueOf(nroPesajesImpagos);
     }
 }
