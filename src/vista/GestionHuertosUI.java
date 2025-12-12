@@ -151,7 +151,7 @@ public class GestionHuertosUI {
                 rol = 0;
             }
         } while (rol == 0);
-        rut = leerRutValido("> Rut: ");
+        rut = Rut.of(leerTextoNoVacio("> Rut: ");
         nombre = leerTextoNoVacio("> Nombre: ");
         email = leerTextoNoVacio("> Email: ");
         direccion = leerTextoNoVacio("> Direccion: ");
@@ -226,11 +226,11 @@ public class GestionHuertosUI {
         nombreHuerto = leerTextoNoVacio("> Nombre del Huerto: ");
         ubicacion = leerTextoNoVacio("> Ubicacion: ");
         superficieHuerto = leerFloatPositivo("> Superficie (metros cuadrados): ");
-        rutPropietario = leerRutValido("> Rut Propietario: ");
         try {
+            rutPropietario = Rut.of(leerTextoNoVacio("> Rut Propietario: "));
             controlProduccion.createHuerto(nombreHuerto, superficieHuerto, ubicacion, rutPropietario);
             System.out.println("\nEl Huerto a sido creado exitosamente.");
-        } catch (GestionHuertosException e) {
+        } catch (GestionHuertosException | IllegalArgumentException e) {
             System.out.println("\nX Error: " + e.getMessage() + "\n");
         }
     }
@@ -364,11 +364,12 @@ public class GestionHuertosUI {
             for (int i = 1; i <= nroCuadrillas; i++) {
                 idCuadrilla = leerNumeroPositivo("> ID de la cuadrilla: ");
                 nombreCuadrilla = leerTextoNoVacio("> Nombre de la Cuadrilla: ");
-                rutSupervisor = leerRutValido("> Rut del Supervisor: ");
-                try { //Captura el error si no se puede agregar la cuadrilla al plan de cosecha.
+                try {
+                    rutSupervisor = Rut.of(leerTextoNoVacio("> Rut del Supervisor: "));
+                    //Captura el error si no se puede agregar la cuadrilla al plan de cosecha
                     controlProduccion.addCuadrillaToPlan(idPlanDeCosecha, idCuadrilla, nombreCuadrilla, rutSupervisor);
                     System.out.println("\nCuadrilla agregada exitosamente al Plan de Cosecha.");
-                } catch (GestionHuertosException e) {
+                } catch (GestionHuertosException | IllegalArgumentException e) {
                     System.out.println("\nX Error: " + e.getMessage() + "\n");
                 }
             }
@@ -393,12 +394,12 @@ public class GestionHuertosUI {
                 fechaTerminoAsignacion = leerFechaExistente("> Fecha de Termino de asignacion (dd/mm/yyyy): ");
             } while (!comparaFechas(fechaInicioAsignacion, fechaTerminoAsignacion));
             metaKilos = leerDoublePositivo("> Meta (Kilos): ");
-            rutCosechador = leerRutValido("> Rut del Cosechador: ");
             try {
+                rutCosechador = Rut.of(leerTextoNoVacio("> Rut del Cosechador: "));
                 controlProduccion.addCosechadorToCuadrilla(idPlan, idCuadrilla, fechaInicioAsignacion,
                         fechaTerminoAsignacion, metaKilos, rutCosechador);
                 System.out.println("\nCosechador asignado exitosamente a la cuadrilla del plan de Cosecha");
-            } catch (GestionHuertosException e) {
+            } catch (GestionHuertosException | IllegalArgumentException e) {
                 System.out.println("\nX Error: " + e.getMessage() + "\n");
             }
             System.out.println("- - - - - - - - - - - - - - - -");
@@ -414,7 +415,7 @@ public class GestionHuertosUI {
         boolean error;
         System.out.println("\n---Agregando Pesaje a un Cosechador---");
         idPesaje = leerNumeroPositivo("> ID del Pesaje: ");
-        rutCosechador = leerRutValido("> Rut del Cosechador: ");
+        rutCosechador = Rut.of(leerTextoNoVacio("> Rut del Cosechador: ");
         idPlan = leerNumeroPositivo("> ID del Plan: ");
         idCuadrilla = leerNumeroPositivo("> ID de la Cuadrilla: ");
         cantKilos = leerFloatPositivo("> Cantidad de Kilos: ");
@@ -455,11 +456,11 @@ public class GestionHuertosUI {
         double montoAPagar;
         System.out.println("\n---Pagando Pesaje a un Cosechador---");
         idPagoPesaje = leerNumeroPositivo("> ID del Pago de Pesaje: ");
-        rutCosechador = leerRutValido("> Rut del Cosechador: ");
         try {
+            rutCosechador = Rut.of(leerTextoNoVacio("> Rut del Cosechador: "));
             montoAPagar = controlProduccion.addPagoPesaje(idPagoPesaje, rutCosechador);
             System.out.println("\nMonto Pagado al Cosechador: $" + Math.round(montoAPagar * 100) / 100.0);
-        } catch (GestionHuertosException e) {
+        } catch (GestionHuertosException | IllegalArgumentException e) {
             System.out.println("\nX Error: " + e.getMessage() + "\n");
         }
     }
@@ -643,8 +644,8 @@ public class GestionHuertosUI {
 
     private void listaPesajesCosechadores() {
         System.out.println("\nLISTA DE PESAJES DEL COSECHADOR");
-        Rut rutCosechador = leerRutValido("> Rut del Cosechador: ");
         try {
+            Rut rutCosechador = Rut.of(leerTextoNoVacio("> Rut del Cosechador: "));
             System.out.println("--------------------------");
             if (controlProduccion.listPesajesCosechador(rutCosechador).length != 0) {
 
@@ -660,7 +661,7 @@ public class GestionHuertosUI {
                 System.out.println("\nNo hay pesajes registrados para el cosechador ingresado.");
                 System.out.println("----------------------------");
             }
-        } catch (GestionHuertosException e) {
+        } catch (GestionHuertosException | IllegalArgumentException e) {
             System.out.println("\nX Error: " + e.getMessage() + "\n");
             System.out.println("----------------------------");
         }
@@ -778,28 +779,6 @@ public class GestionHuertosUI {
             }
         } while (!fechaExistente);
         return fecha;
-    }
-
-    private Rut leerRutValido(String mensaje) {
-        boolean rutInvalido = true;
-        String rutStr;
-        String formatoValido = "^[0-9]{2}\\.[0-9]{3}\\.[0-9]{3}-[0-9kK]$";
-        //^: Inicia la cadena
-        //[0-9]: Cadena de numeros
-        //{3}: Cadena de 3 digitos
-        //\\. : Indica que hay un punto
-        //[kK]: Indica que hay una k minus o mayus.
-        //$: Finaliza la cadena
-        do {
-            System.out.print(mensaje);
-            rutStr = sc.next();
-            if (rutStr.matches(formatoValido)) {
-                rutInvalido = false;
-            } else {
-                System.out.println("\nX Error: El rut ingresado no cumple el formato 00.000.000-X.\n");
-            }
-        } while (rutInvalido);
-        return Rut.of(rutStr);
     }
 
     private boolean comparaFechas(LocalDate fechaInicio, LocalDate fechaTermino) {
