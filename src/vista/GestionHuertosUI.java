@@ -8,6 +8,7 @@ import java.awt.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.Locale;
@@ -307,7 +308,7 @@ public class GestionHuertosUI {
         do {
             fechaInicio = leerFechaExistente("> Fecha de inicio (dd/mm/yyyy): ");
             fechaTermino = leerFechaExistente("> Fecha de termino (dd/mm/yyyy): ");
-        } while (comparaFechas(fechaInicio, fechaTermino));
+        } while (fechaInicio.isAfter(fechaTermino) || fechaInicio.isEqual(fechaTermino));
         metaKilos = leerDoublePositivo("> Meta (Kilos): ");
         precioBaseKilos = leerDoublePositivo("> Precio de Base por Kilo: ");
         nombreHuerto = leerTextoNoVacio("> Nombre del Huerto: ");
@@ -392,7 +393,7 @@ public class GestionHuertosUI {
                 System.out.println("\n-Cosechador "+i+" de "+nroCosechadores);
                 fechaInicioAsignacion = leerFechaExistente("> Fecha de Inicio de asignacion (dd/mm/yyyy): ");
                 fechaTerminoAsignacion = leerFechaExistente("> Fecha de Termino de asignacion (dd/mm/yyyy): ");
-            } while (!comparaFechas(fechaInicioAsignacion, fechaTerminoAsignacion));
+            } while (fechaInicioAsignacion.isAfter(fechaTerminoAsignacion) || fechaInicioAsignacion.isEqual(fechaTerminoAsignacion));
             metaKilos = leerDoublePositivo("> Meta (Kilos): ");
             try {
                 rutCosechador = Rut.of(leerTextoNoVacio("> Rut del Cosechador: "));
@@ -763,12 +764,13 @@ public class GestionHuertosUI {
 
     private LocalDate leerFechaExistente(String mensaje) {
         LocalDate fecha = LocalDate.now();
-        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formatoStrict = DateTimeFormatter.ofPattern("dd/MM/yyyy G", Locale.US).
+                withResolverStyle(ResolverStyle.STRICT);
         boolean fechaExistente;
         do {
             System.out.print(mensaje);
             try {
-                fecha = LocalDate.parse(sc.next(), formato);
+                fecha = LocalDate.parse(sc.next() + " AD", formatoStrict);
                 fechaExistente = true;
             } catch (DateTimeParseException e) {
                 System.out.println("\nX Error: la fecha es invalida o no cumple el formato dd/MM/yyyy.\n");
@@ -779,14 +781,6 @@ public class GestionHuertosUI {
             }
         } while (!fechaExistente);
         return fecha;
-    }
-
-    private boolean comparaFechas(LocalDate fechaInicio, LocalDate fechaTermino) {
-        if(fechaInicio.isAfter(fechaTermino)){
-            System.out.println("\nX Error: La fecha de inicio es posterior a la fecha de termino.\n");
-            return false;
-        }
-        return true;
     }
 
     private String trunca(String nroStr) {

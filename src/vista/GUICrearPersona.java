@@ -17,6 +17,7 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 import java.util.Locale;
 
 public class GUICrearPersona extends JDialog {
@@ -123,16 +124,17 @@ public class GUICrearPersona extends JDialog {
     private boolean isFechaValida(String fecha) {
         LocalDate fechaNac;
         LocalDate fechaActual = LocalDate.now();
-        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formatoStrict = DateTimeFormatter.ofPattern("dd/MM/yyyy G", Locale.US).
+                withResolverStyle(ResolverStyle.STRICT);
         try {
-            fechaNac = LocalDate.parse(fecha, formato);
+            fechaNac = LocalDate.parse(fecha + " AD", formatoStrict);
             if (fechaNac.isAfter(fechaActual)) {
                 guiMsg.error("La fecha ingresada no puede ser posterior a la fecha actual");
                 datoVariableField.setText("");
                 return false;
             }
         } catch (DateTimeParseException e) {
-            guiMsg.error("El formato de la fecha es incorrecto. Formato valido: dd/mm/yyyy");
+            guiMsg.error("La Fecha no es valida ó el formato de la fecha es incorrecto. Formato valido: dd/mm/yyyy");
             datoVariableField.setText("");
             return false;
         }
