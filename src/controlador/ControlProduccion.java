@@ -525,10 +525,10 @@ public class ControlProduccion {
     }
 
     //Metodo private que encuentra a una persona deseada a través de su rut.
-    private Optional<Persona> findPersona(Rut rut) {
+    private Optional<Persona> findPersona(Rut rut)
+    {
        return personas.stream()
-               .filter(persona -> persona.getRut().equals(rut))
-               .findFirst();
+               .filter(persona -> persona.getRut().equals(rut)).findFirst();
     }
 
     //private method para encontrar un cultivo.
