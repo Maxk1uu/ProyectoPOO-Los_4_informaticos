@@ -540,11 +540,23 @@ public class ControlProduccion {
         persistencia.savePersonas(personasObj);
 
         // Guardar cultivos
-        Cultivo[] cultivosObj = cultivos.toArray(new Cultivo[0]);
+        ArrayList<Cultivo> cultivosList = new ArrayList<>();
+        for (Cultivo cultivo : cultivos) {
+            if (cultivo.getCuarteles().length == 0) {
+                cultivosList.add(cultivo);
+            }
+        }
+        Cultivo[] cultivosObj = cultivosList.toArray(new Cultivo[0]);
         persistencia.saveCultivos(cultivosObj);
 
         // Guardar planes de cosecha
-        PlanCosecha[] planCosechasObj = planCosechas.toArray(new PlanCosecha[0]);
+        ArrayList<PlanCosecha> planesCosechasList = new ArrayList<>();
+        for (PlanCosecha planCosecha: planCosechas) {
+            if(planCosecha.getCuadrillas().length == 0) {
+                planesCosechasList.add(planCosecha);
+            }
+        }
+        PlanCosecha[] planCosechasObj = planesCosechasList.toArray(new PlanCosecha[0]);
         persistencia.savePlanesCosecha(planCosechasObj);
     }
 

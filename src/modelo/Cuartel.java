@@ -6,9 +6,10 @@ package modelo;
 
 import utilidades.EstadoFenologico;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Cuartel {
+public class Cuartel implements Serializable {
 
     private int id;
     private float superficie;

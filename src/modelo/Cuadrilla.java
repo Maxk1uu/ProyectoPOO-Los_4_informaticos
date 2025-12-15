@@ -1,11 +1,12 @@
 package modelo;//Revisado por: Gabriel Rojas
 import utilidades.GestionHuertosException;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Optional;
 
-public class Cuadrilla {
+public class Cuadrilla implements Serializable {
     //Atributos
     private int id;
     private String nombre;

@@ -29,9 +29,9 @@ public class GestionHuertosIO {
                 archObjPersonas.writeObject(persona);
             }
         } catch (FileNotFoundException e) {
-            throw new GestionHuertosException("Error al abrir/crear el archivo Personas.obj");
+            throw new GestionHuertosException("Error al abrir/crear el archivo Personas.obj: "+ e.getMessage());
         } catch (IOException e) {
-            throw new GestionHuertosException("Error al intentar escribir en el archivo Personas.obj");
+            throw new GestionHuertosException("Error al intentar escribir en el archivo Personas.obj: " + e.getMessage());
         }
         return personas;
     }
@@ -42,22 +42,22 @@ public class GestionHuertosIO {
                 archObjCultivos.writeObject(cultivo);
             }
         } catch (FileNotFoundException e) {
-            throw new GestionHuertosException("Error al abrir/crear el archivo Cultivos.obj");
+            throw new GestionHuertosException("Error al abrir/crear el archivo Cultivos.obj: " + e.getMessage());
         } catch (IOException e) {
-            throw new GestionHuertosException("Error al intentar escribir en el archivo Cultivos.obj");
+            throw new GestionHuertosException("Error al intentar escribir en el archivo Cultivos.obj: "  + e.getMessage());
         }
         return cultivos;
     }
 
     public PlanCosecha[] savePlanesCosecha(PlanCosecha[] planCosechas) throws GestionHuertosException {
-        try (ObjectOutputStream archObjPlanesCosecha = new ObjectOutputStream(new FileOutputStream("PlanCosecha.obj"))) {
+        try (ObjectOutputStream archObjPlanesCosecha = new ObjectOutputStream(new FileOutputStream("PlanesCosecha.obj"))) {
             for (PlanCosecha planCosecha : planCosechas) {
                 archObjPlanesCosecha.writeObject(planCosecha);
             }
         } catch (FileNotFoundException e) {
-            throw new GestionHuertosException("Error al abrir/crear el archivo PlanCosecha.obj");
+            throw new GestionHuertosException("Error al abrir/crear el archivo PlanCosecha.obj: "  + e.getMessage());
         } catch (IOException e) {
-            throw new GestionHuertosException("Error al intentar escribir en el archivo PlanesCosecha.obj");
+            throw new GestionHuertosException("Error al intentar escribir en el archivo PlanesCosecha.obj: "  + e.getMessage());
         }
         return planCosechas;
     }
@@ -81,10 +81,10 @@ public class GestionHuertosIO {
             throw new GestionHuertosException("Archivo Personas.obj no encontrado");
 
         } catch (ClassCastException | ClassNotFoundException e) {
-            throw new GestionHuertosException("Objeto leído no corresponde a Persona");
+            throw new GestionHuertosException("Objeto leído no corresponde a Persona: " + e.getMessage());
 
         } catch (IOException e) {
-            throw new GestionHuertosException("Error al intentar leer datos del archivo Personas.obj");
+            throw new GestionHuertosException("Error al intentar leer datos del archivo Personas.obj: " + e.getMessage());
         }
 
         return personas.toArray(new Persona[0]);
@@ -106,13 +106,13 @@ public class GestionHuertosIO {
             }
 
         } catch (FileNotFoundException e) {
-            throw new GestionHuertosException("Archivo Cultivos.obj no encontrado");
+            throw new GestionHuertosException("Archivo Cultivos.obj no encontrado: " + e.getMessage());
 
         } catch (ClassCastException | ClassNotFoundException e) {
-            throw new GestionHuertosException("Objeto leído no corresponde a Cultivo");
+            throw new GestionHuertosException("Objeto leído no corresponde a Cultivo: " + e.getMessage());
 
         } catch (IOException e) {
-            throw new GestionHuertosException("Error al intentar leer datos del archivo Cultivos.obj");
+            throw new GestionHuertosException("Error al intentar leer datos del archivo Cultivos.obj: " + e.getMessage());
         }
 
         return cultivos.toArray(new Cultivo[0]);
@@ -134,13 +134,13 @@ public class GestionHuertosIO {
             }
 
         } catch (FileNotFoundException e) {
-            throw new GestionHuertosException("Archivo PlanesCosecha.obj no encontrado");
+            throw new GestionHuertosException("Archivo PlanesCosecha.obj no encontrado:  " + e.getMessage());
 
         } catch (ClassCastException | ClassNotFoundException e) {
-            throw new GestionHuertosException("Objeto leído no corresponde a PlanCosecha");
+            throw new GestionHuertosException("Objeto leído no corresponde a PlanCosecha: " + e.getMessage());
 
         } catch (IOException e) {
-            throw new GestionHuertosException("Error al intentar leer datos del archivo PlanesCosecha.obj");
+            throw new GestionHuertosException("Error al intentar leer datos del archivo PlanesCosecha.obj: " + e.getMessage());
         }
 
         return planesCosecha.toArray(new PlanCosecha[0]);
