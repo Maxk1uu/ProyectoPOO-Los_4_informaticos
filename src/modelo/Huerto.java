@@ -5,10 +5,11 @@ package modelo;
 import utilidades.EstadoFenologico;
 import utilidades.GestionHuertosException;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Optional;
 
-public class Huerto {
+public class Huerto implements Serializable {
 
     // Atributos
     private String nombre;

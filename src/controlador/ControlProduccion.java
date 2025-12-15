@@ -4,6 +4,9 @@ package controlador;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.lang.reflect.Array;
+import java.security.GeneralSecurityException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -12,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import persistencia.GestionHuertosIO;
 import utilidades.*;
 import modelo.*;
 
@@ -529,6 +533,48 @@ public class ControlProduccion {
         }
     }
 
+    // Hecho por Ricardo Quintana
+    public void saveSystemData() throws GestionHuertosException {
+        GestionHuertosIO persistencia = GestionHuertosIO.getInstance();
+
+        // Guardar personas
+        Persona[] personasObj = personas.toArray(new Persona[0]);
+        persistencia.savePersonas(personasObj);
+
+        // Guardar cultivos
+        ArrayList<Cultivo> cultivosList = new ArrayList<>();
+        for (Cultivo cultivo : cultivos) {
+            if (cultivo.getCuarteles().length == 0) {
+                cultivosList.add(cultivo);
+            }
+        }
+        Cultivo[] cultivosObj = cultivosList.toArray(new Cultivo[0]);
+        persistencia.saveCultivos(cultivosObj);
+
+        // Guardar planes de cosecha
+        ArrayList<PlanCosecha> planesCosechasList = new ArrayList<>();
+        for (PlanCosecha planCosecha: planCosechas) {
+            if(planCosecha.getCuadrillas().length == 0) {
+                planesCosechasList.add(planCosecha);
+            }
+        }
+        PlanCosecha[] planCosechasObj = planesCosechasList.toArray(new PlanCosecha[0]);
+        persistencia.savePlanesCosecha(planCosechasObj);
+    }
+
+    // Hecho por Ricardo Quintana
+    public void readSystemData() throws GestionHuertosException {
+        GestionHuertosIO persistencia = GestionHuertosIO.getInstance();
+        // primero limpio las colecciones para evitar objetos duplicados
+        personas.clear();
+        cultivos.clear();
+        planCosechas.clear();
+
+        personas.addAll(Arrays.asList(persistencia.readPersonas()));
+        cultivos.addAll(Arrays.asList(persistencia.readCultivos()));
+        planCosechas.addAll(Arrays.asList(persistencia.readPlanesCosecha()));
+    }
+
     //Metodo private que encuentra a una persona deseada a través de su rut.
     private Optional<Persona> findPersona(Rut rut) {
        return personas.stream()
@@ -597,12 +643,14 @@ public class ControlProduccion {
                 .filter(pesaje -> !pesaje.isPagado())
                 .toList();
     }
+
     private String reconstruyeRut(String rut) {
         String dosNumeros = rut.substring(0,2);
         String tresNumeros = rut.substring(2,5);
         String resto = rut.substring(5);
         return dosNumeros + "." + tresNumeros + "." + resto;
     }
+
     private double getMontoImpago(Cosechador cosechador) {
         return Arrays.stream(cosechador.getAsignaciones())
                 .map(CosechadorAsignado::getPesajes)
@@ -611,6 +659,7 @@ public class ControlProduccion {
                 .mapToDouble(Pesaje::getMonto)
                 .sum();
     }
+
     private double getMontoPagado(Cosechador cosechador) {
         return Arrays.stream(cosechador.getAsignaciones())
                 .map(CosechadorAsignado::getPesajes)

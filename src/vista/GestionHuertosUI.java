@@ -1,6 +1,7 @@
 //Codigo Actualizado Por: Maximiliano Maureira (V2)
 //Revisado por: Gabriel Rojas (V2)
 package vista;
+
 import controlador.ControlProduccion;
 import utilidades.*;
 
@@ -8,6 +9,7 @@ import java.awt.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.format.ResolverStyle;
 import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.Locale;
@@ -47,17 +49,21 @@ public class GestionHuertosUI {
             System.out.println("2. Menu Huertos");
             System.out.println("3. Menu Planes de Cosecha");
             System.out.println("4. Menu Listados");
-            System.out.println("5. Salir");
+            System.out.println("5. Leer Datos Sistema");
+            System.out.println("6. Guardar Datos Sistema");
+            System.out.println("7. Salir");
             opcion = leerNumeroPositivo("\t> Opcion: ");
             switch (opcion) {
                 case 1 -> creaPersona();
                 case 2 -> menuHuertos();
                 case 3 -> menuPlanesDeCosecha();
                 case 4 -> menuListados();
-                case 5 -> System.out.println("\nCerrando Sistema de Gestion de Huertos...\n");
+                case 5 -> leerDatosSistema();
+                case 6 -> guardarDatosSistema();
+                case 7 -> System.out.println("\nCerrando Sistema de Gestion de Huertos...\n");
                 default -> System.out.println("\nX Error: La opcion seleccionada no existe.\n");
             }
-        } while (opcion != 5);
+        } while (opcion != 7);
     }
 
     private void menuHuertos() {
@@ -151,7 +157,7 @@ public class GestionHuertosUI {
                 rol = 0;
             }
         } while (rol == 0);
-        rut = leerRutValido("> Rut: ");
+        rut = Rut.of(leerTextoNoVacio("> Rut: ");
         nombre = leerTextoNoVacio("> Nombre: ");
         email = leerTextoNoVacio("> Email: ");
         direccion = leerTextoNoVacio("> Direccion: ");
@@ -226,11 +232,11 @@ public class GestionHuertosUI {
         nombreHuerto = leerTextoNoVacio("> Nombre del Huerto: ");
         ubicacion = leerTextoNoVacio("> Ubicacion: ");
         superficieHuerto = leerFloatPositivo("> Superficie (metros cuadrados): ");
-        rutPropietario = leerRutValido("> Rut Propietario: ");
         try {
+            rutPropietario = Rut.of(leerTextoNoVacio("> Rut Propietario: "));
             controlProduccion.createHuerto(nombreHuerto, superficieHuerto, ubicacion, rutPropietario);
             System.out.println("\nEl Huerto a sido creado exitosamente.");
-        } catch (GestionHuertosException e) {
+        } catch (GestionHuertosException | IllegalArgumentException e) {
             System.out.println("\nX Error: " + e.getMessage() + "\n");
         }
     }
@@ -307,7 +313,7 @@ public class GestionHuertosUI {
         do {
             fechaInicio = leerFechaExistente("> Fecha de inicio (dd/mm/yyyy): ");
             fechaTermino = leerFechaExistente("> Fecha de termino (dd/mm/yyyy): ");
-        } while (comparaFechas(fechaInicio, fechaTermino));
+        } while (fechaInicio.isAfter(fechaTermino) || fechaInicio.isEqual(fechaTermino));
         metaKilos = leerDoublePositivo("> Meta (Kilos): ");
         precioBaseKilos = leerDoublePositivo("> Precio de Base por Kilo: ");
         nombreHuerto = leerTextoNoVacio("> Nombre del Huerto: ");
@@ -364,11 +370,12 @@ public class GestionHuertosUI {
             for (int i = 1; i <= nroCuadrillas; i++) {
                 idCuadrilla = leerNumeroPositivo("> ID de la cuadrilla: ");
                 nombreCuadrilla = leerTextoNoVacio("> Nombre de la Cuadrilla: ");
-                rutSupervisor = leerRutValido("> Rut del Supervisor: ");
-                try { //Captura el error si no se puede agregar la cuadrilla al plan de cosecha.
+                try {
+                    rutSupervisor = Rut.of(leerTextoNoVacio("> Rut del Supervisor: "));
+                    //Captura el error si no se puede agregar la cuadrilla al plan de cosecha
                     controlProduccion.addCuadrillaToPlan(idPlanDeCosecha, idCuadrilla, nombreCuadrilla, rutSupervisor);
                     System.out.println("\nCuadrilla agregada exitosamente al Plan de Cosecha.");
-                } catch (GestionHuertosException e) {
+                } catch (GestionHuertosException | IllegalArgumentException e) {
                     System.out.println("\nX Error: " + e.getMessage() + "\n");
                 }
             }
@@ -388,17 +395,17 @@ public class GestionHuertosUI {
         nroCosechadores = leerNumeroPositivo("> Nro. de Cosechadores a asignar: ");
         for (int i = 1; i <= nroCosechadores; i++) {
             do {
-                System.out.println("\n-Cosechador "+i+" de "+nroCosechadores);
+                System.out.println("\n-Cosechador " + i + " de " + nroCosechadores);
                 fechaInicioAsignacion = leerFechaExistente("> Fecha de Inicio de asignacion (dd/mm/yyyy): ");
                 fechaTerminoAsignacion = leerFechaExistente("> Fecha de Termino de asignacion (dd/mm/yyyy): ");
-            } while (!comparaFechas(fechaInicioAsignacion, fechaTerminoAsignacion));
+            } while (fechaInicioAsignacion.isAfter(fechaTerminoAsignacion) || fechaInicioAsignacion.isEqual(fechaTerminoAsignacion));
             metaKilos = leerDoublePositivo("> Meta (Kilos): ");
-            rutCosechador = leerRutValido("> Rut del Cosechador: ");
             try {
+                rutCosechador = Rut.of(leerTextoNoVacio("> Rut del Cosechador: "));
                 controlProduccion.addCosechadorToCuadrilla(idPlan, idCuadrilla, fechaInicioAsignacion,
                         fechaTerminoAsignacion, metaKilos, rutCosechador);
                 System.out.println("\nCosechador asignado exitosamente a la cuadrilla del plan de Cosecha");
-            } catch (GestionHuertosException e) {
+            } catch (GestionHuertosException | IllegalArgumentException e) {
                 System.out.println("\nX Error: " + e.getMessage() + "\n");
             }
             System.out.println("- - - - - - - - - - - - - - - -");
@@ -414,7 +421,7 @@ public class GestionHuertosUI {
         boolean error;
         System.out.println("\n---Agregando Pesaje a un Cosechador---");
         idPesaje = leerNumeroPositivo("> ID del Pesaje: ");
-        rutCosechador = leerRutValido("> Rut del Cosechador: ");
+        rutCosechador = Rut.of(leerTextoNoVacio("> Rut del Cosechador: ");
         idPlan = leerNumeroPositivo("> ID del Plan: ");
         idCuadrilla = leerNumeroPositivo("> ID de la Cuadrilla: ");
         cantKilos = leerFloatPositivo("> Cantidad de Kilos: ");
@@ -455,11 +462,11 @@ public class GestionHuertosUI {
         double montoAPagar;
         System.out.println("\n---Pagando Pesaje a un Cosechador---");
         idPagoPesaje = leerNumeroPositivo("> ID del Pago de Pesaje: ");
-        rutCosechador = leerRutValido("> Rut del Cosechador: ");
         try {
+            rutCosechador = Rut.of(leerTextoNoVacio("> Rut del Cosechador: "));
             montoAPagar = controlProduccion.addPagoPesaje(idPagoPesaje, rutCosechador);
             System.out.println("\nMonto Pagado al Cosechador: $" + Math.round(montoAPagar * 100) / 100.0);
-        } catch (GestionHuertosException e) {
+        } catch (GestionHuertosException | IllegalArgumentException e) {
             System.out.println("\nX Error: " + e.getMessage() + "\n");
         }
     }
@@ -475,7 +482,7 @@ public class GestionHuertosUI {
                 for (String cultivo : listaDeCultivos) {
                     String[] infoCultivo = cultivo.split("; ");
                     System.out.printf("%-20s%-25s%-25s%-30s%-30s%n", infoCultivo[0], infoCultivo[1], infoCultivo[2],
-                            trunca(infoCultivo[3])+" %", infoCultivo[4]);
+                            trunca(infoCultivo[3]) + " %", infoCultivo[4]);
                 }
                 System.out.println("----------------------");
             } else {
@@ -553,7 +560,7 @@ public class GestionHuertosUI {
                             infoSupervisor[7] = "0";
                         }
                         System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s%-15s%-15s%n", infoSupervisor[0], infoSupervisor[1],
-                                infoSupervisor[2], infoSupervisor[3], infoSupervisor[4], infoSupervisor[5], trunca(infoSupervisor[6]) +" kg", infoSupervisor[7]);
+                                infoSupervisor[2], infoSupervisor[3], infoSupervisor[4], infoSupervisor[5], trunca(infoSupervisor[6]) + " kg", infoSupervisor[7]);
                     }
                 }
                 System.out.println("----------------------");
@@ -569,6 +576,7 @@ public class GestionHuertosUI {
     }
 
     private void listaCosechadores() {
+        /*
         try {
             if (controlProduccion.listCosechadores().length != 0) {
                 System.out.println("\nLISTA DE COSECHADORES");
@@ -579,7 +587,7 @@ public class GestionHuertosUI {
                     if (cosechador != null) {
                         String[] infoCosechador = cosechador.split("; ");
                         System.out.printf("%-20s%-25s%-25s%-30s%-30s%-20s%-15s%-15s%n", infoCosechador[0], infoCosechador[1],
-                                infoCosechador[2], infoCosechador[3], infoCosechador[4], infoCosechador[5], "$ "+trunca(infoCosechador[6]), "$ "+trunca(infoCosechador[7]));
+                                infoCosechador[2], infoCosechador[3], infoCosechador[4], infoCosechador[5], "$ " + trunca(infoCosechador[6]), "$ " + trunca(infoCosechador[7]));
                     }
                 }
                 System.out.println("----------------------");
@@ -591,6 +599,10 @@ public class GestionHuertosUI {
             System.out.println("\nX Error: " + e.getMessage() + "\n");
             System.out.println("----------------------------");
         }
+         */
+        GUIListarCosechadores listarCosechadores = new GUIListarCosechadores();
+        listarCosechadores.setVisible(true);
+        listarCosechadores.setLocationRelativeTo(null);
     }
 
     private void listaPlanesCosecha() {
@@ -605,7 +617,7 @@ public class GestionHuertosUI {
                     String[] infoPlan = plan.split("; ");
                     System.out.printf("%-8s%-25s%-20s%-20s%-15s%-20s%-15s%-15s%-25s%-18s%-17s%n", infoPlan[0], infoPlan[1],
                             infoPlan[2], infoPlan[3], trunca(infoPlan[4]), trunca(infoPlan[5]), infoPlan[6], infoPlan[7], infoPlan[8],
-                            infoPlan[9], trunca(infoPlan[10])+"%");
+                            infoPlan[9], trunca(infoPlan[10]) + "%");
                 }
                 System.out.println("-----------------------------");
             } else {
@@ -628,7 +640,7 @@ public class GestionHuertosUI {
                 for (String pesaje : controlProduccion.listPesajes()) {
                     String[] infoPesaje = pesaje.split("; ");
                     System.out.printf("%-8s%-15s%-20s%-15s%-18s%-18s%-16s%-15s%n", infoPesaje[0], infoPesaje[1],
-                            infoPesaje[2], infoPesaje[3], trunca(infoPesaje[4])+" Kg", "$ "+trunca(infoPesaje[5]), "$ "+trunca(infoPesaje[6]), infoPesaje[7]);
+                            infoPesaje[2], infoPesaje[3], trunca(infoPesaje[4]) + " Kg", "$ " + trunca(infoPesaje[5]), "$ " + trunca(infoPesaje[6]), infoPesaje[7]);
                 }
                 System.out.println("----------------------------");
             } else {
@@ -643,8 +655,8 @@ public class GestionHuertosUI {
 
     private void listaPesajesCosechadores() {
         System.out.println("\nLISTA DE PESAJES DEL COSECHADOR");
-        Rut rutCosechador = leerRutValido("> Rut del Cosechador: ");
         try {
+            Rut rutCosechador = Rut.of(leerTextoNoVacio("> Rut del Cosechador: "));
             System.out.println("--------------------------");
             if (controlProduccion.listPesajesCosechador(rutCosechador).length != 0) {
 
@@ -653,14 +665,14 @@ public class GestionHuertosUI {
                 for (String pesajeCos : controlProduccion.listPesajesCosechador(rutCosechador)) {
                     String[] infoPesajeCos = pesajeCos.split("; ");
                     System.out.printf("%-8s%-15s%-15s%-18s%-18s%-16s%-15s%n", infoPesajeCos[0], infoPesajeCos[1],
-                            infoPesajeCos[2], trunca(infoPesajeCos[3])+" Kg", "$ "+trunca(infoPesajeCos[4]), "$ "+trunca(infoPesajeCos[5]), infoPesajeCos[6]);
+                            infoPesajeCos[2], trunca(infoPesajeCos[3]) + " Kg", "$ " + trunca(infoPesajeCos[4]), "$ " + trunca(infoPesajeCos[5]), infoPesajeCos[6]);
                 }
                 System.out.println("--------------------------");
             } else {
                 System.out.println("\nNo hay pesajes registrados para el cosechador ingresado.");
                 System.out.println("----------------------------");
             }
-        } catch (GestionHuertosException e) {
+        } catch (GestionHuertosException | IllegalArgumentException e) {
             System.out.println("\nX Error: " + e.getMessage() + "\n");
             System.out.println("----------------------------");
         }
@@ -674,13 +686,33 @@ public class GestionHuertosUI {
                     "Rut Cosechador");
             for (String pagos : controlProduccion.listPagoPesajes()) {
                 String[] infoPagos = pagos.split("; ");
-                System.out.printf("%-8s%-15s%-16s%-17s%-20s%n", infoPagos[0], infoPagos[1], "$ "+trunca(infoPagos[2]), infoPagos[3],
+                System.out.printf("%-8s%-15s%-16s%-17s%-20s%n", infoPagos[0], infoPagos[1], "$ " + trunca(infoPagos[2]), infoPagos[3],
                         infoPagos[4]);
             }
             System.out.println("----------------------------");
         } else {
             System.out.println("\nNo hay pagos registrados.");
             System.out.println("----------------------------");
+        }
+    }
+
+    public void leerDatosSistema() {
+        System.out.println("\n --- Leyendo datos del sistema ---");
+        try {
+            controlProduccion.readSystemData();
+            System.out.println("\n datos leidos exitosamente");
+        } catch (GestionHuertosException e) {
+            System.out.println("\nX Error: " + e.getMessage() + "\n");
+        }
+    }
+
+    public void guardarDatosSistema() {
+        System.out.println("\n --- guardando datos del sistema ---");
+        try {
+            controlProduccion.saveSystemData();
+            System.out.println("\n datos guardados exitosamente");
+        } catch (GestionHuertosException e) {
+            System.out.println("\nX Error: " + e.getMessage() + "\n");
         }
     }
 
@@ -762,17 +794,18 @@ public class GestionHuertosUI {
 
     private LocalDate leerFechaExistente(String mensaje) {
         LocalDate fecha = LocalDate.now();
-        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formatoStrict = DateTimeFormatter.ofPattern("dd/MM/yyyy G", Locale.US).
+                withResolverStyle(ResolverStyle.STRICT);
         boolean fechaExistente;
         do {
             System.out.print(mensaje);
             try {
-                fecha = LocalDate.parse(sc.next(), formato);
+                fecha = LocalDate.parse(sc.next() + " AD", formatoStrict);
                 fechaExistente = true;
             } catch (DateTimeParseException e) {
                 System.out.println("\nX Error: la fecha es invalida o no cumple el formato dd/MM/yyyy.\n");
                 fechaExistente = false;
-                if(String.valueOf(fecha).matches("^[0-9]{2}/[0-9]{2}/[0-9]{4}$")) {
+                if (String.valueOf(fecha).matches("^[0-9]{2}/[0-9]{2}/[0-9]{4}$")) {
                     sc.next();
                 }
             }
@@ -803,7 +836,7 @@ public class GestionHuertosUI {
     }
 
     private boolean comparaFechas(LocalDate fechaInicio, LocalDate fechaTermino) {
-        if(fechaInicio.isAfter(fechaTermino)){
+        if (fechaInicio.isAfter(fechaTermino)) {
             System.out.println("\nX Error: La fecha de inicio es posterior a la fecha de termino.\n");
             return false;
         }

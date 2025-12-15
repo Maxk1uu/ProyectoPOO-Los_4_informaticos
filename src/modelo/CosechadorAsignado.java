@@ -1,8 +1,9 @@
 package modelo;//Revisado por: Gabriel Rojas
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class CosechadorAsignado {
+public class CosechadorAsignado implements Serializable {
     //Atributos
     private LocalDate desde;
     private LocalDate hasta;
