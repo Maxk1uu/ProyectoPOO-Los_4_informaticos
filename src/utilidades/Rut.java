@@ -2,7 +2,9 @@
 //Revisado por: Gabriel Rojas
 package utilidades;
 
-public class Rut {
+import java.io.Serializable;
+
+public class Rut implements Serializable {
     //Atributos
     private final long numero;
     private final char dv;

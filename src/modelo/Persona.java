@@ -2,9 +2,11 @@ package modelo;
 
 import utilidades.Rut;
 
+import java.io.Serializable;
+
 //Codigo hecho por: Maximiliano Maureira
 //Revisado por: Gabriel Rojas
-public abstract class Persona {
+public abstract class Persona implements Serializable {
     //Atributos
     private Rut rut;
     private String nombre;
