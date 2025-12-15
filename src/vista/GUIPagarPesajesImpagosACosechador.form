@@ -25,7 +25,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="6cbc2" class="javax.swing.JTable" binding="table1" default-binding="true">
+              <component id="6cbc2" class="javax.swing.JTable" binding="tableCosechador">
                 <constraints/>
                 <properties>
                   <autoResizeMode value="2"/>
