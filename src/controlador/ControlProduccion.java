@@ -278,14 +278,14 @@ public class ControlProduccion {
 
     // Hecho por Ricardo Quintana, Programación funcional por Gabriel Rojas
     public String[] listSupervisores() {
-        Comparator<Supervisor> ordenarPorKilosPesados = Comparator.comparing(supervisor -> supervisor.getCuadrillaAsignada().getKilosPesados());
+        Comparator<Supervisor> ordenarPorKilosPesados = Comparator.comparing(supervisor -> (supervisor.getCuadrillaAsignada() == null) ? 0 : supervisor.getCuadrillaAsignada().getKilosPesados());
         return personas.stream()
                 .filter(persona -> persona.getClass() == Supervisor.class)
                 .map(Supervisor.class::cast)
                 .sorted(ordenarPorKilosPesados.reversed())
                 .map(supervisor -> String.join("; ", reconstruyeRut(supervisor.getRut().toString()), supervisor.getNombre(), supervisor.getDireccion(), supervisor.getEmail(),
                         supervisor.getProfesion(), (supervisor.getCuadrillaAsignada() == null) ? "S/A" : supervisor.getCuadrillaAsignada().getNombre(),
-                        (supervisor.getCuadrillaAsignada() == null) ? "N/A" :  (Double.toString(supervisor.getCuadrillaAsignada().getKilosPesados())), getNroPesajesImpagos(supervisor) ))
+                        (supervisor.getCuadrillaAsignada() == null) ? "0" :  (Double.toString(supervisor.getCuadrillaAsignada().getKilosPesados())),(supervisor.getCuadrillaAsignada() == null) ? "0" : getNroPesajesImpagos(supervisor) ))
                 .toArray(String[]::new);
     }
 
@@ -324,7 +324,7 @@ public class ControlProduccion {
                 .map(pesaje -> String.join("; ",
                         Integer.toString(pesaje.getId()),
                         pesaje.getFechaHora().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
-                        pesaje.getCosechadorAsignado().getCosechador().getRut().toString(),
+                        reconstruyeRut(pesaje.getCosechadorAsignado().getCosechador().getRut().toString()),
                         String.valueOf(pesaje.getCalidad()), String.valueOf(pesaje.getCantidadKg()),
                         String.valueOf(pesaje.getPrecioKg()), String.valueOf(pesaje.getMonto()), (pesaje.getPagoPesaje() == null) ? "Impago" : pesaje.getPagoPesaje().getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))))
                 .toArray(String[]::new);

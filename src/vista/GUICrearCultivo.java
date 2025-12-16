@@ -58,8 +58,8 @@ public class GUICrearCultivo extends JDialog {
     private void onOK() {
         setAlwaysOnTop(false);
         String idCultivo = idCultivoInt.getText();
-        String variedad = idCultivoInt.getText();
-        String especie = variedadText.getText();
+        String variedad = variedadText.getText();
+        String especie = especieText.getText();
         String rendimiento = rendimientoFloatTextField.getText();
         if (idCultivo.isBlank() ||  variedad.isBlank() || especie.isBlank() || rendimiento.isBlank()) {
             errorMessage.error("Existen datos incorrectos o faltantes");
