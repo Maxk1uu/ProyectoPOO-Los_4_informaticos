@@ -1,3 +1,4 @@
+//Hecho por: Gabriel Rojas
 package vista;
 
 import controlador.ControlProduccion;
@@ -31,6 +32,7 @@ public class GUIAgregarPesajeACosechador extends JDialog {
             String onlyRutAndNombre = listOfCos[0] +";"+ listOfCos[1];
             cosechadorListaComboBox.addItem(onlyRutAndNombre);
         }
+        cosechadorListaComboBox.setSelectedIndex(-1);
         //ActionListener que cambiá las cuadrillas mostradas según el cosechador seleccionado
         ActionListener changeComboBoxOfCuadrillas = (event) -> {
             if (cosechadorListaComboBox.getSelectedIndex() != -1) {
@@ -89,6 +91,8 @@ public class GUIAgregarPesajeACosechador extends JDialog {
                 float cantidadKiloFloat = Float.parseFloat(cantidadKilos);
                 if (cantidadKiloFloat <= 0) {
                     errorMessage.error("La cantidad de kilos no puede ser menor o igual a 0");
+                } else if (idPesaje < 0) {
+                    errorMessage.error("El ID indicado no puede ser negativo");
                 } else {
                     String cos = cosechadorListaComboBox.getSelectedItem().toString();
                     String cuadrilla = cuadrillaDeCosComboBox.getSelectedItem().toString();

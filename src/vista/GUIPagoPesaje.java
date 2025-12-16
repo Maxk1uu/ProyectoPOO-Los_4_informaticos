@@ -100,12 +100,16 @@ public class GUIPagoPesaje extends JDialog {
         } else {
             try {
                 int idPago = Integer.parseInt(idPagoStr);
-                Rut rut = Rut.of(rutCosechadorTextField.getText());
-                ControlProduccion.getInstance().addPagoPesaje(idPago, rut);
-                guiMsg.informacion("Pago de pesajes realizado con exito");
-                idPagoTextField.setText("");
-                rutCosechadorTextField.setText("");
-                onFocusGainedRutCosechador();
+                if (idPago < 0 ) {
+                    guiMsg.error("El ID indicado no puede ser negativo");
+                }else {
+                    Rut rut = Rut.of(rutCosechadorTextField.getText());
+                    ControlProduccion.getInstance().addPagoPesaje(idPago, rut);
+                    guiMsg.informacion("Pago de pesajes realizado con exito");
+                    idPagoTextField.setText("");
+                    rutCosechadorTextField.setText("");
+                    onFocusGainedRutCosechador();
+                }
             } catch (IllegalArgumentException e) {
                 guiMsg.error("Existen datos incorrectos o faltantes");
             } catch (GestionHuertosException e) {
