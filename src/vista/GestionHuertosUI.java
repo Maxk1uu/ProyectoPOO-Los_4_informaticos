@@ -194,9 +194,9 @@ public class GestionHuertosUI {
         }
 
          */
-       GUICrearPersona guiCrearPersona = new GUICrearPersona();
-       guiCrearPersona.setModal(true);
-       guiCrearPersona.setVisible(true);
+        GUICrearPersona guiCrearPersona = new GUICrearPersona();
+        guiCrearPersona.setModal(true);
+        guiCrearPersona.setVisible(true);
     }
 
     private void creaCultivo() {
@@ -216,7 +216,7 @@ public class GestionHuertosUI {
         }
 
         */
-        SwingUtilities.invokeLater(()-> {
+        SwingUtilities.invokeLater(() -> {
             GUICrearCultivo guiCrearCultivo = new GUICrearCultivo();
             guiCrearCultivo.pack();
             guiCrearCultivo.setVisible(true);
@@ -603,9 +603,14 @@ public class GestionHuertosUI {
             System.out.println("----------------------------");
         }
          */
-        GUIListarCosechadores listarCosechadores = new GUIListarCosechadores();
-        listarCosechadores.setVisible(true);
-        listarCosechadores.setLocationRelativeTo(null);
+        if (controlProduccion.listCosechadores().length != 0) {
+            GUIListarCosechadores listarCosechadores = new GUIListarCosechadores();
+            listarCosechadores.setVisible(true);
+            listarCosechadores.setLocationRelativeTo(null);
+        } else {
+            GUIMsg msg = new GUIMsg();
+            msg.informacion("No existen cosechadores para listar");
+        }
     }
 
     private void listaPlanesCosecha() {
