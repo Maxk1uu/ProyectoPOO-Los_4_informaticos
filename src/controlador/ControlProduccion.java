@@ -395,7 +395,7 @@ public class ControlProduccion {
             while (scGestionHuertos.hasNextLine()) {
                 String linea = scGestionHuertos.nextLine().trim();
                 int nroDeLineas = 0;
-                if (!linea.startsWith("#") && !linea.isEmpty()) {
+                if (!linea.startsWith("#") && !linea.isBlank()) {
                     String[] operacion = linea.split(";");
                     switch (operacion[0]) {
                         case "createPropietario":
@@ -570,10 +570,29 @@ public class ControlProduccion {
         personas.clear();
         cultivos.clear();
         planCosechas.clear();
+        huertos.clear();
 
         personas.addAll(Arrays.asList(persistencia.readPersonas()));
         cultivos.addAll(Arrays.asList(persistencia.readCultivos()));
         planCosechas.addAll(Arrays.asList(persistencia.readPlanesCosecha()));
+        // por medio de los propietarios accedo a los huertos
+        for (Persona persona : personas) {
+            if (persona instanceof Propietario){
+                Huerto[] huertosArray = ((Propietario) persona).getHuertos();
+                huertos.addAll(Arrays.stream(huertosArray).toList());
+            }
+        }
+
+        // Por medio de los cuarteles de un huerto guardo los planesDeCosecha
+        for (Huerto huerto : huertos) {
+            for (Cuartel cuartel: huerto.getCuartels()) {
+                for (PlanCosecha planCosecha: cuartel.getPlanCosechas()) {
+                    if (!planCosechas.contains(planCosecha)) {
+                        planCosechas.add(planCosecha);
+                    }
+                }
+            }
+        }
     }
 
     //Metodo private que encuentra a una persona deseada a través de su rut.
@@ -606,7 +625,7 @@ public class ControlProduccion {
                 .orElseThrow(()-> new GestionHuertosException("No existe el plan cosecha con el id indicado"))
                 .getCuadrillas())
                 .filter(planCosecha -> planCosecha.getId() == idCuadrilla)
-            .findFirst();
+                .findFirst();
     }
 
     // Hecho por Ricardo Quintana

@@ -45,8 +45,9 @@
 createPropietario;1
 11.111.111-1;Daniel Ruiz Saez;daniel.ruizs@gmail.com;Las Amapolas 1234;Av Santa Marta 6350
 
-createSupervisor;1
+createSupervisor;2
 22.222.222-2;Leonora Casas Solis;leonora.casas@gmail.com;Los Lirios 432;Agrónomo
+55.555.555-5;David Solis;dsolis@gmail.com;Av Francia 3100;Botánico
 
 createCosechador;2
 33.333.333-3;Perla Flores Miller;perla.floresmi@gmail.com;San Carlos 201;12/04/2005
@@ -63,21 +64,25 @@ addCuartelToHuerto;2
 Fundo Los Aromos;1101;15000;101
 Fundo Los Aromos;2202;10000;201
 
-createPlanCosecha;1
-11111;Cosecha Manz01;22/09/2025;31/12/2025;300;890;Fundo Los Aromos;1101
+createPlanCosecha;2
+11111;Cosecha Manz01;22/09/2025;08/02/2026;300;890;Fundo Los Aromos;1101
+11112;Cosecha Pera01;22/09/2025;08/02/2026;300;890;Fundo Los Aromos;2202
 
-addCuadrillaToPlan;1
+addCuadrillaToPlan;2
 11111;991;Manzanar;22.222.222-2
+11112;992;Peral;55.555.555-5
 
-addCosechadorToCuadrilla;2
+addCosechadorToCuadrilla;3
 11111;991;23/09/2025;30/12/2025;15;33.333.333-3
 11111;991;23/09/2025;30/12/2025;15;44.444.444-4
+11112;992;25/09/2025;30/01/2026;15;44.444.444-4
 
 changeEstadoPlan;1
 11111;EJECUTANDO
 
-changeEstadoCuartel;1
+changeEstadoCuartel;2
 1101;Fundo Los Aromos;COSECHA
+2202;Fundo Los Aromos;COSECHA
 
 addPesaje;8
 550;33.333.333-3;11111;991;5.2;EXCELENTE
