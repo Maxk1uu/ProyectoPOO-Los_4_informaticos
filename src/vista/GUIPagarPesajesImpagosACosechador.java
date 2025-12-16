@@ -34,15 +34,20 @@ public class GUIPagarPesajesImpagosACosechador extends JDialog {
 
         String[] columnas = {"Id","Fecha","Calidad","Kilos","Precio Kg","Monto", "Pagado"};
 
-        tableModel = new DefaultTableModel(columnas, 0);
+        tableModel = new DefaultTableModel();
+        tableModel.setColumnIdentifiers(columnas);
+
         tableCosechador.setModel(tableModel);
 
+
         rutCosechador.addFocusListener(new FocusAdapter() {
+            boolean flag = false;
             @Override
             public void focusLost(FocusEvent e) {
-            if(!rutCosechador.getText().isBlank()){
-                   cargaDatos();
+            if(!rutCosechador.getText().isBlank() && flag == false){
+                    cargaDatos();
                 }
+            flag = true;
             }
         });
 
@@ -62,6 +67,7 @@ public class GUIPagarPesajesImpagosACosechador extends JDialog {
     public static void main(String[] args) {
         GUIPagarPesajesImpagosACosechador dialog = new GUIPagarPesajesImpagosACosechador();
         dialog.setVisible(true);
+
     }
 
     private boolean hayCamposVacios() {
@@ -69,20 +75,23 @@ public class GUIPagarPesajesImpagosACosechador extends JDialog {
 
     }
 
-    private void onOk(){
+    private void onOk()
+    {
 
     }
 
-    private  void onCancelar(){
+    private  void onCancelar()
+    {
         dispose();
     }
-    private void cargaDatos(){
+    private void cargaDatos()
+    {
         Rut rutCos = Rut.of(rutCosechador.getText());
         try{
             String[] datos = controlProduccion.listPesajesCosechador(rutCos);
-            //tableModel;
-
-
+            for(String data : datos) {
+                tableModel.addRow(data.split(";"));
+            }
         }catch(GestionHuertosException | IllegalArgumentException e){
             guiMsg.error(e.getMessage());
         }
