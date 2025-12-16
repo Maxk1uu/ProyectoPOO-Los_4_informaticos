@@ -82,11 +82,6 @@ public class GUICambiaEstadoPlan extends JDialog {
                 dispose();
             } catch (GestionHuertosException e) {
                 guiMsg.error(e.getMessage());
-                idPlanField.setText("");
-                nombrePlanLabel.setText("");
-                cumplimientoMetaLabel.setText("");
-                estadoActualLabel.setText("");
-                nuevoEstadoComboBox.setSelectedIndex(0);
             }
         }
     }
@@ -97,8 +92,13 @@ public class GUICambiaEstadoPlan extends JDialog {
 
     private void cargaDatos(FocusEvent event) {
         boolean planEncontrado = false;
-        if (!idPlanField.getText().isBlank()) {
-            try {
+        try {
+            if (hayCamposVacios()) {
+                guiMsg.error("Existen datos incorrectos o faltantes");
+            } else if (!isIdPositive()){
+                guiMsg.error("El id del plan debe ser positivo");
+                idPlanField.setText("");
+            } else {
                 int idPlan = Integer.parseInt(idPlanField.getText());
                 String[] listPlanes = controlProduccion.listPlanes();
                 for (String plan : listPlanes) {
@@ -116,17 +116,21 @@ public class GUICambiaEstadoPlan extends JDialog {
                     estadoActualLabel.setText("");
                     guiMsg.error("No existe un plan con ese id");
                 }
-            } catch (GestionHuertosException e) {
-                guiMsg.error(e.getMessage());
-            } catch (NumberFormatException e) {
-                guiMsg.error("El id del plan debe ser numerico");
             }
+        } catch (NumberFormatException e) {
+            guiMsg.error("El id del plan debe ser numerico");
+            idPlanField.setText("");
+        } catch (GestionHuertosException e) {
+            guiMsg.error(e.getMessage());
         }
     }
 
     //Validaciones
     private boolean hayCamposVacios() {
         return idPlanField.getText().isEmpty();
+    }
+    private boolean isIdPositive() {
+        return Integer.parseInt(idPlanField.getText()) > 0;
     }
 
     //Formateo
