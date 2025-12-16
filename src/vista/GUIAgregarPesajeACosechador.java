@@ -27,7 +27,7 @@ public class GUIAgregarPesajeACosechador extends JDialog {
         setLocationRelativeTo(null);
         //Las siguientes lineas llaman a cada list de cosechadores que existen a través del controlador
         for (String listaCos : ControlProduccion.getInstance().listCosechadores()) {
-            String[] listOfCos = listaCos.split(";");
+            String[] listOfCos = listaCos.split("; ");
             String onlyRutAndNombre = listOfCos[0] +";"+ listOfCos[1];
             cosechadorListaComboBox.addItem(onlyRutAndNombre);
         }
@@ -87,21 +87,25 @@ public class GUIAgregarPesajeACosechador extends JDialog {
             try {
                 int idPesaje =  Integer.parseInt(idStr);
                 float cantidadKiloFloat = Float.parseFloat(cantidadKilos);
-                String cos =  cosechadorListaComboBox.getSelectedItem().toString();
-                String cuadrilla = cuadrillaDeCosComboBox.getSelectedItem().toString();
-                String[] listaCos = cos.split(";");
-                String[]  listaCuadrilla = cuadrilla.split(";");
-                Rut rutCos =  Rut.of(listaCos[0]);
-                int idCuadrilla = Integer.parseInt(listaCuadrilla[0]);
-                int idPlanCosechaDeCuadrilla = Integer.parseInt(listaCuadrilla[2].trim());
-                Calidad calidad = calidadComboBox.getItemAt(calidadIndex);
-                ControlProduccion.getInstance().addPesaje(idPesaje, rutCos, idPlanCosechaDeCuadrilla, idCuadrilla, cantidadKiloFloat, calidad);
-                errorMessage.informacion("Pesaje registrado con exito");
-                idPesajeTextField.setText("");
-                cantidadKilosTextField.setText("");
-                cosechadorListaComboBox.setSelectedIndex(-1);
-                calidadComboBox.setSelectedIndex(-1);
-                cuadrillaDeCosComboBox.setSelectedIndex(-1);
+                if (cantidadKiloFloat <= 0) {
+                    errorMessage.error("La cantidad de kilos no puede ser menor o igual a 0");
+                } else {
+                    String cos = cosechadorListaComboBox.getSelectedItem().toString();
+                    String cuadrilla = cuadrillaDeCosComboBox.getSelectedItem().toString();
+                    String[] listaCos = cos.split(";");
+                    String[] listaCuadrilla = cuadrilla.split(";");
+                    Rut rutCos = Rut.of(listaCos[0]);
+                    int idCuadrilla = Integer.parseInt(listaCuadrilla[0]);
+                    int idPlanCosechaDeCuadrilla = Integer.parseInt(listaCuadrilla[2].trim());
+                    Calidad calidad = calidadComboBox.getItemAt(calidadIndex);
+                    ControlProduccion.getInstance().addPesaje(idPesaje, rutCos, idPlanCosechaDeCuadrilla, idCuadrilla, cantidadKiloFloat, calidad);
+                    errorMessage.informacion("Pesaje registrado con exito");
+                    idPesajeTextField.setText("");
+                    cantidadKilosTextField.setText("");
+                    cosechadorListaComboBox.setSelectedIndex(-1);
+                    calidadComboBox.setSelectedIndex(-1);
+                    cuadrillaDeCosComboBox.setSelectedIndex(-1);
+                }
 
             } catch (NumberFormatException e) {
                 errorMessage.error("Un formato númerico indicado es incorrecto");

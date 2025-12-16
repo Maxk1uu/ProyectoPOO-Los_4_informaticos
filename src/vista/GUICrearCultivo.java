@@ -67,12 +67,16 @@ public class GUICrearCultivo extends JDialog {
             try {
                 int id = Integer.parseInt(idCultivo);
                 float rendimientoParsed =  Float.parseFloat(rendimiento);
-                ControlProduccion.getInstance().createCultivo(id, especie, variedad, rendimientoParsed);
-                errorMessage.informacion("Cultivo registrado con exito");
-                especieText.setText("");
-                idCultivoInt.setText("");
-                variedadText.setText("");
-                rendimientoFloatTextField.setText("");
+                if (rendimientoParsed <= 0){
+                    errorMessage.error("El rendimiento indicado no puede ser menor o igual a 0");
+                } else {
+                    ControlProduccion.getInstance().createCultivo(id, especie, variedad, rendimientoParsed);
+                    errorMessage.informacion("Cultivo registrado con exito");
+                    especieText.setText("");
+                    idCultivoInt.setText("");
+                    variedadText.setText("");
+                    rendimientoFloatTextField.setText("");
+                }
             } catch(NumberFormatException e) {
                 errorMessage.error("Un formato númerico indicado es inválido");
             } catch (GestionHuertosException e) {
