@@ -17,7 +17,7 @@ public class GUIAgregarPesajeACosechador extends JDialog {
     private JComboBox<String> cuadrillaDeCosComboBox;
     private JTextField cantidadKilosTextField;
     private JComboBox<Calidad> calidadComboBox;
-    private final GUIAgregarPesajeACosMsg errorMsg = new GUIAgregarPesajeACosMsg();
+    private final GUIMsg errorMessage = new GUIMsg();
     public GUIAgregarPesajeACosechador() {
         setContentPane(contentPane);
         setModal(true);
@@ -82,7 +82,7 @@ public class GUIAgregarPesajeACosechador extends JDialog {
                 || cuadrillaDeCosComboBox.getSelectedIndex() == -1
                 || calidadComboBox.getSelectedIndex() == -1
         || idStr.isBlank() || cantidadKilos.isBlank()) {
-            errorMsg.errorMessageEmpty();
+            errorMessage.error("Existen datos faltantes, incorrectos o no seleccionados");
         } else {
             try {
                 int idPesaje =  Integer.parseInt(idStr);
@@ -96,7 +96,7 @@ public class GUIAgregarPesajeACosechador extends JDialog {
                 int idPlanCosechaDeCuadrilla = Integer.parseInt(listaCuadrilla[2].trim());
                 Calidad calidad = calidadComboBox.getItemAt(calidadIndex);
                 ControlProduccion.getInstance().addPesaje(idPesaje, rutCos, idPlanCosechaDeCuadrilla, idCuadrilla, cantidadKiloFloat, calidad);
-                errorMsg.successMessage();
+                errorMessage.informacion("Pesaje registrado con exito");
                 idPesajeTextField.setText("");
                 cantidadKilosTextField.setText("");
                 cosechadorListaComboBox.setSelectedIndex(-1);
@@ -104,9 +104,9 @@ public class GUIAgregarPesajeACosechador extends JDialog {
                 cuadrillaDeCosComboBox.setSelectedIndex(-1);
 
             } catch (NumberFormatException e) {
-                errorMsg.errorMessageInvalid(e.getMessage());
+                errorMessage.error("Un formato númerico indicado es incorrecto");
             } catch(GestionHuertosException e){
-                errorMsg.errorMessageGestionHuertosApp(e.getMessage());
+                errorMessage.error(e.getMessage());
             }
         }
     }
