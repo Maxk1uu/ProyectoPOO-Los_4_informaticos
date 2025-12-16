@@ -66,10 +66,12 @@ public class GUICrearCultivo extends JDialog {
         } else {
             try {
                 int id = Integer.parseInt(idCultivo);
-                float rendimientoParsed =  Float.parseFloat(rendimiento);
-                if (rendimientoParsed <= 0){
+                float rendimientoParsed = Float.parseFloat(rendimiento);
+                if (rendimientoParsed <= 0 ) {
                     errorMessage.error("El rendimiento indicado no puede ser menor o igual a 0");
-                } else {
+                }else if(id < 0){
+                    errorMessage.error("El ID indicado no puede ser negativo");
+                }else {
                     ControlProduccion.getInstance().createCultivo(id, especie, variedad, rendimientoParsed);
                     errorMessage.informacion("Cultivo registrado con exito");
                     especieText.setText("");
