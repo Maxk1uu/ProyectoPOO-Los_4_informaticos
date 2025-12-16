@@ -457,6 +457,7 @@ public class GestionHuertosUI {
     }
 
     private void pagaPesajesPendientesACosechador() {
+        /*
         int idPagoPesaje;
         Rut rutCosechador;
         double montoAPagar;
@@ -469,6 +470,8 @@ public class GestionHuertosUI {
         } catch (GestionHuertosException | IllegalArgumentException e) {
             System.out.println("\nX Error: " + e.getMessage() + "\n");
         }
+         */
+        GUIPagoPesaje.display();
     }
 
     private void listaCultivos() {

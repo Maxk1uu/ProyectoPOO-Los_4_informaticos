@@ -301,7 +301,7 @@ public class ControlProduccion {
                 .map(Cosechador.class::cast)
                 .sorted(ordenarPorMontoImpago.reversed())
                 .map(cosechador -> String.join("; ", reconstruyeRut(cosechador.getRut().toString()), cosechador.getNombre(), cosechador.getDireccion(), cosechador.getEmail(),
-                        cosechador.getFechaNacimiento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), Integer.toString(cosechador.getCuadrillas().length), Double.toString(getMontoImpago(cosechador)), Double.toString(getMontoPagado(cosechador))))
+                        cosechador.getFechaNacimiento().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), Integer.toString(cosechador.getCuadrillas().length), String.format("%.1f",getMontoImpago(cosechador)), String.format("%.1f",getMontoPagado(cosechador))))
                 .toArray(String[]::new);
     }
 
@@ -318,7 +318,7 @@ public class ControlProduccion {
                         planCosecha.getCuartel().getHuerto().getNombre(), Integer.toString(planCosecha.getCuadrillas().length), Double.toString(planCosecha.getCumplimientoMeta())))
                 .toArray(String[]::new);
     }
-
+    //Hecho por Ricardo Quintana, Programación funcional por Gabriel Rojas
     public String[] listPesajes() {
         return pesajes.stream()
                 .map(pesaje -> String.join("; ",
@@ -329,15 +329,15 @@ public class ControlProduccion {
                         String.valueOf(pesaje.getPrecioKg()), String.valueOf(pesaje.getMonto()), (pesaje.getPagoPesaje() == null) ? "Impago" : pesaje.getPagoPesaje().getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))))
                 .toArray(String[]::new);
     }
-
+    //Hecho por Ricardo Quintana, Programación funcional por Gabriel Rojas
     public String[] listPesajesCosechador(Rut rut) {
         if(findPersona(rut).isPresent() && findPersona(rut).get() instanceof Cosechador cosechador) {
             if(cosechador.getAsignaciones().length > 0){
                 return pesajes.stream()
                         .filter(pesaje -> pesaje.getCosechadorAsignado().getCosechador().getRut().equals(rut))
                         .map(pesaje -> String.join("; ", Integer.toString(pesaje.getId()), pesaje.getFechaHora().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
-                                pesaje.getCalidad().name(), Double.toString(pesaje.getCantidadKg()), Double.toString(pesaje.getPrecioKg()),
-                                Double.toString(pesaje.getMonto()), (pesaje.getPagoPesaje() == null) ? "IMPAGO" : pesaje.getPagoPesaje().getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))))
+                                pesaje.getCalidad().name(), String.format("%.1f",pesaje.getCantidadKg()), String.format("%.1f",pesaje.getPrecioKg()),
+                                String.format("%.1f",pesaje.getMonto()), (pesaje.getPagoPesaje() == null) ? "Impago" : pesaje.getPagoPesaje().getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))))
                         .toArray(String[]::new);
 
             } else {
@@ -354,6 +354,7 @@ public class ControlProduccion {
                 .map(pagoPesaje -> String.join("; ", Integer.toString(pagoPesaje.getId()), pagoPesaje.getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), Double.toString(pagoPesaje.getMonto()), Integer.toString(pagoPesaje.getPesajes().length), reconstruyeRut(pagoPesaje.getPesajes()[0].getCosechadorAsignado().getCosechador().getRut().toString())))
                 .toArray(String[]::new);
     }
+    //Hecho por Gabriel Rojas
     public String[] getCuadrillasDeCosechadorDePlan(Rut rutCosechador) throws GestionHuertosException {
         //Asegura que la fecha de hoy, que será la del pesaje, esta dentro de cada intervalo de asignación de su plan de cosecha correspondiente
         Predicate<Cuadrilla> filterCuadrillaByDate = (cuadrilla ->
