@@ -485,7 +485,7 @@ public class GestionHuertosUI {
                 for (String cultivo : listaDeCultivos) {
                     String[] infoCultivo = cultivo.split("; ");
                     System.out.printf("%-20s%-25s%-25s%-30s%-30s%n", infoCultivo[0], infoCultivo[1], infoCultivo[2],
-                            trunca(infoCultivo[3]) + " %", infoCultivo[4]);
+                            truncaPorcentaje(infoCultivo[3]) + " %", infoCultivo[4]);
                 }
                 System.out.println("----------------------");
             } else {
@@ -861,7 +861,9 @@ public class GestionHuertosUI {
             return nroStr.substring(0, punto + 3); //Si el numero tiene mas de 3 decimales, se retorna con 2 decimales.
         }
          */
-        double numero = Double.parseDouble(nroStr)*100;
-        return String.format("%.1f", numero);
+        return String.format("%.1f", Double.parseDouble(nroStr));
+    }
+    private String truncaPorcentaje(String nroStr){
+        return  String.format("%.1f", Double.parseDouble(nroStr)*100);
     }
 }
