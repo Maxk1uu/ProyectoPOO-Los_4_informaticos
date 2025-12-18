@@ -1,7 +1,8 @@
 package modelo;//Revisado por: Gabriel Rojas
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Cultivo {
+public class Cultivo implements Serializable {
     // Atributos
     private int id;
     private String especie;
