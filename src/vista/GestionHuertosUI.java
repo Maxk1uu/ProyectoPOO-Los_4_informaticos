@@ -852,6 +852,7 @@ public class GestionHuertosUI {
     }
 
     private String trunca(String nroStr) {
+        /*
         int punto = nroStr.indexOf('.');
         int decimalesAfterPunto = nroStr.length() - punto;
         if (decimalesAfterPunto <= 3) { //Si el numero tiene 2 o menos decimales, se retorna normal.
@@ -859,5 +860,8 @@ public class GestionHuertosUI {
         } else {
             return nroStr.substring(0, punto + 3); //Si el numero tiene mas de 3 decimales, se retorna con 2 decimales.
         }
+         */
+        double numero = Double.parseDouble(nroStr)*100;
+        return String.format("%.1f", numero);
     }
 }
